@@ -1,0 +1,216 @@
+
+{% block content %}
+
+
+    <script>
+
+        $(document).ready(function(){
+
+            $('.ui.progress').hide();
+
+            $('#slide_image_form #image').change(function(){
+
+                var formData = new FormData();
+                console.log($('#slide_image_form #image').prop('files'));
+                formData.append("image", $('#slide_image_form #image').prop('files')[0]);
+
+                console.log(formData);
+                $.ajax({
+                    url: "{{  path('admin_content_slide_image_edit', {'id': slide.id}) }}",
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+
+
+                    beforeSend: function() {
+                        $('.upload_photo button').addClass("loading");
+                        $('.ui.progress').show();
+                    },
+                    uploadProgress: function(event, position, total, percentComplete) {
+
+                        $('.ui.progress').progress({
+                            percent: percentComplete,
+                        });
+
+                        if(percentComplete == 100){
+                            percentComplete = 99;
+                        }
+
+                        $('#upload_photo_label span').text(percentComplete);
+
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        editSlide($('.slideId').val());
+                    },
+                })
+            });
+
+            //$('#slide_image_form .checkbox').checkbox();
+
+            // $('#slide_image_form').submit({
+            //     beforeSend: function() {
+            //         $('.upload_photo button').addClass("loading");
+            //         $('.ui.progress').show();
+            //     },
+            //     uploadProgress: function(event, position, total, percentComplete) {
+            //
+            //         $('.ui.progress').progress({
+            //             percent: percentComplete,
+            //         });
+            //
+            //         if(percentComplete == 100){
+            //             percentComplete = 99;
+            //         }
+            //
+            //         $('#upload_photo_label span').text(percentComplete);
+            //
+            //     },
+            //     success: function(data) {
+            //         console.log(data);
+            //         editSlide($('.slideId').val());
+            //     },
+            //     complete: function(xhr) {
+            //         //status.html(xhr.responseText);
+            //     }
+            //
+            // });
+
+        });
+
+    </script>
+    
+
+    <h1 class="ui grey header right">
+        <i class="photo icon"></i>
+        <div class="content">
+            <span class="username">{{ slide.name }}</span>
+            <div class="sub header">עריכת תמונה</div>
+        </div>
+    </h1>
+
+
+    <div class="left close">
+        <i class="icon remove circle olive big " onclick="$.kfModal.close();"></i>
+    </div>
+
+    <div class="clear"></div>
+
+
+    <div class="ui segment">
+
+{#        <div class="cloudinaryForm hidden">#}
+{#            {{ renderedCloudForm|raw }}#}
+{#        </div>#}
+{#        <form action="" enctype="multipart/form-data" class="slider-image-form">#}
+{#            <input type="file" name="image" id="image-slider">UploadedFile#}
+{#        </form>#}
+        <form id="slide_image_form" action="{{ path('admin_content_slide_image_edit', {'id': slide.id}) }}" method="post" enctype="multipart/form-data">
+            <input type="file" name="image" id="image" class="hidden">
+            <input type="hidden" class="slideId" value="{{ slide.id }}">
+            <input type="submit" class="hidden">
+        </form>
+
+
+        <div class="mar_top"></div>
+
+        <form class="ui form" id="slide_form" method="post" enctype="multipart/form-data">
+
+            <div class="field">
+
+
+                <div class="ui one column centered grid slide_image">
+                    <img alt="" src="{{ asset(slide.imageName) }}">
+                </div>
+
+                <br><br><br>
+
+                <div class="ui one column centered grid upload_photo" onclick="$('#slide_image_form #image').click();">
+                    <button type="button" class="ui labeled icon green button">
+                        <i class="photo icon"></i>
+                        בחרו תמונה
+                    </button>
+                </div>
+
+                {{ form_widget(form.imageName) }}
+            </div>
+
+            <br><br>
+
+            <div class="ui indicating progress">
+                <div class="bar" id="upload_photo_progress"></div>
+                <div class="label" id="upload_photo_label">העלאה: <span>0</span>%</div>
+            </div>
+
+
+            <h3 class="ui horizontal divider header">
+                <i class="attach olive icon"></i>
+                טקסט
+            </h3>
+
+            <div class="ui grey large horizontal label">{{ form_label(form.name) }}</div>
+            <div class="field">
+                {{ form_widget(form.name) }}
+            </div>
+
+            <div class="ui grey large horizontal label">{{ form_label(form.headerType) }}</div>
+            <div class="field">
+                {{ form_widget(form.headerType) }}
+            </div>
+
+            <div class="ui grey large horizontal label">{{ form_label(form.content) }}</div>
+            <div class="field">
+                {{ form_widget(form.content) }}
+            </div>
+
+
+            <h3 class="ui horizontal divider header">
+                <i class="settings olive icon"></i>
+                הגדרות
+            </h3>
+
+            <div class="field">
+                <div class="ui grey large horizontal label">
+                    {{ form_label(form.isActive) }}
+                </div>
+                <div class="ui compact segment">
+                    <div class="ui slider fitted checkbox">
+                        {{ form_widget(form.isActive) }}
+                        <label></label>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="ui divider"></div>
+            <br>
+            <br>
+
+            <div class="ui one column centered grid">
+                <button type="button" class="ui labeled icon green approve large button right" onclick="saveSlide({{ slide.id }}, $('#slide_form'));">
+                    <i class="save icon"></i>
+                    לשמור
+                </button>
+            </div>
+
+            {{ form_rest(form) }}
+
+        </form>
+
+
+
+
+
+        <br>
+        <br>
+
+
+        <div class="clear"></div>
+
+
+    </div>
+
+
+
+{% endblock %}

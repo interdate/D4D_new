@@ -1,0 +1,63 @@
+{% if errors %}
+    <div class="errors">
+        <div class="ui orange message">
+            <div class="content">
+                <div class="header">
+                    {% trans %}Please complete fields below{% endtrans %}
+                </div>
+                <p>
+                    {{ form_errors(form.about) }}
+                    {{ form_errors(form.looking) }}
+                    {{ form_errors(form.hobbies) }}
+                </p>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+
+
+
+<div class="inner_form_bot">
+    <div class="main_form">
+        <h1>{% trans %}More About Me{% endtrans %}</h1>
+
+
+        <div class="about_field cf {% if form.about.vars.errors|length %}error{% endif %}">
+            <label for="{{ form.about.vars.id }}">{{ form.about.vars.label|raw }}</label>
+            {{ form_widget(form.about) }}
+        </div>
+
+        <div class="about_field cf {% if form.looking.vars.errors|length %}error{% endif %}">
+            <label for="{{ form.looking.vars.id }}">{{ form.looking.vars.label|raw }}</label>
+            {{ form_widget(form.looking) }}
+        </div>
+
+        <div class="long_field cf {% if form.hobbies.vars.errors|length %}error{% endif %}">
+            <div class="long_label">{{ form_label(form.hobbies) }}</div>
+            <div class="cf checkboxes hobbies">
+
+                <div class="block">
+
+                    {% for hobby in form.hobbies %}
+                    <div class="ui checkbox">
+                        {{ form_widget(hobby) }}
+                        {{ form_label(hobby) }}
+                    </div>
+                    <div class="clr"></div>
+
+                    {% if loop.index % 13 == 0 %}
+                </div>
+                <div class="block">
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

@@ -1,0 +1,74 @@
+<script>
+
+
+    $(document).ready(
+        function () {
+
+            $('#profile_one_admin_is_sent_email').removeAttr('required');
+
+        }
+    );
+
+
+</script>
+
+
+<h1 class="ui grey header right">
+    <i class="edit icon"></i>
+    <div class="content">
+        <span class="username">{{ user.username }}</span>
+        <div class="sub header">שליחת הודעה אישית</div>
+    </div>
+</h1>
+
+
+<div class="left close">
+    <i class="icon remove circle olive big " onclick="$.kfModal.close();"></i>
+</div>
+
+<div class="clear"></div>
+
+<div class="ui divider"></div>
+
+
+<div class="ui segment">
+
+    <form id="form_send" method="post">
+
+        <div class="ui form">
+            <input type="hidden" name="id" value="{{ user.id }}" class="send_user_id">
+            <div class="clear"></div>
+
+            {% if send %}
+                <div class="ui success visible message" style="max-width: 300px;margin: 0 auto;">
+                    <i class="close icon"></i>
+                    <p style="text-align: center;">ההודעה נשלחה בהצלחה!</p>
+                </div>
+            {% endif %}
+
+            <div class="ui big ribbon label" style="margin-bottom: 10px;margin-top: 15px;">תוכן ההודעה</div>
+            <div class="field">
+                <textarea name="message" id="textMessage-{{ user.id }}">{{ message }}</textarea>
+            </div>
+
+            <div class="clear"></div>
+
+            <div class="right">
+                <button class="ui labeled icon violet approve large button right" onclick="sendQuickMessage($(this).parents('#form_send')); return false;">
+                    <i class="send outline icon"></i>
+                    שלח הודעה
+                </button>
+            </div>
+
+            <div class="clear"></div>
+
+        </div>
+    </form>
+</div>
+{#<style>#}
+{#    .mce-container.mce-panel.mce-floatpanel.mce-window.mce-in, .mce-window.mce-in{#}
+{#        z-index: 9999999999 !important;#}
+{#    }#}
+{#</style>#}
+
+

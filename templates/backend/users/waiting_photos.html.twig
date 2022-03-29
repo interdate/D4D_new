@@ -1,0 +1,167 @@
+{% extends "backend/layout.html.twig" %}
+
+{% block content %}
+
+
+    {{ include('backend/header.html.twig', { 'header': 'ניהול משתמשים', 'icon': 'users' }) }}
+
+    <script>
+        $(document).ready(function () {
+            // $('.rotate').click(function (e) {
+            //     e.stopPropagation();
+            //     var id = $(this).parents('.equal.width.grid').find('.sel_item input[type="hidden"]').val();
+            //     var rotate = ($(this).hasClass('left-side')) ? -90 : 90;
+            //     var image = $(this).parents('.card').find('.image.photo img');
+            //     console.log(id, rotate, image);
+            //     rotateImage(id,rotate,image);
+            // });
+        });
+
+    </script>
+
+
+    <div class="page_content waiting_photos_content">
+
+        <table class="ui single line table waiting_photos">
+            <thead>
+            <tr>
+                <th>
+                    <h3 class="ui grey header right">
+                        <i class="photo circular icon"></i>
+                        אישור תמונות
+
+                    </h3>
+                </th>
+            </tr>
+            <tr class="actions">
+                <th>
+                    {{ include('backend/users/waiting_photos_actions.html.twig') }}
+                </th>
+            </tr>
+
+            </thead>
+            <tbody>
+
+            <tr>
+                <td>
+
+
+                    <div class="ui four stackable cards">
+
+                        {% for photo in photos %}
+
+                            <div class="card">
+                                <div class="content">
+
+                                    <input type="hidden" value="{{ photo.user.id }}" class="userId">
+
+
+                                    <i class="photo icon grey large right floated link manage_photos"
+                                       data-position="top center" data-content="עריכת תמונות"></i>
+
+                                    <i class="edit icon grey large right floated link manage_user"
+                                       data-position="top center" data-content="עריכת פרופיל"></i>
+
+
+                                    <div class="header">
+                                        <span class="username" data-position="top center" data-content="לפרופיל המלא">
+                                            {{ photo.user.username }}
+                                        </span>
+                                    </div>
+                                    <div class="meta">
+                                        {% if photo.user.isPaying %}
+                                            <i class="star green icon" data-position="top center" data-content="מנוי"></i>
+                                        {% endif %}
+                                        {{ photo.user.age }}, {{ photo.user.city.name }}
+                                    </div>
+                                    {#
+                                    <div class="description">
+                                        {{ photo.user.about|length > 50 ? photo.user.about|slice(0, 50) ~ '...' : photo.user.about  }}
+                                    </div>
+                                    #}
+                                </div>
+                                <div class="image photo">
+                                    <img src="{{ photo.getWebPath() }}">
+{#                                    <input type="hidden" value="{{ photo.name }}">#}
+                                </div>
+                                <div class="extra content">
+
+
+                                    <div class="ui equal width grid">
+                                        <div class="column">
+
+                                            <button class="ui green icon button approve" data-position="top center" data-content="לאשר תמונה">
+                                                <i class="thumbs up icon"></i>
+                                            </button>
+
+                                        </div>
+                                        <div class="column sel_item">
+
+                                            <div class="ui slider checkbox">
+                                                <input type="checkbox">
+                                                <label></label>
+                                            </div>
+                                            <input type="hidden" value="{{ photo.id }}">
+
+                                        </div>
+                                        <div class="column">
+                                              <div class="rotate-buttons">
+                                                    <div class="ui mini icon button green rotate left-side">
+                                                        <i class="share icon"></i>
+                                                    </div>
+                                                    <div class="ui mini icon button green rotate right-side">
+                                                        <i class="reply icon"></i>
+                                                    </div>
+                                               </div>
+                                         </div>
+                                        <div class="column">
+
+                                            <button class="ui red left icon button delete"  data-position="top center" data-content="להסיר תמונה">
+                                                <i class="thumbs down icon"></i>
+                                            </button>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+
+                </td>
+            </tr>
+
+
+
+
+
+
+
+
+            </tbody>
+            <tfoot>
+            <tr class="actions">
+                <th>
+                    {{ include('backend/users/waiting_photos_actions.html.twig') }}
+                </th>
+            </tr>
+            </tfoot>
+        </table>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+{% endblock %}

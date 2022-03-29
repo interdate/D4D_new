@@ -1,0 +1,62 @@
+<div class="nymain_mobile">
+    {% if app.user %}
+
+        {% set filter = data is not defined ? 'lastActivity' : data.filter %}
+
+        <div class="member cf sorting">
+            <div class="mem-left">{% trans %}Sort By{% endtrans %}</div>
+            <div class="mem-right">
+                <div class="sortby">
+                    <select id="search_filter1">
+                        <option value="distance"{% if filter == 'distance' %} selected="selected"{% endif %}>{% trans %}Distance{% endtrans %}</option>
+                        <option value="new"{% if filter == 'new' %} selected="selected"{% endif %}>{% trans %}New Members{% endtrans %}</option>
+                        {% if data.withPhoto is not defined or not data.withPhoto %}
+                            <option value="photo" {% if filter == 'photo' %} selected="selected"{% endif %}>{% trans %}Photo Owners{% endtrans %}</option>
+                        {% endif %}
+                        <option value="lastActivity"{% if filter == 'lastActivity' or filter == '' %} selected="selected"{% endif %}>{% trans %}Last Visit{% endtrans %}</option>
+                        <option value="popularity"{% if filter == 'popularity' %} selected="selected"{% endif %}>{% trans %}Popularity{% endtrans %}</option>
+                    </select>
+                </div>
+            </div>
+            <button class="left close ui icon basic button">
+                <i class="remove icon"></i>
+            </button>
+            <i class="chevron down ui icon open-sort"></i>
+        </div>
+
+    {% endif %}
+    <ul class="nymobul cf">
+        <div class="mobile_results">
+            {% if app.user %}
+                {{ include ('frontend/user/users_list_mobile.html.twig') }}
+            {% else %}
+                {{ include ('frontend/user/users_public_list_mobile.html.twig') }}
+
+            {% endif %}
+        </div>
+    </ul>
+</div>
+
+{% if not app.user %}
+<style>
+    @media only screen and (max-width:639px) {
+{#
+        .new-msec.user-section, .left_content, .mid_title, .right_content, .nmobile_footer{
+            display: none;
+        }
+        .wrap{
+            padding: 0px;
+        }
+#}
+        .nymain_mobile {
+            padding-top: 240px;
+            padding-bottom: 0px;
+        }
+        /*
+        .hatraotinner_content{
+            padding-bottom: 0px;
+        }
+        */
+    }
+</style>
+{% endif %}

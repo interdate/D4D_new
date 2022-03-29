@@ -1,0 +1,50 @@
+{% extends "frontend/layout.html.twig" %}
+
+{% set route = app.request.attributes.get('_route') %}
+{% if route == 'user_mobile_base' %}
+    {% set page_title = 'Base Links' %}
+    {% set class_name = 'left_welcome' %}
+{% elseif route == 'user_mobile_interests' %}
+    {% set page_title = 'Interests' %}
+    {% set class_name = 'left_interest' %}
+{% elseif route == 'user_mobile_my_profile' %}
+    {% set page_title = 'My Profile' %}
+    {% set class_name = 'left_myprofile' %}
+{% elseif route == 'user_mobile_search' %}
+    {% set page_title = 'Search' %}
+    {% set class_name = 'left_search' %}
+{% endif %}
+
+{% block title %}
+    {{ parent() }} - {{ page_title }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="mid_content">
+
+    </div>
+
+    <script>
+        jQuery(document).ready(function ($) {
+            /* .hatraotinner_content .wrap .mid_content,  */
+            {% if class_name == 'left_search' %}
+                $('.nymain_mobile .mid_content').append('<div class="{{ class_name }}">' + $('.left_content .{{ class_name }}').html() + '</div>');
+            {% else %}
+                $('.nymain_mobile .mid_content').append('<div class="leftul {{ class_name }}">' + $('.left_content .leftul.{{ class_name }}').html() + '</div>');
+            {% endif %}
+        });
+
+    </script>
+{% endblock %}
+
+
+
+
+{% block mobile_content %}
+    <div class="nymain_mobile">
+    <div class="mid_content">
+
+    </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,338 @@
+{% extends "frontend/main_layout.html.twig" %}
+
+{% block container %}
+    <script>
+        function pageInit() {
+        }
+
+        jQuery(document).ready(function ($) {
+            pageInit();
+
+            $('.subscription').click(function () {
+                //console.log();
+                let userId = '{{ app.user.id }}';
+                //let productId = $(this).data('productid');
+                let productperiod = $(this).data('productperiod');
+                let productprice = $(this).data('productprice');
+
+                let url = 'https://redirect.telepay.co.il/?product=' + productprice + '&payPeriod=' + productperiod + '&userId=' + userId + '&formId=ca9b5f3c-6259-eb11-b847-ecebb895de82';
+                window.location.href = url;
+
+                console.log(url);
+            });
+        });
+    </script>
+    <style>
+        #pp {
+            display: none !important;
+        }
+
+
+        #get-discount {
+            height: 38px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #get-discount button {
+            color: #fff;
+            background-color: #f20022;
+            font-weight: bold;
+            border: 0;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: 'Open Sans Hebrew', Arial, Helvetica, sans-serif;
+            padding: 0 20px;
+        }
+
+        #get-discount input {
+            padding: 4px;
+            border: 2px solid #ccc !important;
+        }
+
+        .subscriptions {
+            text-align: center;
+            clear: both;
+        }
+
+        .subscription {
+            display: inline-block;
+            width: 45%;
+            background: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            box-shadow: #c5c5c4 4px 4px 4px;
+            -moz-box-shadow: #c5c5c4 4px 4px 4px;
+            -webkit-box-shadow: #c5c5c4 4px 4px 4px;
+            margin: 0px 2% 35px;
+            cursor: pointer;
+        }
+
+        .wrap-pay {
+            padding: 10px;
+            border: 1px #c5c5c4 dashed;
+            -webkit-border: 1px #c5c5c4 dashed;
+            -moz-border: 1px #c5c5c4 dashed;
+            border-radius: 10px;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+        }
+
+        .subscription .chackbox {
+            border: 2px #555658 solid;
+            -webkit-border: 2px #555658 solid;
+            -moz-border: 2px #555658 solid;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            margin: 0 auto;
+            padding: 3px;
+        }
+
+        .subscription .chackbox > span {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #cacaca;
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+        }
+
+        .subscription .chackbox.click > span {
+            background: #f20022;
+        }
+
+        .subscription .title {
+            color: #414147;
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 36px;
+        }
+
+        .subscription .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #f20023;
+            margin-bottom: 20px;
+        }
+
+        .subscription .description {
+            color: #434349;
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        .subscription .month-price {
+            background: #f20022;
+            color: #fff;
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            width: 110px;
+            height: 110px;
+            margin: 0px auto;
+            font-size: 20px;
+            font-weight: bold;
+            padding-top: 30px;
+        }
+
+        .subscription .month-price > span.dollar + span {
+            font-size: 30px;
+        }
+
+        .subscription .month-price > span.month {
+            display: block;
+        }
+
+        .table-subs {
+            width: 94%;
+            border-radius: 10px;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            box-shadow: #c5c5c4 4px 4px 4px;
+            -moz-box-shadow: #c5c5c4 4px 4px 4px;
+            -webkit-box-shadow: #c5c5c4 4px 4px 4px;
+            background: #ffffff;
+            margin: 0px auto;
+            font-size: 16px;
+        }
+
+        .table-subs .header-table {
+            padding: 15px 15px 10px;
+            background: #e7e3dd;
+            font-weight: bold;
+            border-radius: 10px 10px 0px 0px;
+            -webkit-border-radius: 10px 10px 0px 0px;
+            -moz-border-radius: 10px 10px 0px 0px;
+        }
+
+        .table-subs .cell {
+            display: inline-block;
+            width: 70px;
+            vertical-align: middle;
+        }
+
+        .table-subs .header-table .cell {
+            text-align: center;
+            font-weight: bold;
+            vertical-align: bottom;
+        }
+
+        .table-subs .header-table > .cell:first-child, .table-subs .line > .cell:first-child {
+            width: calc(100% - 150px);
+            color: #616267;
+        }
+
+        .table-subs .header-table > .cell:first-child + .cell {
+            color: #fe002c;
+        }
+
+        .table-subs .header-table > .cell:first-child + .cell + .cell {
+            color: #4c4d53;
+        }
+
+        .table-subs .body {
+            padding: 10px 15px 5px;
+        }
+
+        .line {
+            padding: 7px 0px;
+            border-top: 1px #cbcbcb dotted;
+            -webkit-border-top: 1px #cbcbcb dotted;
+            -moz-border-top: 1px #cbcbcb dotted;
+            display: block;
+        }
+
+        .table-subs .body .line:first-child {
+            border-top: none;
+            -webkit-border-top: none;
+            -moz-border-top: none;
+        }
+
+        .cell.check-red {
+            height: 20px;
+            background: url(/images/pay-red-v.png) no-repeat center;
+        }
+
+        .cell.check-grey {
+            height: 20px;
+            background: url(/images/pay-grey-v.png) no-repeat center;
+
+        }
+
+        .mid_title {
+            margin: 0px auto 30px;
+        }
+
+        .text {
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+
+
+        @media all and (max-width: 767px) {
+
+        }
+
+        @media all and (max-width: 640px) {
+            .subscription {
+                width: 90%;
+            }
+
+
+            .table-subs .cell {
+                width: 50px;
+                font-size: 12px;
+            }
+
+            .table-subs .header-table > .cell:first-child, .table-subs .line > .cell:first-child {
+                width: calc(100% - 110px);
+                font-size: 14px;
+            }
+        }
+
+    </style>
+    <!-- Mid Container -->
+    <div class="mid_content faq_main">
+        {% set banners = getBanners('subscriptionPage') %}
+        {% if(banners) %}
+            {% set i = random(banners|length -1) %}
+            <a target="_blank" href="{{ banners[i].href }}">
+                <img style="width: 88%; margin: auto" class="banner" src="{{ asset(banners[i].img) }}" style="width:100%;margin: 0 auto;" data-id="{{ banners[i].id }}"/>
+            </a>
+        {% endif %}
+        <div class="mid_title">
+            <h1>{% trans %}תשלום חדש - תקופה{% endtrans %}</h1>
+        </div>
+
+        <div class="inner_form">
+
+
+            <div class="inner_form_bot">
+                <div class="main_form">
+
+
+                    {% if app.user.isPaying %}
+                        <div class="ui olive tiny message">{% trans %}Your payment was successful.{% endtrans %}</div>
+                        <div class="div4" style="padding: 0px;">
+                            <a href="{{ path('homepage') }}">{% trans %}Enter{% endtrans %}</a>
+                        </div>
+                    {% else %}
+
+                        {% for textb in textBefore %}
+                            {% if textb.id != 1 %}
+                                <div class="text">
+                                    {{ textb.text | raw }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                        <div class="subscriptions">
+
+                            {% for payment in payments %}
+                                {% if payment.isActive %}
+                                    <div class="subscription" data-productperiod="{{ payment.period }}"
+                                         data-productprice="{{ payment.period > 1 ? (payment.amount / payment.period) : payment.amount }}" data-productId="{{ loop.index }}">
+                                        <div class="wrap-pay">
+                                            <div class="chackbox"><span></span></div>
+                                            <div class="title">{{ payment.title }}</div>
+                                            <div class="price">₪{{ payment.amount }}</div>
+                                            <div class="description">{{ payment.text | raw }}</div>
+                                            <div class="month-price">
+                                                <span class="dollar">₪</span><span>{{ payment.price }}</span>
+                                                <span class="month">{{ payment.textPrice }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <form id="get-discount">
+                            <input name="coupon" type="text" placehollder="קוד קלט">
+                            <button>קבל הנחה</button>
+                        </form>
+
+                        {% if textAfter[0].isActive %}
+                            {{ textAfter[0].text | raw }}
+                        {% endif %}
+
+
+
+
+                    {% endif %}
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}

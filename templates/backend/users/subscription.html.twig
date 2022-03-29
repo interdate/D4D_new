@@ -1,0 +1,609 @@
+<style>
+    .hover-popup{ cursor: pointer; }
+    .title.full-data .dropdown.icon.up{
+        -webkit-transform: translateY(60%) rotate(180deg);
+        transform: translateY(60%) rotate(180deg);
+    }
+    .fullData .ui.basic.right.pointing.label:before {
+        top: 50%;
+        right: -1px;
+        -webkit-transform: translateX(50%) translateY(-50%) rotate(45deg);
+        transform: translateX(50%) translateY(-50%) rotate(45deg);
+        left: auto;
+        bottom: auto;
+    }
+    .fullData .ui.labeled.button{
+        margin-bottom: 0.25em;
+    }
+    .fullData .ui.labeled.button > .button{
+        background: #e0e1e2 none;
+    }
+    .kfModal{
+        width: 90%;
+    }
+    .view{
+        min-height: 40px;
+    }
+    .edit textarea{
+        border-radius: 5px;
+        border: 1px grey solid;
+    }
+    #ui-datepicker-div{
+        z-index: 9999999999 !important;
+    }
+    .ui.form ul{
+        padding-left: 20px;
+        color: red;
+    }
+    #payment-backend .fullData, #payment-backend .fullData *{
+        direction: ltr;
+    }
+    #payment-backend td, #payment-backend th{
+        text-align: center;
+    }
+</style>
+<script>
+
+    jQuery(document).ready(function ($) {
+        $('.ui.dropdown').dropdown();
+        $('.title.full-data').click(function () {
+            var tr = $(this).parents('tr').next();
+            if(tr.hasClass('fullData')) {
+                tr.toggleClass('hidden');
+            }else {
+                tr.next().toggleClass('hidden');
+            }
+            $(this).find('i').toggleClass('up');
+        });
+        $('.view').dblclick(function () {
+            $(this).addClass('hidden');
+            $(this).parents('td').find('.edit').removeClass('hidden');
+            // $('#pay_form .calendar input,#payment-backend .nextPaymentDate input').datepicker({
+            //     changeMonth: true,
+            //     changeYear: true,
+            //     yearRange: '-1:+10',
+            //     defaultDate:'y-m-d',
+            //     dateFormat: 'yy-mm-dd',
+            // });
+            if($(this).parents('td').find('.edit textarea').length > 0) {
+                $(this).parents('td').find('.edit textarea').focus();
+            }else{
+                $(this).parents('td').find('.edit input').focus();
+            }
+        });
+        $('.edit .button.cn').click(function () {
+            $(this).parents('td').find('.edit').addClass('hidden');
+            $(this).parents('td').find('.view').removeClass('hidden');
+        });
+        $('input[name="isActive"]').click(function () {
+            // $.ajax({
+            //     url: '/admin/users/user/history/edit',
+            //     type: 'Post',
+            //     data: {
+            //         entity: 'payment',
+            //         id: $(this).parents('td').attr('payment'),
+            //         field: $(this).attr('name'),
+            //         value: ($(this).prop('checked') ? '1' : '0')
+            //     },
+            //     error: function(response){
+            //         console.log("Error:" + JSON.stringify(response));
+            //     },
+            //     success: function(response){
+            //         if($(this).prop('checked')){
+            //             $(this).parents('tr').removeClass('not-active').addClass('active');
+            //         }else{
+            //             $(this).parents('tr').removeClass('active').addClass('not-active');
+            //         }
+            //
+            //     }
+            // });
+            var check = ($(this).prop('checked')) ? confirm('האם אתה בטוח?') : true;
+            if(check) {
+                var id = $('#form_id').val();
+                $.ajax({
+                    url: '/admin/users/user/' + id + '/subscription',
+                    type: 'Get',
+                    data: {
+                        'remove': 2,
+                        'payment': $(this).parents('td').attr('payment'),
+                        'val': ($(this).prop('checked') ? '1' : '0')
+                    },
+                    error: function (response) {
+                        console.log("Error:" + JSON.stringify(response));
+                    },
+                    success: function (response) {
+                        $('#payment-backend .message').remove();
+                        $('#payment-backend > .ui.divider').after('<div class="ui success message">\n' +
+                            '            <i class="close icon"></i>\n' +
+                            '            <div class="header">\n' +
+                            'המנוי נשמר בהצלחה.\n' +
+                            '            </div>\n' +
+                            '        </div>');
+                        $('#payment-backend .ui.message .close').click(function () {
+                            $(this).parent().remove();
+                        });
+                        // $('#subscr').html(response).kfModal();
+                        // $('#subscr .menu .item').tab();
+                        // $('#global_dimmer').addClass("disabled").find('.loader').addClass("disabled");
+                    }
+                });
+            }else{
+                $(this).attr('checked', false);
+            }
+
+        });
+        $('.edit .button.ok').click(function () {
+            var textarea = $(this).parent('.edit').find('textarea');
+            var entity, id_entity, field;
+
+            if(textarea.length == 0){
+                textarea = $(this).parent('.edit').find('input');
+                field = textarea.attr('name');
+            }else{
+                field = 'note';
+            }
+            //alert(typeof textarea.attr('history'));
+            entity = (typeof textarea.attr('history') != 'undefined') ? 'history' : 'payment';
+            id_entity = (typeof textarea.attr('history') != 'undefined') ? textarea.attr('history') : textarea.attr('payment');
+
+            $.ajax({
+                url: '/admin/users/user/history/edit',
+                type: 'Post',
+                data: {
+                    entity: entity,
+                    id: id_entity,
+                    field: field,
+                    value: textarea.val()
+                },
+                error: function(response){
+                    console.log("Error:" + JSON.stringify(response));
+                },
+                success: function(response){
+                    //thisObj.parents('tr').remove();
+                }
+            });
+            $(this).parents('td').find('.edit').addClass('hidden');
+            $(this).parents('td').find('.view').text(textarea.val()).removeClass('hidden');
+        });
+
+
+        $('#pay_form .calendar input,#payment-backend .nextPaymentDate input').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: '-1:+10',
+            defaultDate:'d-m-y',
+            dateFormat: 'dd-mm-yy',
+        });
+        $('#form_period').change(function(){
+            var dateObj1 = $(this).parents('.fields').find('.start-date input[type="text"]');
+            var dateObj2 = $(this).parents('.fields').find('.end-date input[type="text"]');
+            var period = 1;
+
+            switch ($(this).val()) {
+                case "12":
+                    period = 12;
+                    break;
+                case "6":
+                    period = 6;
+                    break;
+                case "3":
+                    period = 3;
+                    break;
+                case "1":
+                    period = 1;
+                    break;
+                case "-1":
+                    period = '2weeks';
+                    break;
+                case "0":
+                    period = 0;
+                    break;
+            }
+            //alert(period);
+            setDatePeriods(dateObj1, dateObj2, period, '%dd-%mm-%Y');
+        });
+        $('.removeSubscription').click(function () {
+            if(confirm('Are you sure?')) {
+                var id = $('#form_id').val();
+                $.ajax({
+                    url: '/admin/users/user/' + id + '/subscription',
+                    type: 'Get',
+                    data: {
+                        'remove': 1
+                    },
+                    error: function (response) {
+                        console.log("Error:" + JSON.stringify(response));
+                    },
+                    success: function (response) {
+                        $('#subscr').html(response).kfModal();
+                        $('#subscr .menu .item').tab();
+                        $('#global_dimmer').addClass("disabled").find('.loader').addClass("disabled");
+                    }
+                });
+            }
+        });
+        //transition hidden
+        $('.ui.message .close').click(function () {
+            $(this).parents('.message').transition('fade');
+        });
+        $('.charge-open').click(function () {
+            $(this).parents('tr').next().toggleClass('hidden');
+        });
+        $('.charge-submit').click(function () {
+            var tr = $(this).parents('tr.charge-one');
+            var summ = tr.find('input.charge-summ').val();
+            var payment = $(this).attr('payment');
+            if(parseInt(summ) > 0){
+                $.ajax({
+                    url: '/admin/users/user/charge/one/time',
+                    type: 'Post',
+                    data: {payment_id: payment, summ: summ},
+                    error: function(response){
+                        console.log("Error:" + JSON.stringify(response));
+                        tr.addClass('hidden');
+                        tr.find('input.charge-summ').val(0);
+                    },
+                    success: function(response){
+                        if(response.success == 1){
+                            $('#payment-backend ui.divider').after('<div class="ui negative message">' +
+                                '        <i class="close icon"></i>' +
+                                '        <div class="header">' +
+                                'חיוב היה בהצלחה.' +
+                                '        </div>' +
+                                '    </div>');
+                        }
+                        tr.addClass('hidden');
+                        tr.find('input.charge-summ').val(0);
+                        $('#global_dimmer').addClass("disabled").find('.loader').addClass("disabled");
+                    }
+                });
+            }else{
+                alert('סכום צריך להות יותר מ 0');
+                return false;
+            }
+        });
+    });
+    function sendPayForm(){
+        var data = $('#pay_form').serialize();
+        var id = $('#form_id').val();
+        $.ajax({
+            url: '/admin/users/user/' + id + '/subscription',
+            type: 'Post',
+            data: data,
+            error: function(response){
+                console.log("Error:" + JSON.stringify(response));
+            },
+            success: function(response){
+                $('#subscr').html(response).kfModal();
+                $('#subscr .menu .item').tab();
+                $('#global_dimmer').addClass("disabled").find('.loader').addClass("disabled");
+            }
+        });
+    }
+</script>
+<div id="payment-backend">
+<h1 class="ui header left">
+    <i class="user icon"></i>
+    <div class="content">
+        <span class="username">{{ user.username }}</span>
+        <div class="sub header">משתמש מנוי</div>
+    </div>
+</h1>
+{% if user.isPaying and user.startSubscription and user.endSubscription %}
+    <div class="left ui header" style="padding: 5px 10px 5px 20px">
+        <div class="content">
+            <div class="sub header" style="text-align: center; font-weight: bold;">תאריך התחלה</div>
+            <div class="username">{{ user.startSubscription|date('d/m/Y H:i:s') }}</div>
+
+        </div>
+    </div>
+    <div class="left ui header" style="padding: 5px 10px">
+        <div class="content">
+            <div class="sub header" style="text-align: center; font-weight: bold;">תאריך סיום</div>
+            <div class="username">{{ user.endSubscription|date('d/m/Y H:i:s') }}</div>
+
+        </div>
+    </div>
+{% endif %}
+
+<div class="right close">
+    <i class="icon remove circle olive big " onclick="$.kfModal.close();"></i>
+</div>
+
+<div class="clear"></div>
+
+<div class="ui divider"></div>
+{% if save == '2' %}
+    <div class="ui negative message">
+        <i class="close icon"></i>
+        <div class="header">
+            מנוי המשתמש הוסר בהצלחה.
+        </div>
+    </div>
+{% endif %}
+{% if save == '3' %}
+    <div class="ui negative message">
+        <i class="close icon"></i>
+        <div class="header">
+            המינוי לא נשמר. מנוי משתמש רק לגבר.
+        </div>
+    </div>
+{% endif %}
+<div class="ui secondary menu">
+    <a class="item active" data-tab="1">
+        הוסף מנוי
+    </a>
+    <a class="item" data-tab="2">
+        היסטוריה
+    </a>
+</div>
+<div class="ui tab segment active" data-tab="1">
+    {% if save == '1' %}
+        <div class="ui success message">
+            <i class="close icon"></i>
+            <div class="header">
+                מנוי המשתמש נשמר בהצלחה.
+            </div>
+        </div>
+    {% endif %}
+    <div class="ui form">
+        {{ form_start(form, {'attr': {'id': 'pay_form'}}) }}
+        <input type="hidden" id="response" name="res" value="{%if user.action is defined %}{{ user.action }}{% endif %}"/>
+        <input type="hidden" id="payRemove" name="remove" value="0"/>
+        {{ form_widget(form.id) }}
+        <div class="ui three fields">
+            <div class="field">
+                {{ form_label(form.points) }}
+                <div class="ui small input">
+                    {{ form_widget(form.points) }}
+                </div>
+                {{ form_errors(form.points) }}
+            </div>
+            <div class="field">
+                {{ form_label(form.transactionId) }}
+                <div class="ui small input">
+                    {{ form_widget(form.transactionId) }}
+                </div>
+                {{ form_errors(form.transactionId) }}
+            </div>
+            <div class="field">
+                {{ form_label(form.name) }}
+                <div class="ui small input">
+                    {{ form_widget(form.name) }}
+                </div>
+                {{ form_errors(form.name) }}
+            </div>
+        </div>
+        <div class="ui horizontal icon divider"><i class="pin basic icon"></i></div>
+        <div class="ui three fields">
+            <div class="field date1">
+                {{ form_label(form.startSubscription) }}
+                <div class="ui icon input calendar start-date">
+                    {{ form_widget(form.startSubscription, { 'attr': {'class': 'payCalendar'}}) }}
+                    <i class="calendar icon"></i>
+                </div>
+            </div>
+
+            <div class="field date2">
+                {{ form_label(form.endSubscription) }}
+                <div class="ui icon input calendar end-date">
+                    {{ form_widget(form.endSubscription, { 'attr': {'class': 'payCalendar'}}) }}
+                    <i class="calendar icon"></i>
+                </div>
+
+            </div>
+
+            <div class="field periodPay">
+                {{ form_label(form.period) }}
+                {{ form_widget(form.period, {'attr': {'class' : 'ui dropdown'}}) }}
+                {{ form_errors(form.period) }}
+                {{ form_errors(form.startSubscription) }}
+                {{ form_errors(form.endSubscription) }}
+            </div>
+            <div class="clear"></div>
+
+        </div>
+        <div class="ui horizontal icon divider"><i class="pin basic icon"></i></div>
+        <div class="ui one fields">
+            <div class="field" style="width:100%;">
+                {{ form_label(form.note) }}
+                {{ form_widget(form.note) }}
+                {{ form_errors(form.note) }}
+            </div>
+
+        </div>
+        <div class="field">
+            <div class="right">
+                <div class="ui labeled icon button blue small saveUserPayment" onclick="sendPayForm();">
+                    <i class="inverted save icon"></i>
+                    לשמור
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+
+<div class="ui tab segment" data-tab="2">
+    {% if user.payments|length > 0 %}
+        <table class="ui small table">
+            <thead>
+            <tr>
+                <th>תאריך החידוש הבא</th>
+                <th>סכום</th>
+                <th>שם</th>
+                <th>פירוט</th>
+                <th width="100">הערות</th>
+                <th>שגיאות</th>
+                <th>פעיל</th>
+                <th>אפשרויות</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for payment in user.payments %}
+{#                {% if history.parent is null %}#}
+                    <tr class="{{ payment.error > 0 ? 'error' : '' }} {{ payment.isActive > 0 ? 'active' : 'not-active' }}">
+                        <td>
+                            <div class="view">
+                                {{ payment.nextPaymentDate|date('d-m-Y') }}
+                            </div>
+                            <div class="edit hidden">
+                                <div class="ui icon input calendar nextPaymentDate">
+                                    <input type="text" payment="{{ payment.id }}" name="nextPaymentDate" value="{{ payment.nextPaymentDate|date('d-m-Y') }}">
+                                    <i class="calendar icon"></i>
+                                </div>
+                                <div class="ui green button ok">לשמור</div> <div class="ui grey button cn">ביטול</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="view">
+                                {{ payment.amount }}
+                            </div>
+                            <div class="edit hidden">
+                                <div class="ui icon input amount">
+                                    <input type="text" payment="{{ payment.id }}" name="amount" value="{{ payment.amount }}">
+                                    <i class="shekel sign icon"></i>
+                                </div>
+                                <div class="ui green button ok">לשמור</div> <div class="ui grey button cn">ביטול</div>
+                            </div>
+                        </td>
+                        <td>{{ payment.name }}</td>
+                        <td>
+                            {% if payment.getFullData()|length > 0 %}
+                                <div class="title full-data hover-popup" title="Click for view full data from PayPal">
+                                    <i class="dropdown icon"></i>
+                                    מידע מטלפיי
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="view">
+                                {{ payment.note }}
+                            </div>
+                            <div class="edit hidden">
+                                <textarea class="noteEdit" payment="{{ payment.id }}">{{ payment.note }}</textarea>
+                                <div class="ui green button ok">לשמור</div> <div class="ui grey button cn">ביטול</div>
+                            </div>
+                        </td>
+                        <td>{{ payment.error }}</td>
+                        <td payment="{{ payment.id }}">
+                            <div class="ui toggle checkbox small is_active">
+                                <input type="checkbox" name="isActive"
+                                       {% if payment.isActive %}checked="checked"{% endif %}>
+                                <label></label>
+                            </div>
+                        </td>
+                        <td><div class="ui white button charge-open">לחיוב לסכום</div></td>
+                    </tr>
+                    <tr class="hidden charge-one">
+                        <td colspan="8">
+                            <div style="padding: 0 5px 5px;">חיוב חד פעמי</div>
+                            <label style="margin: 0 5px;font-size: 16px;">סכום</label>
+                            <input style="margin: 0 5px; border: 1px solid rgba(34,36,38,.15);padding: 5px 10px;font-size: 16px;border-radius: 5px;" type="number" class="charge-summ" />
+                            <div style="border-radius: 5px" payment="{{ payment.id }}" class="ui button green charge-submit">לחיוב פעם אחד</div>
+                        </td>
+                    </tr>
+                    {% if payment.getFullData()|length > 0 %}
+                        <tr class="hidden fullData">
+                            <td colspan="8">
+                                {% for key, val in payment.getFullData() %}
+                                    <div class="ui left labeled button" tabindex="0">
+                                        <div class="ui basic pointing right label">
+                                            {{ key }}
+                                        </div>
+                                        <a class="ui button">
+                                            {{ val }}
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if payment.paymentHistories|length > 0 %}
+                        <tr class="fullData">
+                            <td colspan="8">
+                                <table class="ui small table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="5">היסטוריית חיובים בטלפיי</th>
+                                        </tr>
+                                        <tr>
+                                            <th>תאריך סיום</th>
+                                            <th>תאריך חיוב</th>
+                                            <th>סכום</th>
+                                            <th>פירוט</th>
+                                            <th width="100">הערות</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for history in payment.paymentHistories %}
+
+                                            <tr>
+                                                <td>{{ history.endPaymentDate|date('d/m/Y') }}</td>
+                                                <td>{{ history.paymentDate|date('d/m/Y') }}</td>
+                                                <td>{{ history.getFullData()|length > 0 and history.getFullData().amount ? history.getFullData().amount : history.payment.amount }}</td>
+                                                <td>{% if history.getFullData()|length > 0 %}
+                                                        <div class="title full-data hover-popup" title="Click for view full data from PayPal">
+                                                            <i class="dropdown icon"></i>
+                                                            מידע מטלפיי
+                                                        </div>
+                                                    {% endif %}</td>
+                                                <td>
+                                                    <div class="view">
+                                                        {{ history.note }}
+                                                    </div>
+                                                    <div class="edit hidden">
+                                                        <textarea class="noteEdit" history="{{ history.id }}">{{ history.note }}</textarea>
+                                                        <div class="ui green button ok">לשמור</div> <div class="ui grey button cn">ביטול</div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% if history.getFullData()|length > 0 %}
+                                                <tr class="hidden fullData">
+                                                    <td colspan="5">
+                                                        {% for key1, val1 in history.getFullData() %}
+                                                            <div class="ui left labeled button" tabindex="0">
+                                                                <div class="ui basic pointing right label">
+                                                                    {{ key1 }}
+                                                                </div>
+                                                                <a class="ui button">
+                                                                    {{ val1 }}
+                                                                </a>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    {% endif %}
+{#                {% endif %}#}
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="8">
+
+                </th>
+            </tr>
+            </tfoot>
+        </table>
+    {% elseif user.payments|length == 0 %}
+        למשתמש זה אין היסטוריית תשלומים
+    {% endif %}
+
+
+</div>
+<div class="right">
+    {% if user.isPaying %}
+        <div class="ui labeled icon button red small close removeSubscription">
+            <i class="inverted cancel basic icon"></i>
+            לבטל מנוי
+        </div>
+    {% endif %}
+</div>
+</div>

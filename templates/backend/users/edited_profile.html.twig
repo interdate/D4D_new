@@ -1,0 +1,598 @@
+<script>
+
+
+    $(document).ready(
+        function () {
+
+            $('#profile_one_admin_is_sent_email').removeAttr('required');
+
+        }
+    );
+
+
+</script>
+
+
+<h1 class="ui grey header right">
+    <i class="edit icon"></i>
+    <div class="content">
+        <span class="username">{{ user.username }}</span>
+        <div class="sub header">עריכת פרופיל</div>
+    </div>
+</h1>
+
+
+<div class="left close">
+    <i class="icon remove circle olive big " onclick="$.kfModal.close();"></i>
+</div>
+
+<div class="clear"></div>
+
+<div class="ui divider"></div>
+
+<div class="ui secondary menu">
+    <a class="item {% if tab == 1 %}active{% endif %}" data-tab="1">
+        {#<i class="sign in icon circular"></i>#}
+        פרטים
+    </a>
+    <a class="item {% if tab == 2 %}active{% endif %}" data-tab="2">
+        {#<i class="user icon circular"></i>#}
+        פרופיל
+    </a>
+    <a class="item {% if tab == 4 %}active{% endif %}" data-tab="3">
+        <i class="info icon circular"></i>
+            אדמין
+        </a>
+    <a class="item {% if tab == 5 %}active{% endif %}" data-tab="4">
+        <i class="info icon circular"></i>
+            שינוי סיסמה
+        </a>
+    {#    <a class="item {% if tab == 3 %}active{% endif %}" data-tab="3">
+            #}{#<i class="info icon circular"></i>#}{#
+            קצת עליי
+        </a>
+        <a class="item {% if tab == 4 %}active{% endif %}" data-tab="4">
+            #}{#<i class="info icon circular"></i>#}{#
+            אדמין
+        </a>
+        <a class="item {% if tab == 5 %}active{% endif %}" data-tab="5">
+            #}{#<i class="info icon circular"></i>#}{#
+            שינוי סיסמה
+        </a>#}
+</div>
+<div class="ui tab segment {% if tab == 1 %}active{% endif %}" data-tab="1">
+
+    {% set form = (edited_form != null and tab == 1) ? edited_form : form_1 %}
+
+    {% if form.username.vars.errors|length or form.email.vars.errors|length %}
+        <div class="errors">
+            <div class="ui red message">
+                <div class="content">
+                    <div class="header">
+                        יש להשלים את השדות הבאים
+                    </div>
+                    <p>
+
+                        {{ form_errors(form.username) }}
+                        {{ form_errors(form.email) }}
+
+
+                        {{ form_errors(form) }}
+
+                    </p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+    <form id="form_1" onsubmit="return false;">
+
+        <div class="ui form">
+
+            <div class="ui large horizontal label {% if form.username.vars.errors|length %}red{% else %}grey{% endif %}">{{ form_label(form.username) }}</div>
+            <div class="field {% if form.username.vars.errors|length %}error{% endif %}">
+                {{ form_widget(form.username) }}
+            </div>
+
+            <div class="ui large horizontal label {% if form.email.vars.errors|length %}red{% else %}grey{% endif %}">{{ form_label(form.email) }}</div>
+            <div class="field {% if form.email.vars.errors|length %}error{% endif %}">
+                {{ form_widget(form.email) }}
+                <div class="clear"></div>
+            </div>
+
+            {#<div class="field">#}
+            {#<div class="ui grey large horizontal label">{{ form_label(form.email.second) }}</div>#}
+            {#{{ form_widget(form.email.second) }}#}
+            {#</div>#}
+
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.phone) }}</div>
+                {{ form_widget(form.phone) }}
+                <div class="clear"></div>
+            </div>
+
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.gender) }}</div>
+                {{ form_widget(form.gender) }}
+                <div class="clear"></div>
+            </div>
+
+
+            {#
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.lookingGender) }}</div>
+                {{ form_widget(form.lookingGender) }}
+            </div>
+            #}
+
+            <div class="field birthday">
+                {% if user.gender.id == 2 %}
+                    <i class="male pink icon" data-position="top center" data-content="גבר"></i>
+                {% endif %}
+                <div class="ui grey large horizontal label">{{ form_label(form.birthday) }}</div>
+                <div class="clear"></div>
+                <div class="right">{{ form_widget(form.birthday.year) }}</div>
+                <div class="right">{{ form_widget(form.birthday.month) }}</div>
+                <div class="right">{{ form_widget(form.birthday.day) }}</div>
+                <div class="clear"></div>
+            </div>
+
+            {% if user.gender.id == 2 %}
+                <div class="field birthday">
+                    <i class="female pink icon" data-position="top center" data-content="אישה"></i>
+                    <div class="ui grey large horizontal label">{{ form_label(form.birthday1) }}</div>
+                    <div class="clear"></div>
+                    <div class="right">{{ form_widget(form.birthday1.year) }}</div>
+                    <div class="right">{{ form_widget(form.birthday1.month) }}</div>
+                    <div class="right">{{ form_widget(form.birthday1.day) }}</div>
+                    <div class="clear"></div>
+                </div>
+            {% endif %}
+
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.region) }}</div>
+                {{ form_widget(form.region) }}
+                <div class="clear"></div>
+            </div>
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.city) }}</div>
+                {{ form_widget(form.city) }}
+                <div class="clear"></div>
+            </div>
+            <div class="field">
+                <div class="ui large horizontal label grey"><label
+                            class="required">{{ form_label(form.isSentEmail) }}</label></div>
+                <div class="ui compact segment">
+                    <div class="ui slider fitted checkbox">
+                        {{ form_widget(form.isSentEmail) }}
+                        <label></label>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui large horizontal label grey"><label
+                            class="required">{{ form_label(form.isSentPush) }}</label></div>
+                <div class="ui compact segment">
+                    <div class="ui slider fitted checkbox">
+                        {{ form_widget(form.isSentPush) }}
+                        <label></label>
+                    </div>
+                </div>
+            </div>
+
+            <button class="ui labeled icon green large button left"
+                    onclick="saveProfile({{ user.id }}, $('#form_1'), 1);">
+                <i class="save icon"></i>
+                לשמור
+            </button>
+            <div class="clear"></div>
+            {{ form_rest(form) }}
+        </div>
+    </form>
+</div>
+<div class="ui tab segment {% if tab == 2 %}active{% endif %}" data-tab="2">
+
+    {% set form = (edited_form != null and tab == 2) ? edited_form : form_2 %}
+
+    <form id="form_2" onsubmit="return false;">
+
+        <div class="ui form">
+
+            <div class="field">
+                {% if user.gender.id == 2 %}
+                    <i class="female pink icon" data-position="top center" data-content="אישה"></i>
+                {% endif %}
+                <div class="ui grey large horizontal label">{{ form_label(form.height) }}</div>
+                {{ form_widget(form.height) }}
+            </div>
+
+
+            {% if user.gender.id == 2 %}
+                <div class="field">
+                    <i class="male pink icon" data-position="top center" data-content="גבר"></i>
+                    <div class="ui grey large horizontal label">{{ form_label(form.height1) }}</div>
+                    {{ form_widget(form.height1) }}
+                </div>
+            {% endif %}
+
+            <div class="field">
+                {% if user.gender.id == 2 %}
+                    <i class="female pink icon" data-position="top center" data-content="אישה"></i>
+                {% endif %}
+                <div class="ui grey large horizontal label">{{ form_label(form.weight) }}</div>
+                {{ form_widget(form.weight) }}
+            </div>
+
+            {% if user.gender.id == 2 %}
+                <div class="field">
+                    <i class="male pink icon" data-position="top center" data-content="גבר"></i>
+                    <div class="ui grey large horizontal label">{{ form_label(form.weight1) }}</div>
+                    {{ form_widget(form.weight1) }}
+                </div>
+            {% endif %}
+
+            <div class="field">
+                {% if user.gender.id == 2 %}
+                    <i class="female pink icon" data-position="top center" data-content="אישה"></i>
+                {% endif %}
+                <div class="ui grey large horizontal label">{{ form_label(form.hair) }}</div>
+                {{ form_widget(form.hair) }}
+            </div>
+
+            {% if user.gender.id == 2 %}
+                <div class="field">
+                    <i class="male pink icon" data-position="top center" data-content="גבר"></i>
+                    <div class="ui grey large horizontal label">{{ form_label(form.hair1) }}</div>
+                    {{ form_widget(form.hair1) }}
+                </div>
+            {% endif %}
+
+            <div class="field">
+                {% if user.gender.id == 2 %}
+                    <i class="female pink icon" data-position="top center" data-content="אישה"></i>
+                {% endif %}
+                <div class="ui grey large horizontal label">{{ form_label(form.hairStyle) }}</div>
+                {{ form_widget(form.hairStyle) }}
+            </div>
+
+            {% if user.gender.id == 2 %}
+                <div class="field">
+                    <i class="male pink icon" data-position="top center" data-content="גבר"></i>
+                    <div class="ui grey large horizontal label">{{ form_label(form.hairStyle1) }}</div>
+                    {{ form_widget(form.hairStyle1) }}
+                </div>
+            {% endif %}
+
+            <div class="field">
+                {% if user.gender.id == 2 %}
+                    <i class="female pink icon" data-position="top center" data-content="אישה"></i>
+                {% endif %}
+                <div class="ui grey large horizontal label">{{ form_label(form.eyes) }}</div>
+                {{ form_widget(form.eyes) }}
+            </div>
+
+            {% if user.gender.id == 2 %}
+                <div class="field">
+                    <i class="male pink icon" data-position="top center" data-content="גבר"></i>
+                    <div class="ui grey large horizontal label">{{ form_label(form.eyes1) }}</div>
+                    {{ form_widget(form.eyes1) }}
+                </div>
+            {% endif %}
+
+            <div class="field">
+                {% if user.gender.id == 2 %}
+                    <i class="female pink icon" data-position="top center" data-content="אישה"></i>
+                {% endif %}
+                <div class="ui grey large horizontal label">{{ form_label(form.body) }}</div>
+                {{ form_widget(form.body) }}
+            </div>
+
+            {% if user.gender.id == 2 %}
+                <div class="field">
+                    <i class="male pink icon" data-position="top center" data-content="גבר"></i>
+                    <div class="ui grey large horizontal label">{{ form_label(form.body1) }}</div>
+                    {{ form_widget(form.body1) }}
+                </div>
+            {% endif %}
+
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.relationshipStatus) }}</div>
+                {{ form_widget(form.relationshipStatus) }}
+            </div>
+
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.children) }}</div>
+                {{ form_widget(form.children) }}
+            </div>
+
+            <div class="field">
+                {% if user.gender.id == 2 %}
+                    <i class="male pink icon" data-position="top center" data-content="גבר"></i>
+                {% endif %}
+                <div class="ui grey large horizontal label">{{ form_label(form.countryOfOrigin) }}</div>
+                {{ form_widget(form.countryOfOrigin) }}
+            </div>
+
+            {% if user.gender.id == 2 %}
+                <div class="field">
+                    <i class="female pink icon" data-position="top center" data-content="אישה"></i>
+                    <div class="ui grey large horizontal label">{{ form_label(form.countryOfOrigin1) }}</div>
+                    {{ form_widget(form.countryOfOrigin1) }}
+                </div>
+            {% endif %}
+
+            <div class="field">
+                {% if user.gender.id == 2 %}
+                    <i class="female pink icon" data-position="top center" data-content="אישה"></i>
+                {% endif %}
+                <div class="ui grey large horizontal label">{{ form_label(form.ethnicity) }}</div>
+                {{ form_widget(form.ethnicity) }}
+            </div>
+
+            {% if user.gender.id == 2 %}
+                <div class="field">
+                    <i class="male pink icon" data-position="top center" data-content="גבר"></i>
+                    <div class="ui grey large horizontal label">{{ form_label(form.ethnicity1) }}</div>
+                    {{ form_widget(form.ethnicity1) }}
+                </div>
+            {% endif %}
+
+            <div class="field">
+                {% if user.gender.id == 2 %}
+                    <i class="female pink icon" data-position="top center" data-content="אישה"></i>
+                {% endif %}
+                <div class="ui grey large horizontal label">{{ form_label(form.sexPref) }}</div>
+                {{ form_widget(form.sexPref) }}
+            </div>
+
+            {% if user.gender.id == 2 %}
+                <div class="field">
+                    <i class="male pink icon" data-position="top center" data-content="גבר"></i>
+                    <div class="ui grey large horizontal label">{{ form_label(form.sexPref1) }}</div>
+                    {{ form_widget(form.sexPref1) }}
+                </div>
+            {% endif %}
+
+            <div class="field">
+                {% if user.gender.id == 2 %}
+                    <i class="female pink icon" data-position="top center" data-content="אישה"></i>
+                {% endif %}
+                <div class="ui grey large horizontal label">{{ form_label(form.experience) }}</div>
+                {{ form_widget(form.experience) }}
+            </div>
+
+            {% if user.gender.id == 2 %}
+                <div class="field">
+                    <i class="male pink icon" data-position="top center" data-content="גבר"></i>
+                    <div class="ui grey large horizontal label">{{ form_label(form.experience1) }}</div>
+                    {{ form_widget(form.experience1) }}
+                </div>
+            {% endif %}
+
+            <div class="field">
+                {% if user.gender.id == 2 %}
+                    <i class="female pink icon" data-position="top center" data-content="אישה"></i>
+                {% endif %}
+                <div class="ui grey large horizontal label">{{ form_label(form.smoking) }}</div>
+                {{ form_widget(form.smoking) }}
+            </div>
+
+            {% if user.gender.id == 2 %}
+            <div class="field">
+                <i class="male pink icon" data-position="top center" data-content="גבר"></i>
+                <div class="ui grey large horizontal label">{{ form_label(form.smoking1) }}</div>
+                {{ form_widget(form.smoking1) }}
+            </div>
+
+            {% endif %}
+
+            <div class="field">
+                {% if user.gender.id == 2 %}
+                    <i class="female pink icon" data-position="top center" data-content="אישה"></i>
+                {% endif %}
+                <div class="ui grey large horizontal label">{{ form_label(form.drinking) }}</div>
+                {{ form_widget(form.drinking) }}
+            </div>
+
+            {% if user.gender.id == 2 %}
+            <div class="field">
+                <i class="male pink icon" data-position="top center" data-content="גבר"></i>
+                <div class="ui grey large horizontal label">{{ form_label(form.drinking1) }}</div>
+                {{ form_widget(form.drinking1) }}
+            </div>
+            {% endif %}
+
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.lookingForGender) }}</div>
+                <div class="langchk checkdiv cf">
+                    {% for lookingForGender in form.lookingForGender %}
+                        <div class="chkinner checkbox_cont_1">
+                            <div class="ui checkbox">
+                                {{ form_widget(lookingForGender) }}
+                                {{ form_label(lookingForGender) }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.meetingTime) }}</div>
+                <div class="langchk checkdiv cf">
+                    {% for meetingTime in form.meetingTime %}
+                        <div class="chkinner checkbox_cont_1">
+                            <div class="ui checkbox">
+                                {{ form_widget(meetingTime) }}
+                                {{ form_label(meetingTime) }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="{{ form.about.vars.id }}">{{ form.about.vars.label|raw }}</label>
+                {{ form_widget(form.about) }}
+            </div>
+
+            <div class="field">
+                <label for="{{ form.looking.vars.id }}">{{ form.looking.vars.label|raw }}</label>
+                {{ form_widget(form.looking) }}
+            </div>
+
+
+            <div class="field">
+                <button class="ui labeled icon green large button left"
+                        onclick="saveProfile({{ user.id }}, $('#form_2'), 2);">
+                    <i class="save icon"></i>
+                    לשמור
+                </button>
+
+                <div class="clear"></div>
+
+                {{ form_rest(form) }}
+
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="ui tab segment {% if tab == 4 %}active{% endif %}" data-tab="3">
+
+    {% set form = (edited_form != null and tab == 4) ? edited_form : form_4 %}
+
+
+    <form id="form_4" onsubmit="return false;">
+
+        <div class="ui form">
+            {{ form_start(form) }}
+            <div class="field">
+                <div class="ui grey large horizontal label">
+                    {{ form_label(form.isOnHomepage) }}
+                </div>
+                <div class="ui compact segment">
+                    <div class="ui slider fitted checkbox">
+                        {{ form_widget(form.isOnHomepage) }}
+                        <label></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui grey large horizontal label">
+                    {{ form_label(form.isSentEmail) }}
+                </div>
+                <div class="ui compact segment">
+                    <div class="ui slider fitted checkbox">
+                        {{ form_widget(form.isSentEmail) }}
+                        <label></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui grey large horizontal label">
+                    {{ form_label(form.isSentPush) }}
+                </div>
+                <div class="ui compact segment">
+                    <div class="ui slider fitted checkbox">
+                        {{ form_widget(form.isSentPush) }}
+                        <label></label>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="ui horizontal divider header">
+                <i class="setting grey icon"></i>
+            </h4>
+
+            <br>
+
+
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.adminComments) }}</div>
+                {{ form_widget(form.adminComments) }}
+            </div>
+
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.banReason) }}</div>
+                {{ form_widget(form.banReason) }}
+            </div>
+
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.freezeReason) }}</div>
+                {{ form_widget(form.freezeReason) }}
+            </div>
+
+
+            <button class="ui labeled icon green large button left"
+                    onclick="saveProfile({{ user.id }}, $('#form_4'), 4);">
+                <i class="save icon"></i>
+                לשמור
+            </button>
+
+            <div class="clear"></div>
+
+            {{ form_rest(form) }}
+
+        </div>
+
+
+    </form>
+
+</div>
+
+<div class="ui tab segment {% if tab == 5 %}active{% endif %}" data-tab="4">
+
+    {% set form = (edited_form != null and tab == 5) ? edited_form : form_5 %}
+
+    <form id="form_5" onsubmit="return false;">
+        <div class="clear"></div>
+
+        {% if errors %}
+            <div class="errors">
+                <div class="ui red message">
+                    <div class="content">
+                        <div class="header">
+                            Please complete the fields below
+                        </div>
+                        <p>
+                            {{ form_errors(form.password.first) }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="ui form">
+
+            <div class="field">
+                <div class="ui grey large horizontal label">סיסמה</div>
+                {{ user.msEnter }}
+            </div>
+
+            <div class="field">
+                <div class="ui {% if form.password.first.vars.errors|length %}red{% else %}grey{% endif %} large horizontal label">{{ form_label(form.password.first) }}</div>
+                {{ form_widget(form.password.first) }}
+            </div>
+
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.password.second) }}</div>
+                {{ form_widget(form.password.second) }}
+            </div>
+
+            <button class="ui labeled icon green large button right"
+                    onclick="saveProfile({{ user.id }}, $('#form_5'), 5);">
+                <i class="save icon"></i>
+                Save
+            </button>
+
+            <div class="clear"></div>
+
+            {{ form_rest(form) }}
+
+        </div>
+    </form>
+</div>
+
+

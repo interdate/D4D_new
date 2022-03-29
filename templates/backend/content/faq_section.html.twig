@@ -1,0 +1,168 @@
+<h2 class="ui header right">
+    <i class="help icon"></i>
+    <div class="content">
+        שאלות ותשובות
+    </div>
+</h2>
+
+<div class="clear"></div>
+
+<div class="ui menu">
+    <a class="item {% if active_tab == 1 %}active{% endif %}" data-tab="1">
+        קטגוריות
+    </a>
+    <a class="item {% if active_tab == 2 %}active{% endif %}" data-tab="2">
+        שאלות
+    </a>
+    <a class="item" data-tab="3">
+        SEO
+    </a>
+
+</div>
+
+
+
+<div class="ui tab {% if active_tab == 1 %}active{% endif %}" data-tab="1">
+
+
+    <br>
+    <div class="ui one column centered grid">
+        <button class="ui labeled icon orange approve button left add_faq_cat">
+            <i class="add square icon"></i>
+            הוסף
+        </button>
+    </div>
+    <br>
+
+
+    <table class="ui basic celled table faq_categories">
+        <thead>
+        <tr>
+            <th>כותרת</th>
+            <th>פעיל</th>
+            <th>להסיר</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for category in faqCategories %}
+            <tr>
+                <td class="alignRight">
+                    <a class="edit_faq_cat category_name">{{ category.name }}</a>
+                    <input type="hidden" class="category_id" value="{{ category.id }}">
+                </td>
+
+                <td>
+                    <div class="ui checkbox toggle small">
+                        <input type="checkbox" {% if category.isActive %}checked="checked"{% endif %}>
+                        <label></label>
+                    </div>
+                </td>
+
+                <td>
+                    <i class="trash outline big link black icon circular delete"></i>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+</div>
+
+
+<div class="ui tab {% if active_tab == 2 %}active{% endif %}" data-tab="2">
+
+
+    <br>
+    <div class="ui one column centered grid">
+        <button class="ui labeled icon orange approve button left add_faq">
+            <i class="add square icon"></i>
+            הוסף
+        </button>
+    </div>
+    <br>
+
+
+    <div class="ui accordion">
+
+        {% for category in faqCategories %}
+            <div class="title faq_cat_{{ category.id }}" style="font-size: 1.1em;">
+                <i class="dropdown icon"></i>
+                {{ category.name }}
+            </div>
+
+            <div class="content faq_cat_{{ category.id }}" style="padding-right: 25px;">
+
+
+                <table class="ui very basic table faq">
+                    <tbody>
+                    {% for faq in category.faq %}
+                        <tr>
+                            <td class="alignRight">
+                                <a class="edit_faq faq_name">{{ faq.name }}</a>
+                                <input type="hidden" class="faq_id" value="{{ faq.id }}">
+                            </td>
+                            <td>
+                                <i class="trash outline large link black left icon circular delete"></i>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+
+
+
+                {#
+                <div class="ui ordered relaxed divided list faq" style="margin-right: 25px;">
+                    {% for faq in category.faq %}
+                        <a class="item edit_faq" id="faq_{{ faq.id }}">{{ faq.name }}</a>
+                        <div class="ui item left"><i class="ui icon trash"></i></div>
+                    {% endfor %}
+                </div>
+                #}
+
+            </div>
+
+        {% endfor %}
+
+
+
+
+    </div>
+
+
+
+</div>
+
+
+<div class="ui tab" data-tab="3">
+
+    <form class="ui form" id="faq_page_seo">
+        <div class="ui label">Title</div>
+        <div class="field">
+            <input type="text" name="title" value="{{ faqPageSeo.title }}">
+        </div>
+
+        <div class="ui label">Meta Description</div>
+        <div class="field">
+            <textarea name="description">{{ faqPageSeo.description }}</textarea>
+        </div>
+
+        <input type="hidden" name="page" value="{{ faqPageSeo.page }}">
+
+    </form>
+
+    <br><br>
+    <div class="ui one column centered grid">
+        <button class="ui labeled icon orange approve button right" onclick="updatePageSeo($('#faq_page_seo'));">
+            <i class="save icon"></i>
+            לשמור
+        </button>
+    </div>
+    <br><br>
+
+
+
+
+</div>

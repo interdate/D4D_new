@@ -1,0 +1,225 @@
+{% extends "frontend/layout.html.twig" %}
+
+{% block content %}
+
+    <!-- Mid Container -->
+    <div class="mid_content">
+        <div class="wrap">
+            <div class="inner_form left">
+                <div class="inner_form_top">
+                    <ul>
+                        <li {% if tab == 1 %}class="active"{% endif %}><a href="{{ path('user_profile', {'tab': 1}) }}"><span class="fnumber profileSpan">1</span><span class="ftext">{% trans %}General{% endtrans %}</span></a></li>
+                        <li {% if tab == 2 %}class="active"{% endif %}><a href="{{ path('user_profile', {'tab': 2}) }}"><span class="fnumber profileSpan">2</span><span class="ftext">{% trans %}Profile{% endtrans %}</span></a></li>
+                        <li {% if tab == 3 %}class="active"{% endif %}><a href="{{ path('user_profile', {'tab': 3}) }}"><span class="fnumber profileSpan">3</span><span class="ftext">{% trans %}About Me{% endtrans %}</span></a></li>
+                        <li {% if tab == 4 %}class="active"{% endif %}><a href="{{ path('user_profile', {'tab': 4}) }}"><span class="fnumber profileSpan">4</span><span class="ftext">{% trans %}Photos{% endtrans %}</span></a></li>
+                    </ul>
+                    <div class="clr"></div>
+                </div>
+
+                <form action="{{ path('user_profile', {'tab': tab}) }}" method="post" id="profile_form">
+
+                    <input type="hidden" id="form_helper_url" value="{{ path('user_profile_helper') }}">
+
+                    {% if form is defined %}
+                        {{ include ('frontend/user/profile/' ~ tab ~ '.html.twig', {'form': form}) }}
+                        {{ form_rest(form) }}
+                    {% else %}
+                        {{ include ('frontend/user/profile/' ~ tab ~ '.html.twig') }} {#, {'renderedCloudForm': renderedCloudForm}#}
+                    {% endif %}
+
+                    <input type="submit" id="save_data" class="hidden">
+                </form>
+
+            </div>
+        </div>
+
+        {% if tab != 4 %}
+            <div class="clr"></div><input type="button" value="Save" class="right" onclick="$('#save_data').click();" style="margin-top: 15px;">
+        {% endif %}
+
+    </div>
+
+    <script>
+        function b64toBlob(b64Data, contentType, sliceSize) {
+            contentType = contentType || '';
+            sliceSize = sliceSize || 512;
+
+            var byteCharacters = atob(b64Data);
+            var byteArrays = [];
+
+            for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+                var byteNumbers = new Array(slice.length);
+                for (var i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+
+                var byteArray = new Uint8Array(byteNumbers);
+
+                byteArrays.push(byteArray);
+            }
+
+            var blob = new Blob(byteArrays, {type: contentType});
+            return blob;
+        }
+
+
+
+        var scrollUpload = '';
+        function pageInit(){
+
+            if($('.nymain_mobile #save_photo_url').size()){
+                scrollUpload = $('.criteriot').last().offset().top;
+                var formId = '#profile_form';
+
+                $(formId).removeAttr('action');
+
+                var file;
+                var url;
+                var ImageURL;
+                $('#photo').change(function(e){
+                    var target = e.dataTransfer || e.target;
+                    file = target && target.files && target.files[0];
+                    loadImage(
+                        file,
+                        function (img) {
+                            if (!(img.src || img instanceof HTMLCanvasElement)) {
+
+                            }else {
+                                var canvas = loadImage.scale(img, {maxWidth: 1000, orientation: true, canvas: true});
+                                ImageURL = canvas.toDataURL();
+                                //window.location.href = canvas.toDataURL();
+                                //window.open(ImageURL,'_blank')
+                                var block = ImageURL.split(";");
+                                // Get the content type
+                                var contentType = block[0].split(":")[1];// In this case "image/gif"
+                                // get the real base64 content of the file
+                                var realData = block[1].split(",")[1];// In this case "iVBORw0KGg...."
+
+                                // Convert to blob
+                                //url = b64toBlob(realData, contentType);
+
+                                var blob = b64toBlob(realData, contentType);
+                                url = URL.createObjectURL(blob);
+
+                                //$('#file_url').val(url);
+                                $('#my-photos').append('<div class="photo_field cf photo notLoad"><div class="div1"><img alt="" src="'+url+'"></div><div class="div2"><span>{% trans %}Main Photo{% endtrans %}</span> <div class="ui toggle checkbox mainPhoto" style="z-index: -1;"><input type="radio" name="radio" value=""><label></label></div></div><div class="div3"><span>{% trans %}Status{% endtrans %}</span><p>{% trans %}Waiting for approval{% endtrans %}</p></div><div class="div4"><a href="#" class="removePhoto" id="none">{% trans %}Delete{% endtrans %}</a></div></div>');
+                                $('html, body').trigger('refresh');
+                                $('#file_url').val(realData);
+                                $('#photo').closest('form').find('input[type="submit"]').first().click();
+
+                                scrollUpload += 253;
+                                //setTimeout(function () {
+                                    //$('html, body').scrollTo(scrollUpload - 300);
+                                    //$( 'html, body' ).scrollTo( scrollUpload - 300 );
+                                $('html, body').stop().animate({
+                                    scrollTop: scrollUpload - 300
+                                }, 500);
+                                //},700);
+
+                            }
+                        },
+                        {orientation: true} // Options
+                    );
+                    $('.ui.progress').show();
+                    //setTimeout(function () {
+                        //$('#photo').closest('form').find('input[type="submit"]').first().click();
+                    //},500);
+
+                });
+
+
+
+                $(formId).ajaxForm({
+                    url: $('#save_photo_url').val(),
+                    beforeSend: function() {
+                        $('.ui.progress').show();
+                    },
+                    uploadProgress: function(event, position, total, percentComplete) {
+                        //var value = Math.round((data.loaded * 100.0) / data.total);
+                        $('.ui.progress').progress({
+                            percent: percentComplete,
+                        });
+
+                        $('#upload_photo_label span').text(percentComplete);
+
+                        if(percentComplete == 100){
+                            //$('.ui.progress').hide();
+                            //$('#global_dimmer').removeClass("disabled").find('.loader').removeClass("disabled");
+
+                        }
+                    },
+                    success: function(data) {
+                        //window.location.href = $('#photos_url').val();
+                        $('.ui.progress').hide();
+                        $('#global_dimmer').addClass("disabled").find('.loader').addClass("disabled");
+                        $('#my-photos .photo_field').last().removeClass('notLoad').find('.removePhoto').attr('id', data);
+                        $('.removePhoto').click(function(e){
+                            e.preventDefault();
+                            //scrollUpload -= 240;
+                            var id = $(this).attr("id");
+                            var node = $(this).parents('.photo');
+
+                            $('.ui.basic.modal')
+                                .modal({
+                                    closable: true,
+                                    onApprove : function() {
+                                        deletePhoto(id, node);
+                                    }
+                                })
+                                .modal('show')
+                            ;
+                        });
+                        //$('#my-photos').trigger('refresh');
+
+                    },
+                    complete: function(xhr) {
+                        //status.html(xhr.responseText);
+                    }
+
+                });
+
+                $('.removePhoto').click(function(e){
+                    e.preventDefault();
+                    //scrollUpload -= 240;
+                    var id = $(this).attr("id");
+                    var node = $(this).parents('.photo');
+
+                    $('.ui.basic.modal')
+                            .modal({
+                                closable: true,
+                                onApprove : function() {
+                                    deletePhoto(id, node);
+                                }
+                            })
+                            .modal('show')
+                    ;
+                });
+
+
+                $('.mainPhoto.ui.checkbox.toggle').checkbox({
+                    onChecked: function(){
+                        setMainPhoto($(this));
+                    }
+                });
+            }
+        }
+        jQuery(window).load(function () {
+            pageInit();
+        });
+    </script>
+{% endblock %}
+
+
+
+
+{% block mobile_content %}
+    <div class="nymain_mobile">
+        <div class="mid_content">
+
+        </div>
+    </div>
+{% endblock %}
+
+

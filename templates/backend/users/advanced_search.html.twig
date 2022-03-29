@@ -1,0 +1,298 @@
+{% extends "backend/layout.html.twig" %}
+
+{% block content %}
+
+    {{ include('backend/header.html.twig', { 'header': 'ניהול משתמשים', 'icon': 'users' }) }}
+
+    <div class="page_content">
+
+        <div class="ui segment left advanced_search">
+
+            <h2 class="ui header">
+                <i class="search icon"></i>
+                <div class="content">
+                    חיפוש מתקדם
+                </div>
+            </h2>
+
+
+            <form action="{{ path('admin_users', {'filter':'search'}) }}" method="post" id="advanced_search_form">
+
+                <div class="ui form">
+
+					<a class="ui orange big ribbon label">{{ form_label(form.gender) }}</a>
+                    <div class="block">
+                        {% for gender in form.gender %}
+                            <div class="ui checkbox four">
+                                {{ form_widget(gender) }}
+                                {{ form_label(gender) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.region) }}</a>
+                    <div class="block">
+                        {% for region in form.region %}
+                            <div class="ui checkbox four">
+                                {{ form_widget(region) }}
+                                {{ form_label(region) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <a class="ui orange big ribbon label"><span class="hidden she"></span>{{ form_label(form.ageFrom) }}</a>
+                    <div class="block">
+                        <div class="right pair">{{ form_widget(form.ageFrom) }}</div>
+                        <div class="right pair"> עד-</div>
+                        <div class="right pair">{{ form_widget(form.ageTo) }}</div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <div class="hidden age1">
+                        <a class="ui orange big ribbon label"><span class="hidden he"></span>{{ form_label(form.ageFrom1) }}</a>
+                        <div class="block">
+                            <div class="right pair">{{ form_widget(form.ageFrom1) }}</div>
+                            <div class="right pair"> עד-</div>
+                            <div class="right pair">{{ form_widget(form.ageTo1) }}</div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+
+                    <a class="ui orange big ribbon label">גובה</a>
+                    <div class="block">
+                        <div class="right pair">{{ form_widget(form.heightFrom) }}</div>
+                        <div class="right pair"> עד-</div>
+                        <div class="right pair">{{ form_widget(form.heightTo) }}</div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.body) }}</a>
+                    <div class="block">
+                        {% for body in form.body %}
+                            <div class="ui checkbox four">
+                                {{ form_widget(body) }}
+                                {{ form_label(body) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.relationshipStatus) }}</a>
+                    <div class="block">
+                        {% for relationshipStatus in form.relationshipStatus %}
+                            <div class="ui checkbox four">
+                                {{ form_widget(relationshipStatus) }}
+                                {{ form_label(relationshipStatus) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+{#                    <a class="ui orange big ribbon label">{{ form_label(form.relationshipType) }}</a>#}
+{#                    <div class="block">#}
+{#                        {% for relationshipType in form.relationshipType %}#}
+{#                            <div class="ui checkbox four">#}
+{#                                {{ form_widget(relationshipType) }}#}
+{#                                {{ form_label(relationshipType) }}#}
+{#                            </div>#}
+{#                        {% endfor %}#}
+{#                    </div>#}
+
+{#                    <a class="ui orange big ribbon label">{{ form_label(form.sexOrientation) }}</a>#}
+{#                    <div class="block">#}
+{#                        {% for sexOrientation in form.sexOrientation %}#}
+{#                            <div class="ui checkbox three">#}
+{#                                {{ form_widget(sexOrientation) }}#}
+{#                                {{ form_label(sexOrientation) }}#}
+{#                            </div>#}
+{#                        {% endfor %}#}
+{#                    </div>#}
+
+{#                    <a class="ui orange big ribbon label"> כאן {{ form_label(form.lookingFor) }}</a>#}
+{#                    <div class="block">#}
+{#                        {% for lookingFor in form.lookingFor %}#}
+{#                            <div class="ui checkbox three">#}
+{#                                {{ form_widget(lookingFor) }}#}
+{#                                {{ form_label(lookingFor) }}#}
+{#                            </div>#}
+{#                        {% endfor %}#}
+{#                    </div>#}
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.smoking) }}</a>
+                    <div class="block">
+                        {% for smoking in form.smoking %}
+                            <div class="ui checkbox four">
+                                {{ form_widget(smoking) }}
+                                {{ form_label(smoking) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+{#                    <a class="ui orange big ribbon label">{{ form_label(form.origin) }}</a>#}
+{#                    <div class="block">#}
+{#                        {% for origin in form.origin %}#}
+{#                            <div class="ui checkbox four">#}
+{#                                {{ form_widget(origin) }}#}
+{#                                {{ form_label(origin) }}#}
+{#                            </div>#}
+{#                        {% endfor %}#}
+{#                    </div>#}
+
+                    <a class="ui orange big ribbon label">  {{ form_label(form.zodiac) }}</a>
+                    <div class="block">
+                        {% for zodiac in form.zodiac %}
+                            <div class="ui checkbox four">
+                                {{ form_widget(zodiac) }}
+                                {{ form_label(zodiac) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.loginFrom) }}</a>
+                    <div class="block">
+                        {% for loginFrom in form.loginFrom %}
+                            <div class="ui checkbox three">
+                                {{ form_widget(loginFrom) }}
+                                {{ form_label(loginFrom) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.isActive) }}</a>
+                    <div class="block">
+                        <div class="right pair">{{ form_widget(form.isActive) }}</div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.isActivated) }}</a>
+                    <div class="block">
+                        <div class="right pair">{{ form_widget(form.isActivated) }}</div>
+                        <div class="clear"></div>
+                    </div>
+
+{#                    <a class="ui orange big ribbon label">{{ form_label(form.isVerify) }}</a>#}
+{#                    <div class="block">#}
+{#                        <div class="right pair">{{ form_widget(form.isVerify) }}</div>#}
+{#                        <div class="clear"></div>#}
+{#                    </div>#}
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.isFrozen) }}</a>
+                    <div class="block">
+                        <div class="right pair">{{ form_widget(form.isFrozen) }}</div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.isPaying) }}</a>
+                    <div class="block">
+                        <div class="right pair">{{ form_widget(form.isPaying) }}</div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.hasPoints) }}</a>
+                    <div class="block">
+                        <div class="right pair">{{ form_widget(form.hasPoints) }}</div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.isPhoto) }}</a>
+                    <div class="block">
+                        <div class="right pair">{{ form_widget(form.isPhoto) }}</div>
+                        <div class="clear"></div>
+                    </div>
+
+{#                    <a class="ui orange big ribbon label">{{ form_label(form.isPhone) }}</a>#}
+{#                    <div class="block">#}
+{#                        <div class="right pair">{{ form_widget(form.isPhone) }}</div>#}
+{#                        <div class="clear"></div>#}
+{#                    </div>#}
+
+
+
+
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.startSubscriptionFrom) }}</a>
+                    <div class="block">
+                        <div class="right pair calendar date_from">{{ form_widget(form.startSubscriptionFrom) }}</div>
+                        <div class="right pair"> עד-</div>
+                        <div class="right pair calendar date_to">{{ form_widget(form.startSubscriptionTo) }}</div>
+                        <div class="left pair period">
+                            {{ include('backend/users/select_period.html.twig') }}
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.endSubscriptionFrom) }}</a>
+                    <div class="block">
+                        <div class="right pair calendar date_from">{{ form_widget(form.endSubscriptionFrom) }}</div>
+                        <div class="right pair"> עד-</div>
+                        <div class="right pair calendar date_to">{{ form_widget(form.endSubscriptionTo) }}</div>
+                        <div class="left pair period">
+                            {{ include('backend/users/select_period.html.twig') }}
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.signUpFrom) }}</a>
+                    <div class="block">
+                        <div class="right pair calendar date_from">{{ form_widget(form.signUpFrom) }}</div>
+                        <div class="right pair"> עד-</div>
+                        <div class="right pair calendar date_to">{{ form_widget(form.signUpTo) }}</div><div class="left pair period">
+                            {{ include('backend/users/select_period.html.twig') }}
+                        </div>
+
+                        <div class="clear"></div>
+                    </div>
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.lastVisitedFrom) }}</a>
+                    <div class="block">
+                        <div class="right pair calendar date_from">{{ form_widget(form.lastVisitedFrom) }}</div>
+                        <div class="right pair"> עד-</div>
+                        <div class="right pair calendar date_to">{{ form_widget(form.lastVisitedTo) }}</div>
+                        <div class="left pair period">
+                            {{ include('backend/users/select_period.html.twig') }}
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.ip) }}</a>
+                    <div class="block">
+                        <div class="right pair">{{ form_widget(form.ip) }}</div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <a class="ui orange big ribbon label">{{ form_label(form.phone_is) }}</a>
+                    <div class="block">
+                        <div class="right pair">{{ form_widget(form.phone_is) }}</div>
+                        <div class="clear"></div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="buttonCont">
+                    <div class="ui one column centered grid">
+                        {{ form_widget(form.filter) }}
+                        <button class="ui red huge button" onclick="$(this).siblings('input[type=submit]').click();">חפשו</button>
+                        <input type="submit" class="hidden">
+                    </div>
+                </div>
+
+
+
+
+
+            </form>
+
+
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+{% endblock %}

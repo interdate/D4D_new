@@ -1,0 +1,47 @@
+{% extends "frontend/main_layout.html.twig" %}
+
+{% block container %}
+
+    <style>
+        .mid_title{
+            margin: 0px auto 30px;
+            width: calc(100% - 26px);
+        }
+
+
+        @media all and (max-width: 767px) {
+            .mid_title{
+                width: 100%;
+            }
+        }
+
+        @media all and (max-width: 640px) {
+            .mid_title {
+                margin-top: -130px;
+            }
+        }
+
+    </style>
+    <div class="inner_content">
+        <div class="wrap">
+            <div class="mid_title">
+                <h1>{{ title }}</h1>
+            </div>
+
+            <div class="inner_form">
+
+
+                <div class="inner_form_bot">
+                    <div class="main_form">
+
+                        <div class="ui{{ (error_pay == '0') ? ' olive' : ' red' }} tiny message">{{ message }}</div>
+                        <div class="div4" style="padding: 0px;">
+                            <a href="{{ (link == '') ? path('homepage') : link }}"{% if link != '' %} target="_blank" {% endif %}>{% trans %}כניסה{% endtrans %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

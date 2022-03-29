@@ -1,0 +1,146 @@
+{% extends "frontend/layout.html.twig" %}
+
+{% block title %}
+	{{ parent() }} - {% trans %}Notifications{% endtrans %}
+{% endblock %}
+
+{% block content %}
+
+	<!-- Mid Container -->
+	<div class="mid_content">
+		<div class="mid_title"><h3>{% trans %}Notifications{% endtrans %}</h3></div>
+		<div class="arena_text">
+			<p>{% trans %}This is the place where you can learn who liked your photo on The Arena.{% endtrans %}</p>
+			<p>{% trans %}If someone you like likes you back - both of you will receive a Bingo! notification.{% endtrans %}</p>
+		</div>
+		{% if app.user.notifications|length > 0 %}
+		<div class="nf_div">
+			<div class="nf_divinner">
+				<div class="ui top attached tabular menu">
+					<a class="item active" data-tab="like">Like</a>
+					<a class="item" data-tab="bingo">Bingo</a>
+				</div>
+				<div class="ui bottom attached tab segment active" data-tab="like">
+					<ul class="nful">
+                        {% set hasLike = 0 %}
+                        {% for notification in app.user.notifications %}
+							{% if notification.likeMe.isBingo == 0 %}
+								{% set hasLike = 1 %}
+								{% if notification.likeMe.userFrom.id == app.user.id %}
+									{% set send_user = notification.likeMe.userTo %}
+								{% else %}
+									{% set send_user = notification.likeMe.userFrom %}
+								{% endif %}
+								<li{% if notification.isRead %} class="bingoli"{% endif %} notif_id="{{ notification.id }}" user_id="{{ send_user.id }}">
+									<div class="lidiv cf">
+										<div class="lidiv_left cf">
+											<div class="lileft_img"><a href="#"><img alt="{{ send_user.username }}" src="{% if send_user.getMainPhoto is not null %}{{ send_user.getMainPhoto.getFaceWebPath }}{% else %}{{ send_user.getNoPhoto }}{% endif %}" /></a></div>
+											<div class="lileft_text"><h4><a href="#">{{ send_user.username }}</a></h4><p>{{ notification.notification.template|replace({'[USERNAME]':send_user.username}) }}</p></div>
+										</div>
+										<div class="lidiv_right">
+											<span class="lidate">{{ notification.date|date("d F Y") }}</span>
+										</div>
+									</div>
+								</li>
+                            {% endif %}
+						{% endfor %}
+
+						{% if hasLike == 0 %}
+							<div class="no-result ui message info"><div style="margin: 0 auto; width: 130px;"><i class="child icon left"></i>{% trans %}No Results{% endtrans %}</div></div>
+                        {% endif %}
+					</ul>
+				</div>
+				<div class="ui bottom attached tab segment" data-tab="bingo">
+					<ul class="nful">
+                        {% set hasBingo = 0 %}
+                        {% for notification in app.user.notifications %}
+                            {% if notification.likeMe.isBingo %}
+                                {% set hasBingo = 1 %}
+								{% if notification.likeMe.userFrom.id == app.user.id %}
+									{% set send_user = notification.likeMe.userTo %}
+								{% else %}
+									{% set send_user = notification.likeMe.userFrom %}
+								{% endif %}
+								<li{% if notification.isRead %} class="bingoli"{% endif %} notif_id="{{ notification.id }}" user_id="{{ send_user.id }}">
+									<div class="lidiv cf">
+										<div class="lidiv_left cf">
+											<div class="lileft_img"><a href="#"><img alt="{{ send_user.username }}" src="{% if send_user.getMainPhoto is not null %}{{ send_user.getMainPhoto.getFaceWebPath }}{% else %}{{ send_user.getNoPhoto }}{% endif %}" /></a></div>
+											<div class="lileft_text"><h4><a href="#">{{ send_user.username }}</a></h4><p>{{ notification.notification.template|replace({'[USERNAME]':send_user.username}) }}</p></div>
+										</div>
+										<div class="lidiv_right">
+											<span class="lidate">{{ notification.date|date("d F Y") }}</span>
+												<div class="bingoimg"><img alt="bingo" src="/images/bingoimg.png" /></div>
+										</div>
+									</div>
+								</li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if hasBingo == 0 %}
+							<div class="no-result ui message info"><div style="margin: 0 auto; width: 130px;"><i class="child icon left"></i>{% trans %}No Results{% endtrans %}</div></div>
+                        {% endif %}
+					</ul>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+	</div>
+	<input type="hidden" id="dialog_link" value="{{ path('messenger_dialog_open',{'userId': app.user.id, 'contactId': 'CONTACTID'}) }}"/>
+	<input type="hidden" id="read_notif_link" value="{{ path('user_notification_read',{'id': 'NOTIFID'}) }}"/>
+	<!-- Mid Container End -->
+
+
+	<script>
+        $('.menu .item')
+            .tab()
+        ;
+		function pageInit(){
+            $('.menu .item')
+                .tab()
+            ;
+			$('.nful li').click(function () {
+				var link = $('#dialog_link').val();
+				var elem = $(this);
+				if(!$(this).hasClass('bingoli')){
+					var url = $('#read_notif_link').val();
+					$.ajax({
+						url: url.replace("NOTIFID", $(this).attr('notif_id')),
+						type: "POST",
+						dataType: "json",
+						success: function (data) {
+							//alert(data);
+							elem.addClass('bingoli');
+							if (elem.find('.bingoimg').size()) {
+								window.location.href = link.replace("CONTACTID", elem.attr('user_id'));
+							} else {
+                                $('.arena_count').html(parseInt($('.nmobile_footer .arena_count').text()) - 1);
+								openPopup(elem.attr('user_id'));
+							}
+						}
+					});
+
+				}else {
+					if (elem.find('.bingoimg').size()) {
+						window.location.href = link.replace("CONTACTID", elem.attr('user_id'));
+					} else {
+						openPopup(elem.attr('user_id'));
+					}
+				}
+			});
+		}
+		$(window).load(function () {
+			pageInit();
+		});
+	</script>
+{% endblock %}
+
+
+
+
+{% block mobile_content %}
+	<div class="nymain_mobile">
+		<div class="mid_content">
+
+		</div>
+	</div>
+{% endblock %}

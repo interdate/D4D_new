@@ -1,0 +1,47 @@
+{% set settings = getSettings() %}
+{% set minutesNumberConsideredAsOnline = settings.userConsideredAsOnlineAfterLastActivityMinutesNumber %}
+{% set daysNumberConsideredAsNew = settings.getUserConsideredAsNewAfterDaysNumber %}
+
+{% if users|length == 0 %}
+    <div class="no-result ui message info"><div style="margin: 0 auto; width: 130px;"><i class="child icon left"></i>{% trans %}No Results{% endtrans %}</div></div>
+{% endif %}
+
+{% for user in users %}
+
+    {% set url = app.request.attributes.get('_route') == 'users_public_list' ? path('users_public_list_user', {'id': user.id}) : path('sign_up') %}
+
+    <div class="new-msec user-section">
+
+        <input type="hidden" class="userId" value="{{ user.id }}">
+        <input type="hidden" class="userGenderId" value="{{ user.gender.id }}">
+
+        <div class="new-msec-top clearfix">
+            <div class="new-msec-img{% if not user.isPaying %} no_after{% endif %}">
+                <a href="{{ path('users_public_list_user', {'id': user.id}) }}">
+                    <img src="{% if user.getMainPhoto is not null %}{{ user.getMainPhoto.getFaceWebPath }}{% else %}{{ user.getNoPhoto }}{% endif %}" alt="member">
+                </a>
+            </div>
+            <div class="new-msec-dtl">
+                <h5><span{% if not user.isNew(daysNumberConsideredAsNew) %} class="no_after"{% endif %}><a href="{{ path('sign_up') }}">{{ user.username }}</a></span></h5>
+                <div class="send-btn"><a href="{{ path('sign_up') }}"><span>{% trans %}Send Message{% endtrans %}</span></a></div>
+                <div class="clr"></div>
+                <p>{{ user.age }}</p>
+                <p>{{ user.zipCode.area.region.name }}</p>
+                <p class="pd">{{ user.about|length > 50 ? user.about|slice(0, 50) ~ '...' : user.about  }}</p>
+            </div>
+        </div>
+        <div class="profile-nav">
+            <ul>
+                <li><a href="{{ path('sign_up') }}">{% trans %}Send Message{% endtrans %}</a></li>
+                <li><a href="{{ path('users_public_list_user', {'id': user.id}) }}">{% trans %}Full Profile{% endtrans %}</a></li>
+                <li><a href="{{ path('sign_up') }}">{% trans %}Like{% endtrans %}</a></li>
+                <li><a class="add_to_fav" href="{{ path('sign_up') }}">{% trans %}Add to Favorites{% endtrans %}</a></li>
+                <li><a class="add_to_black_list" href="{{ path('sign_up') }}">{% trans %}Block{% endtrans %}</a></li>
+                {% if user.isOnline(minutesNumberConsideredAsOnline) %}
+                    <li class="icon"><a href="path('sign_up')">{% trans %}Online{% endtrans %}</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+{% endfor %}
+

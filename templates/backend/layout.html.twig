@@ -1,0 +1,589 @@
+{% extends 'base.html.twig' %}
+
+{% set globalSeo = getSeo() %}
+{% block title %}{{ globalSeo.title|raw }} - Control Panel{% endblock %}
+
+{% block stylesheets %}	
+	<link rel="stylesheet" href="{{ asset('libs/semantic/dist/semantic.rtl.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('libs/perfect-scrollbar/css/perfect-scrollbar.css') }}">
+	<link rel="stylesheet" href="{{ asset('libs/jquery-modal/jquery.modal.css') }}">
+	<link rel="stylesheet" href="{{ asset('libs/jquery-ui/css/cupertino/jquery-ui-1.10.4.custom.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/admin.css') }}" />
+{% endblock %}
+
+
+{% block js %}
+
+	<script src="{{ asset('libs/jquery/jquery-2.1.4.min.js') }}"></script>	
+	<script src="{{ asset('libs/semantic/dist/semantic.min.js') }}"></script>
+	<script src="{{ asset('libs/jquery-modal/jquery.modal.min.js') }}"></script>
+
+	{#<script src="{{ asset('libs/cloudinary/jquery.ui.widget.js') }}"></script>#}
+	{#<script src="{{ asset('libs/cloudinary/jquery.iframe-transport.js') }}"></script>#}
+	{#<script src="{{ asset('libs/cloudinary/jquery.fileupload.js') }}"></script>#}
+	{#<script src="{{ asset('libs/cloudinary/jquery.cloudinary.js') }}"></script>#}
+
+	<script src="{{ asset('libs/perfect-scrollbar/js/min/perfect-scrollbar-with-mousewheel.min.js') }}"></script>
+	<script src="{{ asset('libs/jquery-ui/js/jquery-ui-1.10.4.custom.min.js') }}"></script>
+
+	<script src="{{ asset('js/admin.js?p=13') }}"></script>
+	<script src="{{ asset('js/list.min.js') }}"></script>
+	
+{% endblock %}
+
+
+{% block body %}
+
+	{% set routeArr = app.request.get('_route')|split('_') %}
+	{% set parentPageName = routeArr[1] %}
+
+	
+	<div id="wrapper">
+		<div id="main_menu">
+			<a href="{{ path('admin_users') }}">
+				<div class="item green {% if parentPageName == 'users' or parentPageName == 'search' %}active{% endif %}">
+					<i class="users icon"></i>
+					משתמשים
+				</div>
+			</a>
+			<a href="{{ path('admin_messenger') }}">
+				<div class="item violet {% if parentPageName == 'messenger'%}active{% endif %}">
+					<i class="chat icon"></i>
+					הודעות
+				</div>
+			</a>
+			<a href="{{ path('admin_content') }}">
+				<div class="item orange {% if parentPageName == 'content'%}active{% endif %}">
+					<i class="text file icon"></i>
+					תוכן
+				</div>
+			</a>
+			<a href="{{ path('admin_magazine') }}">
+				<div class="item pink {% if parentPageName == 'magazine'%}active{% endif %}">
+					<i class="newspaper icon"></i>
+					מגזין
+				</div>
+			</a>
+			<a href="{{ path('admin_settings') }}">
+				<div class="item red {% if parentPageName == 'settings'%}active{% endif %}">
+					<i class="settings icon"></i>
+					הגדרות
+				</div>
+			</a>
+			<div class="item-menu">
+				<a href="#" onclick="$(this).parent().find('.sub-menu').toggle();$(this).find('.item').toggleClass('active');return false;">
+					<div class="item brown{% if parentPageName == 'blocked'%} active{% endif %} {{ parentPageName }}" style="height: 115px;">
+						<i class="ordered list icon"></i>
+						Blocked<br>Lists
+					</div>
+				</a>
+				<div class="sub-menu">
+					<a href="{{ path('admin_blocked_lists_list', {list: 'PhoneBlocked'}) }}"> {#/sonata-admin/app/phoneblocked/list#}
+						<div class="item brown" style="height: 115px;">
+							<i class="call icon"></i>
+							Blocked<br>Phones
+						</div>
+					</a>
+					<a href="{{ path('admin_blocked_lists_list', {list: 'EmailBlocked'}) }}">{#/sonata-admin/app/emailblocked/list#}
+						<div class="item brown" style="height: 115px;">
+							<i class="mail outline icon"></i>
+							Blocked<br>Emails
+						</div>
+					</a>
+					<a href="{{ path('admin_blocked_lists_list', {list: 'WordBlocked'}) }}"> {#/sonata-admin/app/wordblocked/list#}
+						<div class="item brown" style="height: 115px;">
+							<i class="write icon"></i>
+							Blocked<br>Words
+						</div>
+					</a>
+				</div>
+
+			</div>
+		</div>
+
+		<div id="main_container">
+			{% block content %}{% endblock %}
+		</div>
+
+
+
+
+		<div id="main_sidebar">
+			<a href="{{ path('user_homepage') }}" target="_blank"><div id="logo" class="ui orange column"
+				data-position="bottom center"
+				data-content="לאתר"></div>
+			</a>
+
+			<div class="scroll">
+
+
+				{% set sidebarForm = getAdminQuickSearchSidebarForm() %}
+
+				<div class="sidebarCont">
+
+
+
+
+					<div class="ui horizontal divider">
+						חיפוש
+						לפי שדות
+					</div>
+
+
+
+
+
+
+					<div class="ui form">
+
+						<form action="{{ path('admin_users', {'filter':'search'}) }}" method="post">
+							<div class="field">
+
+								<div class="ui action input">
+									{{ form_widget(sidebarForm.id) }}
+									<button class="ui green labeled icon button"
+											onclick="$(this).siblings('input[type=submit]').click();">
+										<i class="search icon"></i>
+										חפשו
+									</button>
+									<input type="submit" class="hidden">
+								</div>
+							</div>
+						</form>
+
+						<br>
+
+						<form action="{{ path('admin_users', {'filter':'search'}) }}" method="post">
+							<div class="field">
+
+								<div class="ui action input">
+									{{ form_widget(sidebarForm.msId) }}
+									<button class="ui violet labeled icon button"
+											onclick="$(this).siblings('input[type=submit]').click();">
+										<i class="search icon"></i>
+										חפשו
+									</button>
+									<input type="submit" class="hidden">
+								</div>
+							</div>
+						</form>
+
+						<br>
+
+						<form action="{{ path('admin_users', {'filter':'search'}) }}" method="post">
+							<div class="field">
+								<div class="ui action input">
+									{{ form_widget(sidebarForm.email) }}
+									<button class="ui red labeled icon button"
+											onclick="$(this).siblings('input[type=submit]').click();">
+										<i class="search icon"></i>
+										חפשו
+									</button>
+									<input type="submit" class="hidden">
+								</div>
+							</div>
+						</form>
+
+						<br>
+
+						<form action="{{ path('admin_users', {'filter':'search'}) }}" method="post">
+							<div class="field">
+								<div class="ui action input">
+									{{ form_widget(sidebarForm.username) }}
+									<button class="ui orange labeled icon button"
+											onclick="$(this).siblings('input[type=submit]').click();">
+										<i class="search icon"></i>
+										חפשו
+									</button>
+									<input type="submit" class="hidden">
+								</div>
+							</div>
+						</form>
+
+						<br>
+
+						<form action="{{ path('admin_users', {'filter':'search'}) }}" method="post">
+							<div class="field">
+								<div class="ui action input">
+									{{ form_widget(sidebarForm.phone) }}
+									<button class="ui blue labeled icon button"
+											onclick="$(this).siblings('input[type=submit]').click();">
+										<i class="search icon"></i>
+										חפשו
+									</button>
+									<input type="submit" class="hidden">
+								</div>
+							</div>
+						</form>
+
+					</div>
+
+
+					<div class="ui horizontal divider">
+						או
+					</div>
+
+
+
+
+					<form action="{{ path('admin_users', {'filter':'search'}) }}" method="post">
+
+
+						<div class="ui form small">
+
+							<div class="field">
+								<div class="ui black horizontal label">{{ form_label(sidebarForm.ageFrom) }}</div>
+								<div class="clear"></div><br>
+								<div class="age right">
+									{{ form_widget(sidebarForm.ageFrom) }}
+								</div>
+								<div class="age left">
+									{{ form_widget(sidebarForm.ageTo) }}
+								</div>
+							</div>
+
+							<div class="clear"></div>
+
+							<br>
+
+							<div class="field">
+								<div class="ui black horizontal label">{{ form_label(sidebarForm.region) }}</div>
+								<div class="clear"></div>
+								<br>
+
+								{% for region in sidebarForm.region %}
+									<div class="two col">
+										<div class="ui checkbox">
+											{{ form_widget(region) }}
+											{{ form_label(region) }}
+										</div>
+										<br>
+									</div>
+								{% endfor %}
+
+							</div>
+
+							<div class="clear"></div>
+							<br>
+
+							<div class="field">
+								{#<div class="ui black horizontal label">{{ form_label(sidebarForm.type) }}</div>#}
+								<div class="clear"></div>
+								<br>
+
+								{#{% for type in sidebarForm.type %}#}
+									{#<div class="two col">#}
+										{#<div class="ui checkbox type">#}
+											{#{{ form_widget(type) }}#}
+											{#{{ form_label(type) }}#}
+										{#</div>#}
+									{#</div>#}
+								{#{% endfor %}#}
+
+							</div>
+							<div class="clear"></div>
+							<br>
+
+
+
+							<button class="ui green big button left" onclick="$(this).siblings('input[type=submit]').click();">חפשו</button>
+							<input type="submit" class="hidden">
+
+							<div class="clear"></div>
+							<br>
+
+						</div>
+
+					</form>
+
+
+					<div class="ui horizontal divider">
+						או
+					</div>
+
+					<br>
+
+					<div class="ui one column centered grid" style="margin-bottom: 50px">
+						<a href="{{ path('admin_search_advanced') }}">
+							<button class="ui red tiny button">
+								{% trans %} חיפוש מתקדם {% endtrans %}
+							</button>
+						</a>
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+
+
+		<div class="clear"></div>
+	</div>
+
+
+
+
+	<div class="ui small basic modal delete_user">
+		<div class="ui icon header">
+			<i class="trash icon"></i>
+			להסיר?
+		</div>
+		<div class="content"><p></p></div>
+		<div class="ui center aligned grid">
+			<div class="actions">
+				<div class="ui red basic cancel inverted button">
+					<i class="remove icon"></i>
+					{% trans  %} No {% endtrans %}
+				</div>
+				<div class="ui green ok inverted button">
+					<i class="checkmark icon"></i>
+					{% trans %} Yes {% endtrans %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ui small modal ban_users_reason light_green">
+		<div class="ui icon small header">
+			<i class="pencil icon"></i>
+			{% trans %} הערות {% endtrans %}
+		</div>
+		<div class="content">
+			<div class="ui form">
+				<textarea></textarea>
+			</div>
+		</div>
+		<div class="actions">
+			{#<button class="ui green big button right" onclick="$(this).siblings('input[type=submit]').click();">חפשו</button>#}
+			<button class="ui labeled icon green approve large button right">
+				<i class="save icon"></i>
+				{% trans %} שמירה {% endtrans %}
+			</button>
+			<button class="ui labeled icon large cancel button right">
+				<i class="remove icon"></i>
+				{% trans %} ביטול {% endtrans %}
+			</button>
+			<div class="clear"></div>
+		</div>
+	</div>
+
+	<div class="ui small modal create_report light_green">
+		<div class="ui icon small header">
+			<i class="bar chart circular icon"></i>
+			יצירת דוח
+		</div>
+		<div class="content">
+			<form class="ui form">
+				<div class="field">
+					<label>שם הדוח</label>
+					<input type="text" name="name">
+				</div>
+				<div class="field">
+					<div class="ui slider checkbox">
+						<input type="checkbox" name="flagged" value="1">
+						<label>מופיע בעמוד הראשי</label>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="actions">
+			{#<button class="ui green big button right" onclick="$(this).siblings('input[type=submit]').click();">חפשו</button>#}
+			<button class="ui labeled icon green approve large button right">
+				<i class="save icon"></i>
+				לצור
+			</button>
+			<button class="ui labeled icon large cancel button right">
+				<i class="remove icon"></i>
+				לבטל
+			</button>
+			<div class="clear"></div>
+		</div>
+	</div>
+
+	<div class="ui small modal export light_green">
+		<div class="ui icon small header">
+			<i class="table circular olive icon"></i>
+			יצוא ל- CSV
+		</div>
+		<div class="content">
+			<form class="ui form">
+				<div class="field">
+					<label>שם הקובץ</label>
+					<input type="text" name="name">
+				</div>
+			</form>
+		</div>
+		<div class="actions">
+			{#<button class="ui green big button right" onclick="$(this).siblings('input[type=submit]').click();">חפשו</button>#}
+			<button class="ui labeled icon green approve large button right">
+				<i class="download icon"></i>
+				יצוא
+			</button>
+			<button class="ui labeled icon large cancel button right">
+				<i class="remove icon"></i>
+				ביטול
+			</button>
+			<div class="clear"></div>
+		</div>
+	</div>
+
+	<div class="ui small modal give_point light_green">
+		<div class="ui icon small header">
+			<i class="selected radio large grey icon"></i>
+			לתת נקודה
+		</div>
+		<div class="content"></div>
+		<div class="actions">
+			<button class="ui labeled icon green approve large button right give_to_all">
+				<i class="add user icon"></i>
+				לכל משתמש במערכת
+			</button>
+
+
+			<button class="ui labeled icon orange cancel large button left">
+				<i class="add user icon"></i>
+				למי שאין נקודות
+			</button>
+
+			<div class="clear"></div>
+
+
+		</div>
+
+	</div>
+
+
+{#
+	<div class="ui long small modal edit_user scrolling" id="edited_user_modal">
+		<i class="close icon"></i>
+		<h1 class="ui grey header">
+			<i class="edit icon"></i>
+			<div class="content">
+				<span class="username"></span>
+				<div class="sub header">עריכת פרופיל</div>
+			</div>
+		</h1>
+
+		<div class="content" id="edited_user_data">
+
+
+
+		</div>
+
+	</div>
+#}
+
+
+
+	<div class="hidden" id="edited_user_modal">
+
+		<div class="content" id="edited_user_data">
+
+
+
+		</div>
+
+	</div>
+
+	<div class="hidden" id="viewed_user_modal">
+
+		<div class="content" id="viewed_user_data">
+
+
+
+		</div>
+
+	</div>
+
+	<div class="hidden" id="user_photos_modal">
+
+		<div class="content" id="user_photos">
+
+			<div class="ui active dimmer inverted" id="user_photos_dimmer">
+				<div class="ui text large loader">טעינה</div>
+			</div>
+
+			<div class="photos">
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="hidden" id="subscr_modal">
+
+		<div class="content" id="subscr">
+
+
+
+		</div>
+
+	</div>
+
+
+	<div class="ui small basic modal delete_photo">
+		<div class="ui icon header">
+			<i class="trash icon"></i>
+			להסיר תמונה?
+		</div>
+		<div class="content"><p></p></div>
+		<div class="ui center aligned grid">
+			<div class="actions">
+				<div class="ui red basic cancel inverted button">
+					<i class="remove icon"></i>
+					לא
+				</div>
+				<div class="ui green ok inverted button">
+					<i class="checkmark icon"></i>
+					כן
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="hidden" id="slide_modal">
+
+		<div class="content" id="slide">
+
+
+
+		</div>
+
+	</div>
+
+	<div class="hidden" id="faq_cat_modal">
+
+		<div class="content" id="faq_cat">
+
+
+
+		</div>
+
+	</div>
+
+	<div class="hidden" id="faq_modal">
+
+		<div class="content" id="faq">
+
+
+
+		</div>
+
+	</div>
+
+	<div class="ui active disabled dimmer" id="global_dimmer">
+		<div class="ui text large loader disabled">טעינה</div>
+	</div>
+
+	<input type="hidden" id="no_photo_male_url" value="/images/no_photo_thumb_1.jpg">
+	<input type="hidden" id="no_photo_female_url" value="/images/no_photo_thumb_2.jpg">
+	<input type="hidden" id="no_photo_a-binary_url" value="/images/no_photo_5.jpg">
+	<input type="hidden" value="{{ app.user.apiKey }}" id="apiKey">
+
+{% endblock %}
+

@@ -1,0 +1,49 @@
+
+<div class="inner_form_bot">
+    <div class="main_form">
+
+
+
+        <div class="mfrm_field cf">
+            {{ form_label(form.country) }}
+            <div class="mselect3">
+                {{ form_widget(form.country, {'attr': {'class': 'ui search dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.region) }}
+            <div class="mselect3" id="region">
+                {{ form_widget(form.region, {'attr': {'class': 'ui search dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.city) }}
+            <div class="mselect3" id="city">
+                {{ form_widget(form.city, {'attr': {'class': 'ui search dropdown'}}) }}
+            </div>
+        </div>
+
+
+        <div class="main_sub main_sub4 cf" style="width: 100%;margin:0px auto;">
+            <a class="back" onclick="$('#prev_stage').click()">Back</a>
+            <a class="next nextstage">Next</a>
+            <input type="submit" id="prev_stage" name="flow_signUp_transition" value="back"
+                   formnovalidate="formnovalidate">
+            <input type="submit" id="next_stage">
+        </div>
+
+
+        <div class="main_sub main_sub4 cf">
+
+        </div>
+
+
+{#
+        {{ form_row(form._token) }}
+#}
+    </div>
+</div>
+
+

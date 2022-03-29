@@ -1,0 +1,144 @@
+{% extends "backend/layout.html.twig" %}
+
+{% block content %}
+
+    {{ include('backend/header.html.twig', { 'header': 'Messages', 'icon': 'chat' }) }}
+
+    <div class="page_content messages_content">
+
+        <div class="ui segment">
+            <form class="ui form" id="sendMessageToUsersGroupe" method="post">
+            <h2 class="ui header left">
+                <i class="{{ icon }} icon"></i>
+                <div class="content">
+                    {{ title }}
+                </div>
+            </h2>
+
+            <div class="right">
+                <button class="ui labeled icon violet approve large button right" id="sentMessage">
+                    <i class="send outline icon"></i>
+                    שלח הודעה
+                </button>
+            </div>
+            <div class="right" style="clear: none;margin-right: 15px;margin-top: 2px;min-width: 100px;">
+
+                <select name="reportId" id="reportId" class="ui search dropdown">
+                    <option value="">Select report</option>
+                    {% for report in reports %}
+                        <option value="{{ report.id }}">{{ report.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="right" style="clear: none;margin-right: 5px;">
+                <label class="left" style="line-height: 40px;">דו"חות</label>
+            </div>
+
+
+            <div class="clear"></div>
+
+            {% if send %}
+                <div class="ui success visible message" style="max-width: 300px;margin: 0 auto;">
+                    <i class="close icon"></i>
+                    <p style="text-align: center;">ההודעה נשלחה בהצלחה!</p>
+                </div>
+            {% endif %}
+
+            <div class="ui big ribbon label" style="margin-bottom: 10px;margin-top: 15px;">תוכן ההודעה</div>
+            <div class="field">
+                <textarea name="message" id="textMessage"></textarea>
+            </div>
+
+            </form>
+
+        </div>
+
+{#        <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>#}
+{#        <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>#}
+        <script src="https://cdn.tiny.cloud/1/9fnkdp4iew3hlm2g8wrviuqou8iou29ieaik1oriohr001f2/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+        <script>
+
+            tinymce.init({
+
+                selector:'#textMessage',
+
+                directionality: "rtl",
+
+                //theme: "modern",
+
+                menubar : false,
+
+                plugins: [
+
+                    "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+
+                    "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+
+                    "save table contextmenu directionality emoticons template paste textcolor"
+
+                ],
+
+                //content_css: "css/content.css",
+
+                toolbar: "insertfile undo redo | bold italic underline | styleselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | preview media fullpage | forecolor backcolor emoticons | link image | code | ltr rtl",
+
+                style_formats: [
+
+                    {title: "Headers", items: [
+
+                        {title: "Header 3", format: "h3"},
+
+                        {title: "Header 4", format: "h4"},
+
+                        {title: "Header 5", format: "h5"},
+
+                        {title: "Header 6", format: "h6"}
+
+                    ]},
+
+                    {title: "Inline", items: [
+
+                        {title: "Bold", icon: "bold", format: "bold"},
+
+                        {title: "Italic", icon: "italic", format: "italic"},
+
+                        {title: "Underline", icon: "underline", format: "underline"},
+
+                        {title: "Strikethrough", icon: "strikethrough", format: "strikethrough"},
+
+                        {title: "Superscript", icon: "superscript", format: "superscript"},
+
+                        {title: "Subscript", icon: "subscript", format: "subscript"},
+
+                    ]},
+
+                    {title: "Alignment", items: [
+
+                        {title: "Left", icon: "alignleft", format: "alignleft"},
+
+                        {title: "Center", icon: "aligncenter", format: "aligncenter"},
+
+                        {title: "Right", icon: "alignright", format: "alignright"},
+
+                        {title: "Justify", icon: "alignjustify", format: "alignjustify"}
+
+                    ]}
+
+                ],
+
+                cleanup : false,
+
+                verify_html : false,
+
+            });
+
+
+        </script>
+
+
+
+
+    </div>
+
+
+{% endblock %}

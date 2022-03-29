@@ -1,0 +1,272 @@
+
+<h1 class="ui header right">
+    <i class="user icon"></i>
+    <div class="content">
+        <span class="username">{{ user.username }}</span>
+        <div class="sub header">פרופיל משמתמש</div>
+    </div>
+</h1>
+
+
+<div class="left close">
+    <i class="icon remove circle olive big " onclick="$.kfModal.close();"></i>
+</div>
+
+<div class="clear"></div>
+
+<div class="ui divider"></div>
+
+<div class="ui secondary menu">
+    <a class="item active" data-tab="1">
+        {#<i class="sign in icon circular"></i>#}
+        פרטים
+    </a>
+    <a class="item" data-tab="2">
+        {#<i class="user icon circular"></i>#}
+        פרופיל
+    </a>
+    <a class="item" data-tab="3">
+        {#<i class="info icon circular"></i>#}
+        קצת עליי
+    </a>
+    <a class="item" data-tab="4">
+        {#<i class="info icon circular"></i>#}
+        אדמין
+    </a>
+</div>
+<div class="ui tab segment active" data-tab="1">
+
+    <div class="ui large ribbon label">כתובת IP של ביקור אחרון</div>
+    <p><b>Ip:</b> {{ user.ip }}</p>
+    <p> <b>date:</b> {{ user.lastLoginAt|date("d/m/Y H:i") }}</p>
+    <div class="ui divider"></div>
+
+    <div class="ui large ribbon label">שם משתמש</div>
+    <p>{{ user.username }}</p><div class="ui divider"></div>
+
+    <div class="ui large ribbon label">אימייל</div>
+    <p>{{ user.email }}</p><div class="ui divider"></div>
+
+    <div class="ui large ribbon label">טלפון</div>
+    <p>{{ user.phone }}</p><div class="ui divider"></div>
+
+    <div class="ui large ribbon label">סיסמה</div>
+    <p>{{ user.msEnter }}</p><div class="ui divider"></div>
+
+    <div class="ui large ribbon label">סמס קוד</div>
+    <p>{{ user.code }}</p><div class="ui divider"></div>
+
+    <div class="ui large ribbon label">מין</div>
+    <p>{{ user.gender.name }}</p><div class="ui divider"></div>
+
+
+    {#<div class="ui large ribbon label">מחפש/ת</div>
+    <p>{{ user.lookingGender.name }}</p><div class="ui divider"></div>#}
+
+    <div class="ui large ribbon label">תאריך לידה</div>
+    {% if user.gender.id == 2 %}<span class="she"></span>{% endif %}
+    <p>{{ user.birthday|date('d/m/Y') }}</p>
+
+    {% if user.gender.id == 2 %}
+        <div class="ui large ribbon label">תאריך לידה</div>
+        <span class="he"></span>
+        <p>{{ user.birthday1|date('d/m/Y') }}</p>
+    {% endif %}
+
+</div>
+
+<div class="ui tab segment" data-tab="2">
+
+    <div class="ui large ribbon label">אזור מגורים</div>
+    <p>{{ user.region ? user.region.name : '' }}</p><div class="ui divider"></div>
+
+    <div class="ui large ribbon label">עיר</div>
+    <p>{{ user.city ? user.city.name : '' }}</p><div class="ui divider"></div>
+
+    <div class="ui large ribbon label">גובה</div>
+    {% if user.gender.id == 2 %}<span class="she"></span>{% endif %}
+    <p>{{ user.height }}</p><div class="ui divider"></div>
+
+    {% if user.gender.id == 2 %}
+        <div class="ui large ribbon label">גובה</div>
+        <span class="he"></span>
+        <p>{{ user.height1 }}</p><div class="ui divider"></div>
+    {% endif %}
+
+    <div class="ui large ribbon label">משקל</div>
+    {% if user.gender.id == 2 %}<span class="she"></span>{% endif %}
+    <p>{{ user.weight }}</p><div class="ui divider"></div>
+
+    {% if user.gender.id == 2 %}
+        <div class="ui large ribbon label">משקל</div>
+        <span class="he"></span>
+        <p>{{ user.weight1 }}</p><div class="ui divider"></div>
+    {% endif %}
+
+    <div class="ui large ribbon label">צבע השער</div>
+    {% if user.gender.id == 2 %}<span class="she"></span>{% endif %}
+    <p>{{ user.hair?user.hair.name:'' }}</p><div class="ui divider"></div>
+
+    {% if user.gender.id == 2 %}
+        <div class="ui large ribbon label">צבע השער</div>
+        <span class="he"></span>
+        <p>{{ user.hair1?user.hair1.name:'' }}</p><div class="ui divider"></div>
+    {% endif %}
+
+    <div class="ui large ribbon label">תסרוקת</div>
+    {% if user.gender.id == 2 %}<span class="she"></span>{% endif %}
+    <p>{{ user.hairStyle?user.hairStyle.name:'' }}</p><div class="ui divider"></div>
+
+    {% if user.gender.id == 2 %}
+        <div class="ui large ribbon label">תסרוקת</div>
+        <span class="he"></span>
+        <p>{{ user.hairStyle1?user.hairStyle1.name:'' }}</p><div class="ui divider"></div>
+    {% endif %}
+
+    <div class="ui large ribbon label">צבע עיניים</div>
+    {% if user.gender.id == 2 %}<span class="she"></span>{% endif %}
+    <p>{{ user.eyes?user.eyes.name:'' }}</p><div class="ui divider"></div>
+
+    {% if user.gender.id == 2 %}
+        <div class="ui large ribbon label">צבע עיניים</div>
+        <span class="he"></span>
+        <p>{{ user.eyes1?user.eyes1.name:'' }}</p><div class="ui divider"></div>
+    {% endif %}
+
+
+    <div class="ui large ribbon label">מבנה גוף</div>
+    {% if user.gender.id == 2 %}<span class="she"></span>{% endif %}
+    <p>{{ user.body?user.body.name:'' }}</p><div class="ui divider"></div>
+
+    {% if user.gender.id == 2 %}
+        <div class="ui large ribbon label">מבנה גוף</div>
+        <span class="he"></span>
+        <p>{{ user.body1?user.body1.name:'' }}</p><div class="ui divider"></div>
+    {% endif %}
+
+    <div class="ui large ribbon label">מצב משפחתי</div>
+    <p>{{ user.relationshipStatus ? user.relationshipStatus.name : '' }}</p><div class="ui divider"></div>
+
+    <div class="ui large ribbon label">מס' ילדים</div>
+    <p>{{ user.children.name }}</p><div class="ui divider"></div>
+
+    <div class="ui large ribbon label">ארץ לידה</div>
+    {% if user.gender.id == 2 %}<span class="she"></span>{% endif %}
+    <p>{{ user.countryOfOrigin?user.countryOfOrigin.name:'' }}</p><div class="ui divider"></div>
+
+    {% if user.gender.id == 2 %}
+        <div class="ui large ribbon label">ארץ לידה</div>
+        <span class="he"></span>
+        <p>{{ user.countryOfOrigin1?user.countryOfOrigin1.name:'' }}</p><div class="ui divider"></div>
+    {% endif %}
+
+    <div class="ui large ribbon label">מוצא</div>
+    {% if user.gender.id == 2 %}<span class="she"></span>{% endif %}
+    <p>{{ user.ethnicity?user.ethnicity.name:'' }}</p><div class="ui divider"></div>
+
+    {% if user.gender.id == 2 %}
+        <div class="ui large ribbon label">מוצא</div>
+        <span class="he"></span>
+        <p>{{ user.ethnicity1?user.ethnicity1.name:'' }}</p><div class="ui divider"></div>
+    {% endif %}
+
+    <div class="ui large ribbon label">העדפה מינית</div>
+    {% if user.gender.id == 2 %}<span class="she"></span>{% endif %}
+    <p>{{ user.sexPref?user.sexPref.name:'' }}</p><div class="ui divider"></div>
+
+    {% if user.gender.id == 2 %}
+        <div class="ui large ribbon label">העדפה מינית</div>
+        <span class="he"></span>
+        <p>{{ user.sexPref1?user.sexPref1.name:'' }}</p><div class="ui divider"></div>
+    {% endif %}
+
+    <div class="ui large ribbon label">ניסיון בחילופי זוגות</div>
+    {% if user.gender.id == 2 %}<span class="she"></span>{% endif %}
+    <p>{{ user.experience?user.experience.name:'' }}</p><div class="ui divider"></div>
+
+    {% if user.gender.id == 2 %}
+        <div class="ui large ribbon label">ניסיון בחילופי זוגות</div>
+        <span class="he"></span>
+        <p>{{ user.experience1?user.experience1.name:'' }}</p><div class="ui divider"></div>
+    {% endif %}
+
+    <div class="ui large ribbon label">הרגלי עישון</div>
+    {% if user.gender.id == 2 %}<span class="she"></span>{% endif %}
+    <p>{{ user.smoking.name }}</p><div class="ui divider"></div>
+
+    {% if user.gender.id == 2 %}
+        <div class="ui large ribbon label">הרגלי עישון</div>
+        <span class="he"></span>
+        <p>{{ user.smoking1?user.smoking1.name:'' }}</p><div class="ui divider"></div>
+    {% endif %}
+
+
+    <div class="ui large ribbon label">הרגלי שתיה</div>
+    {% if user.gender.id == 2 %}<span class="she"></span>{% endif %}
+    <p>{{ user.drinking.name }}</p><div class="ui divider"></div>
+
+    {% if user.gender.id == 2 %}
+        <div class="ui large ribbon label">הרגלי שתיה</div>
+        <span class="he"></span>
+        <p>{{ user.drinking1?user.drinking1.name:'' }}</p><div class="ui divider"></div>
+    {% endif %}
+
+    <div class="ui large ribbon label">את מי אני/אנחנו מחפש/ים</div>
+        <p>
+            {% for lookingForGender in user.lookingForGender %}
+                {{ lookingForGender.name }}{% if not loop.last %},{% endif %}
+            {% endfor %}
+        </p><div class="ui divider"></div>
+
+
+    <div class="ui large ribbon label">שעות מפגש מועדפות</div>
+        <p>
+             {% for meetingTime in user.meetingTime %}
+                 {{ meetingTime.name }}{% if not loop.last %},{% endif %}
+             {% endfor %}
+        </p><div class="ui divider"></div>
+
+</div>
+<div class="ui tab segment" data-tab="3">
+
+    <div class="ui large ribbon label">מעט עליי</div>
+    <p>{{ user.about }}</p><div class="ui divider"></div>
+
+
+    <div class="ui large ribbon label">מה אני מחפש/ת</div>
+    <p>{{ user.looking }}</p><div class="ui divider"></div>
+
+</div>
+
+<div class="ui tab segment" data-tab="4">
+
+	<div class="ui large ribbon label">התראה על הודעה למייל</div>
+    <p>{% if user.isSentEmail %}כן{% else %}לא{% endif %}</p>
+    
+    <div class="ui large ribbon label">התראה על הודעה לטלפון (Push)</div>
+    <p>{% if user.isSentPush %}כן{% else %}לא{% endif %}</p>
+
+    <div class="ui large ribbon label">המשתמש מופיע בעמוד הכניסה</div>
+    <p>{% if user.isOnHomepage %}כן{% else %}לא{% endif %}</p>
+    <div class="ui divider"></div>
+
+    {% if user.adminComments|length %}
+        <div class="ui large ribbon label">הערות</div>
+        <p>{{ user.adminComments }}</p>
+        <div class="ui divider"></div>
+    {% endif %}
+
+    {% if user.banReason|length %}
+        <div class="ui large ribbon label">סיבת החסימה</div>
+        <p>{{ user.banReason }}</p>
+        <div class="ui divider"></div>
+    {% endif %}
+
+    {% if user.freezeReason|length %}
+        <div class="ui large ribbon label">סיבת ההקפאה</div>
+        <p>{{ user.freezeReason }}</p>
+    {% endif %}
+
+</div>
+
+<div class="clear"></div>

@@ -1,0 +1,27 @@
+{% extends "frontend/layout.html.twig" %}
+
+{% block title %}{{ page.title }}{% endblock %}
+{% block meta_description %}{{ page.description }}{% endblock %}
+
+{% block content %}
+    <div class="mid_content magazin1">
+        <div class="mid_title"><{{ page.headerType  }}>{{ page.name }}</{{ page.headerType }}></div>
+        <div class="magazin_main">
+            {{ page.content|raw }}
+        </div>
+    </div>
+
+    <script>
+        function pageInit(){
+
+        }
+    </script>
+
+{% endblock %}
+{% block mobile_content %}
+    <div class="nymain_mobile"{% if not app.user %} style="padding-top:225px; padding-bottom:20px;"{% endif %}>
+        <div class="mid_content magazin1">
+
+        </div>
+    </div>
+{% endblock %}

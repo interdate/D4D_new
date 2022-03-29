@@ -1,0 +1,166 @@
+{% extends "backend/layout.html.twig" %}
+
+{% block content %}
+
+    {{ include('backend/header.html.twig', { 'header': 'תוכן', 'icon': 'text file' }) }}
+
+    <div class="page_content">
+
+        {% if page.id > 0 %}
+
+        <a href="{{ path('admin_content') }}" class="link" style="margin-right: 30px;">
+            תוכן
+        </a>
+        /
+        עמוד -
+            קופון
+
+        {% endif %}
+
+         <div class="ui segment page">
+
+            <h2 class="ui header right">
+                <i class="write icon"></i>
+                <div class="content">
+                    {% set title = page.id > 0 ? 'עריכת קופון' : 'הוספת קופון' %}
+                    {{ title }}
+                </div>
+            </h2>
+
+            <div class="clear"></div>
+
+            <form class="ui form" id="page_form" method="post">
+
+                <div class="ui big ribbon label">{{ form_label(form.name) }}</div>
+                <div class="field">
+                    {{ form_widget(form.name) }}
+                </div>
+
+                <div class="ui big ribbon label">{{ form_label(form.value) }}</div>
+                <div class="field">
+                    {{ form_widget(form.value) }}
+                </div>
+
+                <div class="ui big ribbon label">{{ form_label(form.code) }}</div>
+                <div class="field">
+                    {{ form_widget(form.code) }}
+                </div>
+
+                <div class="ui big ribbon label">{{ form_label(form.type) }}</div>
+                <div class="field">
+                    {{ form_widget(form.type) }}
+                </div>
+
+                <div class="field">
+                    <div class="ui big ribbon label">
+                        {{ form_label(form.isActive) }}
+                    </div>
+                    <div class="ui compact segment">
+                        <div class="ui slider fitted checkbox">
+                            {{ form_widget(form.isActive) }}
+                            <label></label>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <br>
+
+                <div class="ui one column centered grid">
+                    <button class="ui labeled icon orange approve big button right">
+                        <i class="save icon"></i>
+                        לשמור
+                    </button>
+                </div>
+                {{ form_rest(form) }}
+            </form>
+            <br>
+            <br>
+            <div class="clear"></div>
+        </div>
+
+    </div>
+
+
+
+{#    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>#}
+    <script src="https://cdn.tiny.cloud/1/9fnkdp4iew3hlm2g8wrviuqou8iou29ieaik1oriohr001f2/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+
+        tinymce.init({
+
+            selector:'#page_content',
+
+            //theme: "modern",
+
+            menubar : false,
+
+            plugins: [
+
+                "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+
+                "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+
+                "save table contextmenu directionality emoticons template paste textcolor"
+
+            ],
+
+            //content_css: "css/content.css",
+
+            toolbar: "insertfile undo redo | bold italic underline | styleselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | preview media fullpage | forecolor backcolor emoticons | link image | code ",
+
+            style_formats: [
+
+                {title: "Headers", items: [
+
+                    {title: "Header 3", format: "h3"},
+
+                    {title: "Header 4", format: "h4"},
+
+                    {title: "Header 5", format: "h5"},
+
+                    {title: "Header 6", format: "h6"}
+
+                ]},
+
+                {title: "Inline", items: [
+
+                    {title: "Bold", icon: "bold", format: "bold"},
+
+                    {title: "Italic", icon: "italic", format: "italic"},
+
+                    {title: "Underline", icon: "underline", format: "underline"},
+
+                    {title: "Strikethrough", icon: "strikethrough", format: "strikethrough"},
+
+                    {title: "Superscript", icon: "superscript", format: "superscript"},
+
+                    {title: "Subscript", icon: "subscript", format: "subscript"},
+
+                ]},
+
+                {title: "Alignment", items: [
+
+                    {title: "Left", icon: "alignleft", format: "alignleft"},
+
+                    {title: "Center", icon: "aligncenter", format: "aligncenter"},
+
+                    {title: "Right", icon: "alignright", format: "alignright"},
+
+                    {title: "Justify", icon: "alignjustify", format: "alignjustify"}
+
+                ]}
+
+            ],
+
+            cleanup : false,
+
+            verify_html : false,
+
+        });
+
+
+    </script>
+
+
+{% endblock %}

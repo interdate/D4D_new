@@ -1,0 +1,324 @@
+{#<script src="{{ asset('libs/cloudinary/jquery.ui.widget.js') }}"></script>#}
+{#<script src="{{ asset('libs/cloudinary/jquery.iframe-transport.js') }}"></script>#}
+{#<script src="{{ asset('libs/cloudinary/jquery.fileupload.js') }}"></script>#}
+{#<script src="{{ asset('libs/cloudinary/jquery.cloudinary.js') }}"></script>#}
+
+<script>
+
+    $(document).ready(function(){
+        $('.submitPhoto').click(function (e) {
+            e.preventDefault();
+            //alert(1);
+            console.log($('.photoInput').prop('files')[0]);
+            var formData = new FormData();
+
+            formData.append("photo", $('.photoInput').prop('files')[0]);
+            $.ajax({
+                url: '/admin/users/user/'+ {{ user.id }} +'/photos/photo',
+                type: 'post',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                xhr: function() {
+                    var xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener("progress", function(evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = ((evt.loaded / evt.total) * 100);
+
+                            $(".bar").css({'width': parseInt(percentComplete) + '%'})
+                            $(".bar .progress").html(parseInt(percentComplete)+'%');
+                            if (percentComplete > 99) {
+                                $('.ui.progress').addClass('success');
+                            }
+                        }
+                    }, false);
+                    return xhr;
+                },
+                beforeSend: function(){
+                    $('.ui.progress').css({'display': 'block'});
+                    //$('#uploadStatus').html('<img src="images/loading.gif"/>');
+                },
+
+                success: function (res) {
+                    //console.log(res);
+                    if (res == 'maxCount') {
+                        alert('max count');
+                    } else {
+                       // alert(res.id)
+                        getUserPhotos({{ user.id }});
+                    }
+                }
+            });
+        });
+
+        $('.rotate').click(function () {
+            var id = $(this).parents('tr').find('.photoId').val();
+            var rotate = ($(this).hasClass('left-side')) ? -90 : 90;
+            var image = $(this).parents('tr').find('.photo_cont img');
+            rotateImage(id,rotate,image);
+        });
+
+
+        /******************** User Photos And Cloudinary *********************************************/
+
+        {#$.cloudinary.config({ cloud_name: 'interdate', api_key: '771234826869846'});#}
+        {#$('.ui.progress').hide();#}
+
+        {#$('.cloudinary-fileupload').bind('fileuploadstart', function(e, data) {#}
+            {#$('.ui.progress').show();#}
+            {#$('.upload_photo button').addClass("loading");#}
+        {#});#}
+
+        {#$('.cloudinary-fileupload').bind('fileuploadprogress', function(e, data) {#}
+            {#var value = Math.round((data.loaded * 100.0) / data.total);#}
+            {#$('.ui.progress').progress({#}
+                {#percent: value,#}
+            {#});#}
+            {#$('#upload_photo_label span').text(value);#}
+        {#});#}
+
+        {#$('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {#}
+            {#//console.log(JSON.stringify(data));#}
+            {#$('.upload_photo button').removeClass("loading");#}
+            {#$('.ui.progress').hide();#}
+            {#savePhotoData(data, {{ user.id }});#}
+            {#return true;#}
+        {#});#}
+
+
+//        if($('.photo_name').size()){
+//            $('.photo_name').each(function(index){
+//                var template = $('#photo_template').html();
+//                var idArr = $(this).val().split("__");
+//                var photoName = idArr[0];
+//                var photoId = idArr[1];
+//                var main = idArr[2] == 1 ? 'checked="checked"' : '';
+//                var valid = idArr[3] == 1 ? 'checked="checked"' : '';
+//                var node = template.replace(/\[PHOTO_NAME\]/g, photoName);
+//                node = node.replace(/\[PHOTO_ID\]/g, photoId);
+//                node = node.replace(/\[main\]/, main);
+//                node = node.replace(/\[valid\]/, valid);
+//
+//                $('.photos').append(node);
+//                $('#' + photoName).find('.photo_cont').html(
+//                    $.cloudinary.image(photoName + '.jpg',{
+//                        crop: 'fill',
+//                        width: 210,
+//                        height: 260
+//                    })
+//                );
+//            });
+
+//            $('#user_photos_dimmer').addClass("disabled").find('.loader').addClass("disabled");
+
+//        }
+
+        /********************************************************************************************/
+
+
+        /*
+        $('.photos .valid_photo').click(function(){
+
+            var value = ($(this).is(":checked")) ? 1 : 0;
+            setPhotoProperty('isValid', value, $(this).parents('tr').find('.photoId').val());
+        });
+        */
+
+        $('.photos .ui.checkbox.toggle.main_photo').checkbox({
+            onChecked: function(){
+                setPhotoProperty('isMain', 1, $(this).parents('tr').find('.photoId').val(), $(this));
+            }/*,
+            onUnchecked: function(){
+                setPhotoProperty('isMain', 0, $(this).parents('tr').find('.photoId').val());
+            },*/
+        });
+
+        $('.photos .ui.checkbox.toggle.valid_photo').checkbox({
+            onChecked: function(){
+                setPhotoProperty('isValid', 1, $(this).parents('tr').find('.photoId').val(), $(this));
+            },
+            onUnchecked: function(){
+                setPhotoProperty('isValid', 0, $(this).parents('tr').find('.photoId').val(), $(this));
+            },
+        });
+
+        // $('.photos .ui.checkbox.toggle.private_photo').checkbox({
+        //     onChecked: function(){
+        //         setPhotoProperty('isPrivate', 1, $(this).parents('tr').find('.photoId').val(), $(this));
+        //     },
+        //     onUnchecked: function(){
+        //         setPhotoProperty('isPrivate', 0, $(this).parents('tr').find('.photoId').val(), $(this));
+        //     },
+        // });
+
+
+
+        $('.photos .delete').click(function(){
+            if(confirm('להסיר תמונה?')){
+                deletePhoto(
+                    $(this).siblings('.photoId').val(),
+                    $(this).parents('table')
+                );
+            }
+        });
+
+
+    });
+
+</script>
+
+
+<h1 class="ui grey header right">
+    <i class="photo circular icon"></i>
+    <div class="content">
+        <span class="username">{{ user.username }}</span>
+        <div class="sub header">עריכת תמונות</div>
+    </div>
+</h1>
+
+
+<div class="left close">
+    <i class="icon remove circle olive big " onclick="$.kfModal.close();"></i>
+</div>
+
+<div class="clear"></div>
+
+{#<div class="ui divider"></div>#}
+
+{#<br>#}
+
+{#<div class="ui one column centered grid upload_photo">#}
+    {#<button class="ui labeled icon green huge button" onclick="$('.cloudinaryForm input[type=file]').click();">#}
+        {#<i class="cloud upload icon"></i>#}
+        {#העלאת תמונה לענן#}
+    {#</button>#}
+{#</div>#}
+
+{#<br><br>#}
+
+{#<div class="ui indicating progress uploadPhotoProgress">#}
+    {#<div class="bar" id="upload_photo_progress"></div>#}
+    {#<div class="label" id="upload_photo_label">העלאה: <span>0</span>%</div>#}
+{#</div>#}
+
+{#<br>#}
+
+
+
+
+
+{#<input type="hidden" id="save_photo_data_url" value="{{ path('user_photo_data') }}">#}
+{#<input type="hidden" id="photos_url" value="{{ path('user_profile', {'tab': 4}) }}">#}
+{#<input type="hidden" id="mainPhotoAlreadyExists" value="{% if user.photos|length  %}1{% else %}0{% endif %}">#}
+
+{#<div class="cloudinaryForm hidden">#}
+    {#{{ renderedCloudForm|raw }}#}
+{#</div>#}
+
+{#{% for photo in user.photos %}#}
+    {#<input type="hidden" class="photo_name" value="{{ photo.name }}__{{ photo.id }}__{{ photo.isMain }}__{{ photo.isValid }}">#}
+{#{% endfor %}#}
+
+
+{#<div id="photo_template" class="hidden">#}
+<div class="ui one column centered grid upload_photo">
+    <button class="ui labeled icon green huge button" onclick="$('.photoInput').click();">
+        <i class="cloud upload icon"></i>
+        העלאת תמונה לענן
+    </button>
+</div>
+
+
+<div class="ui progress" style="display: none;">
+    <div class="bar">
+        <div class="progress"></div>
+    </div>
+    {#            <div class="label">Uploading Files</div>#}
+</div>
+
+
+{#<div class="ui indicating progress uploadPhotoProgress">#}
+    {#<div class="bar" id="upload_photo_progress"></div>#}
+    {#<div class="label" id="upload_photo_label">Uploading: <span>0</span>%</div>#}
+{#</div>#}
+
+<form  method="POST" enctype="multipart/form-data" id="testForm" class="hidden" {#onsubmit="testfnc(event, user.id)"#}>
+    <div class="browser_field">
+        <div class="filediv">
+            <div class="hfile">
+                <label for="photo" class="browsebutt"><strong>{% trans %}Browse{% endtrans %}</strong><span>&nbsp;</span></label>
+                <input type="file" class="browseinput photoInput" name="photo" onchange="$('.submitPhoto').click()">
+                {#<input type="hidden" id="mainPhotoAlreadyExists" name="mainPhotoAlreadyExists" value="{{ app.user.hasPhotos ? 1 : 0 }}">#}
+                <input type="submit" class="submitPhoto">
+            </div>
+        </div>
+    </div>
+</form>
+{% for photo in user.photos %}
+    <table class="ui celled table olive photo" id="[PHOTO_NAME]">
+        <thead>
+        <tr>
+            <th>תמונה</th>
+            <th>ראשית</th>
+            <th>מאושר</th>
+{#            <th>חסוי</th>#}
+            <th>להסיר</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="photo_cont">
+                    <a href="{{ photo.getWebPath }}" target="_blank">
+                        <img src="{{ photo.getWebPath }}" height="260">
+                    </a>
+                    <div class="rotate-buttons">
+                        <div class="ui mini icon button green rotate left-side">
+                            <i class="share icon"></i>
+                        </div>
+                        <div class="ui mini icon button green rotate right-side">
+                            <i class="reply icon"></i>
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="ui toggle checkbox main_photo">
+                        <input type="radio" name="radio" value="{{ photo.id }}" {% if(photo.getIsMain) %} checked="checked" {% endif %}
+{#                            {% if (photo.getIsPrivate) %} disabled="disabled" {% endif %}>#}
+                        <label></label>
+                    </div>
+                </td>
+                <td>
+                    <div class="ui toggle checkbox valid_photo">
+                        <input type="checkbox" value="{{ photo.id }}" {% if(photo.getIsValid) %} checked="checked" {% endif %}>
+                        <label></label>
+                    </div>
+                </td>
+{#                <td>#}
+{#                    <div class="ui toggle checkbox private_photo">#}
+{#                        <input type="checkbox" value="{{ photo.id }}" {% if(photo.getIsPrivate) %} checked="checked"#}
+{#                                {% endif %} {% if photo.getIsMain() %} disabled="disabled" {% endif %}>#}
+{#                        <label></label>#}
+{#                    </div>#}
+{#                </td>#}
+                {#<td class="col1">#}
+                    {#<div class="ui toggle checkbox mainPhoto">#}
+                        {#<input type="radio" name="radio" value="{{ photo.getId() }}" {{  photo.isPrivate or not photo.getIsValid? 'disabled="disabled"' : '' }} {{ photo.isMain ? 'checked="checked"' : '' }}>#}
+                        {#<label></label>#}
+                    {#</div>#}
+                {#</td>#}
+                <td>
+                    <i class="trash outline huge link olive icon circular delete"></i>
+                    <input type="hidden" class="photoId" value="{{ photo.id }}">
+{#                    <a class="ui button" href="https://cloudinary.com/console/media_library#/dialog/image/upload/[PHOTO_NAME]" target="_blank">עריכת תמונה בקלאודינרי</a>#}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+{% endfor %}
+{#</div>#}
+
+
+
+

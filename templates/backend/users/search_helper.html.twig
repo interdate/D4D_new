@@ -1,0 +1,11 @@
+{% set root_parent_class = list.root_parent is defined ? ' root_parent_' ~ list.root_parent.id : '' %}
+
+<h3 class="{{ list.name }} parent_{{ list.parent.id }}{{ root_parent_class }}">{{ list.parent.name }}</h3>
+<div class="block {{ list.name }} parent_{{ list.parent.id }}{{ root_parent_class }}">
+    {% for item in list.items %}
+        <div class="ui checkbox {{ list.columns }} {{ list.name }}">
+            <input type="checkbox" id="{{ list.name }}_{{ item.id }}" name="admin_advanced_search[{{ list.name }}][]" value="{{ item.id }}">
+            <label for="{{ list.name }}_{{ item.id }}">{{ item.name }}</label>
+        </div>
+    {% endfor %}
+</div>

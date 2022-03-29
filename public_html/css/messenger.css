@@ -1,0 +1,250 @@
+
+
+#templates{
+	display: none;
+}
+
+.right{
+	float:right;
+}
+
+.left{
+	float:left;
+}
+
+.clear{
+	clear:both;	
+}
+
+
+.hiden{
+	display: none;
+}
+
+
+.rounded{
+	border-radius: 3px; /* future proofing */
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;	
+	-khtml-border-radius: 3px; /* for old Konqueror browsers */
+}
+
+.chatWindow{
+	position:relalive;
+	width: 300px;
+	/*height:400px;*/
+	box-shadow: 1px 1px 10px #787878;
+	position: fixed;
+	bottom: 20px;
+	right: 600px;
+	/*display:none;*/ 
+}
+
+.chatWindow .header{
+	position:relative;
+	width:100%;
+	height: 25px;
+	background: #ff860d;
+	cursor:pointer;
+	opacity:.9;	
+}
+
+
+/*
+.test:target{
+	-webkit-animation: blink 1s step-end infinite;
+	-webkit-animation-name: blink;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-timing-function: step-end;
+	-webkit-animation-delay: initial;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-direction: initial;
+	-webkit-animation-fill-mode: initial;
+	-webkit-animation-play-state: initial; 
+}
+ 
+*/
+
+
+.blinking{
+	animation:blink 1s step-end infinite;
+	-webkit-animation:blink 1s step-end infinite; /* Safari and Chrome */	
+}
+
+-webkit-keyframes blink {
+	0% {background: #ff860d} 
+	50% {background: #e250f2}
+}
+
+.blinking{background:black}
+.blinking:target{-moz-animation:blink 1s step-end infinite}
+.blinking:target{-webkit-animation:blink 1s step-end infinite}
+.blinking:target{animation:blink 1s step-end infinite}
+
+@-moz-keyframes blink{
+	0%{background-color: #ff860d}
+	50%{background-color: #ff430f}
+}
+
+@-webkit-keyframes blink{
+	0%{background-color: #ff860d}
+	50%{background-color: #ff430f}
+}
+
+@keyframes blink{
+	0%{background-color: #ff860d}
+	50%{background-color: #ff430f}
+} 
+
+
+
+
+
+
+
+.chatWindow .contactName{
+	position: absolute;
+	left:10px;
+	top:0px;
+	cursor: pointer;
+	
+	color: #fff;
+	text-shadow:0 1px 0 #000;
+	line-height: 25px;
+	font-weight:bold;
+	font-size: 13px;
+	/*margin-right:10px;*/
+		
+}
+
+.chatWindow .contactName a{
+	color: #fff;	
+}
+
+.chatWindow .close{
+	width:15px;
+	height:15px;
+	position: absolute;
+	right: 5px;
+	top:5px;
+	background: url('../images/close.png') center center no-repeat;
+	cursor:pointer;
+	z-index:500;
+	border:1px solid #ff430f;	 
+}
+
+.chatWindow .close:hover{
+	background: #ff430f url('../images/close.png') center center no-repeat;	
+}
+
+.chatWindow .minimize{	
+	width:15px;
+	height:15px;
+	position: absolute;
+	right: 25px;
+	top:5px;
+	background: url('../images/minimize.png') center center no-repeat;
+	cursor:pointer;
+	z-index:500;
+	border:1px solid #ff430f;	
+}
+
+.chatWindow .minimize:hover{
+	background: #ff430f url('../images/minimize.png') center center no-repeat;
+}
+
+.chatWindow .body{
+	background: #e5e5e5;	
+	width:100%;
+	height:275px;
+	border-bottom: 1px dashed #ff860d;		
+}
+
+.chatWindow .messageSection{	
+	position:relative;	
+	margin:0px 10px 10px 10px;
+}
+
+.chatWindow .imageWrap{
+	width:50px;
+	height:50px;
+	overflow:hidden;
+}
+
+.chatWindow .userPicture{	
+	width:50px;
+	cursor:pointer;	
+}
+
+.chatWindow .messageWrap{	
+	width: 210px;
+	background: #fff;
+	min-height:50px;	
+	box-shadow: 1px 1px 2px #787878;
+}
+
+.chatWindow .message{
+	margin: 5px;
+	font-family: Arial;
+	font-size:14px;
+	line-height: 1.5em;
+	color:#000;
+	overflow: hidden;
+	
+	position: relative;
+}
+
+.chatWindow .message a{
+	color: #4fb3ff;
+}
+
+.chatWindow .message .dateTime{
+	width:100px;
+	font-size:11px;
+	color: #bcbcbc;		
+	text-align:right;
+	float:right;
+}
+
+.chatWindow .message .status{
+	width: 20px;
+	float:right;
+	margin-left: 5px;	
+}
+
+.chatWindow .message .status img{
+	height: 14px; 
+}
+
+.chatWindow .in .pos{
+	float:right;	
+}
+
+
+.chatWindow .out .pos{
+	float:left;
+}
+
+
+.chatWindow textarea{
+	width:97%;
+	height:90px;
+	padding: 5px;
+	font-size:15px;
+	margin-top: 0px;
+	/*margin:0px 10px 0px 10px;*/
+	border:0px;
+	/*background: #f8f8f8;*/	
+}
+
+
+
+.scrollbar1 .viewport{width:280px;height:245px;overflow:hidden;position:relative}
+.scrollbar1 .overview{list-style:none;position:absolute;right:0;top:0;padding-bottom:10px}
+.scrollbar1 .thumb .end, .scrollbar1 .thumb{background-color: #ff860d}
+.scrollbar1 .scrollbar{position:relative;float:right;width:15px}
+.scrollbar1 .track{background-color:#fff;height:100%;width:5px;position:relative;padding:0px;-moz-border-radius:15px;-webkit-border-radius:15px;border-radius:15px}
+.scrollbar1 .thumb{height:20px;width:5px;cursor:pointer;overflow:hidden;position:absolute;top:0px;left:0px;-moz-border-radius:15px;-webkit-border-radius:15px;border-radius:15px}
+.scrollbar1 .thumb .end{overflow:hidden;height:5px;width:13px;-moz-border-radius:15px;-webkit-border-radius:15px;border-radius:15px}
+.scrollbar1 .disable{display:inline}
+

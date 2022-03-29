@@ -1,0 +1,330 @@
+{% extends "frontend/layout.html.twig" %}
+
+{% block content %}
+    <div class="mid_content search_main">
+        <form action="{{ path('user_search_results') }}" method="post">
+
+            <input type="hidden" class="form_helper_url" value="{{ path('advanced_search_helper') }}">
+
+             <!-- Mid Container -->
+
+            <div class="mid_title"><h3>{% trans %}Advanced Search{% endtrans %}</h3></div>
+
+            <div class="search_div adv_search">
+
+                <div class="field_name">{{ form_label(form.region) }}</div>
+                <div class="select_box">{{ form_widget(form.region) }}</div>
+                <div class="clr"></div>
+
+                <div class="field_name hidden">{{ form_label(form.area) }}</div>
+                <div class="clr"></div>
+
+
+                    <div id="advanced_search_area" class="hidden">
+
+                        {% for area in form.area %}
+                            <div class="ui checkbox three">
+                                {{ form_widget(area) }}
+                                {{ form_label(area) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+
+                <div class="clr"></div>
+
+                {#
+                <div class="field_name"><label>{% trans %}Or within{% endtrans %}</label></div>
+                <div class="short_select_box">
+                    <select name="miles" id="miles">
+                        <option>{% trans %}Choose{% endtrans %}</option>
+                        <option>300</option>
+                        <option>400</option>
+                    </select>
+                </div>
+                <div class="txt">{% trans %}miles from my Zip Code{% endtrans %} <a href="{{ path('user_profile') }}">{% trans %}Edit my Zip Code{% endtrans %}</a></div>
+
+                <div class="clr"></div>
+                #}
+
+                <div class="field_name">{{ form_label(form.ageFrom) }}</div>
+                <div class="sep1 age">{% trans %}Between{% endtrans %}</div>
+                <div class="short_select_box">
+                    {{ form_widget(form.ageFrom) }}
+                </div>
+
+                <div class="sep2 age">{% trans %}and{% endtrans %}</div>
+
+                <div class="short_select_box">
+                    {{ form_widget(form.ageTo) }}
+                </div>
+
+                <div class="clr"></div>
+
+                <div class="field_name">{{ form_label(form.zodiac) }}</div>
+                <div class="checkboxes">
+
+                    {% for zodiac in form.zodiac %}
+                        <div class="ui checkbox three">
+                            {{ form_widget(zodiac) }}
+                            {{ form_label(zodiac) }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+                <div class="clr"></div>
+
+                <div class="field_name">{{ form_label(form.purposes) }}</div>
+                <div class="checkboxes">
+
+                    {% for purpose in form.purposes %}
+                        <div class="two left">
+                            <div class="ui checkbox">
+                                {{ form_widget(purpose) }}
+                                {{ form_label(purpose) }}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+                <div class="clr"></div>
+
+
+                <div class="field_name">{{ form_label(form.relationshipStatus) }}</div>
+                <div class="checkboxes">
+
+                    {% for relationshipStatus in form.relationshipStatus %}
+
+                        <div class="ui checkbox three">
+                            {{ form_widget(relationshipStatus) }}
+                            {{ form_label(relationshipStatus) }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+                <div class="clr"></div>
+
+                <div class="field_name">{{ form_label(form.languages) }}</div>
+                <div class="checkboxes">
+
+                    {% for language in form.languages %}
+
+                        <div class="ui checkbox three">
+                            {{ form_widget(language) }}
+                            {{ form_label(language) }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+                <div class="clr"></div>
+
+
+                <div class="field_name">{{ form_label(form.children) }}</div>
+                <div class="short_select_box">
+                    {{ form_widget(form.children) }}
+                </div>
+                <div class="clr"></div>
+
+                {% if app.user.gender.id == 2 %}
+
+                    <div class="field_name">{{ form_label(form.status) }}</div>
+                    <div class="checkboxes">
+                        {% for status in form.status %}
+                            <div class="ui checkbox two">
+                                {{ form_widget(status) }}
+                                {{ form_label(status) }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                    <div class="clr"></div>
+
+                    <div class="field_name">{{ form_label(form.netWorth) }}</div>
+                    <div class="checkboxes">
+                        {% for netWorth in form.netWorth %}
+                            <div class="ui checkbox two">
+                                {{ form_widget(netWorth) }}
+                                {{ form_label(netWorth) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="clr"></div>
+
+
+                    <div class="field_name">{{ form_label(form.income) }}</div>
+                    <div class="checkboxes">
+                        {% for income in form.income %}
+                            <div class="ui checkbox two">
+                                {{ form_widget(income) }}
+                                {{ form_label(income) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="clr"></div>
+
+                {% endif %}
+
+                <div class="field_name"><label>{% trans %}Height{% endtrans %}</label></div>
+                <div class="sep1">{% trans %}Between{% endtrans %}</div>
+                <div class="short_select_box">
+                    {{ form_widget(form.heightFrom) }}
+                </div>
+
+                <div class="sep2">{% trans %}and{% endtrans %}</div>
+
+                <div class="short_select_box">
+                    {{ form_widget(form.heightTo) }}
+                </div>
+                <div class="clr"></div>
+
+                <div class="field_name">{{ form_label(form.body) }}</div>
+                <div class="checkboxes">
+                    {% for body in form.body %}
+                        <div class="ui checkbox two">
+                            {{ form_widget(body) }}
+                            {{ form_label(body) }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="clr"></div>
+
+
+                <div class="field_name">{{ form_label(form.eyes) }}</div>
+                <div class="checkboxes">
+                    {% for eyes in form.eyes %}
+                        <div class="ui checkbox four">
+                            {{ form_widget(eyes) }}
+                            {{ form_label(eyes) }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="clr"></div>
+
+                <div class="field_name">{{ form_label(form.hair) }}</div>
+                <div class="checkboxes">
+                    {% for hair in form.hair %}
+                        <div class="ui checkbox three">
+                            {{ form_widget(hair) }}
+                            {{ form_label(hair) }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="clr"></div>
+
+                <div class="field_name">{{ form_label(form.features) }}</div>
+                <div class="checkboxes">
+                    {% for feature in form.features %}
+                        <div class="ui checkbox four">
+                            {{ form_widget(feature) }}
+                            {{ form_label(feature) }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="clr"></div>
+
+                <div class="field_name">{{ form_label(form.drinking) }}</div>
+                <div class="checkboxes">
+                    {% for drinking in form.drinking %}
+                        <div class="ui checkbox three">
+                            {{ form_widget(drinking) }}
+                            {{ form_label(drinking, null, {'label_attr': {'style': 'max-width: 100px;'}}) }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="clr"></div>
+
+                <div class="field_name">{{ form_label(form.smoking) }}</div>
+                <div class="checkboxes">
+                    {% for smoking in form.smoking %}
+                        <div class="ui checkbox three">
+                            {{ form_widget(smoking) }}
+                            {{ form_label(smoking, null, {'label_attr': {'style': 'max-width: 100px;'}}) }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="clr"></div>
+
+                <div class="field_name">{{ form_label(form.ethnicity) }}</div>
+                <div class="checkboxes">
+                    {% for ethnicity in form.ethnicity %}
+                        <div class="ui checkbox two">
+                            {{ form_widget(ethnicity) }}
+                            {{ form_label(ethnicity) }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="clr"></div>
+
+                <div class="field_name">{{ form_label(form.religion) }}</div>
+                <div class="checkboxes">
+                    {% for religion in form.religion %}
+                        <div class="ui checkbox two">
+                            {{ form_widget(religion) }}
+                            {{ form_label(religion) }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="clr"></div>
+
+                <div class="field_name">{{ form_label(form.education) }}</div>
+                <div class="checkboxes">
+                    {% for education in form.education %}
+                        <div class="ui checkbox two">
+                            {{ form_widget(education) }}
+                            {{ form_label(education) }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="clr"></div>
+
+                <div class="field_name"><label>{% trans %}Distance{% endtrans %}</label></div>
+                <div class="short_select_box">
+                    {{ form_widget(form.distance) }}
+                </div>
+                <div class="sep2 dist">{% trans %}miles from my Location{% endtrans %}</div>
+
+                <div class="clr"></div>
+
+
+                <div class="ui checkbox">
+                    {{ form_widget(form.withPhoto) }}
+                    {{ form_label(form.withPhoto) }}
+                </div>
+
+
+                <div class="clr"></div>
+
+
+                {{ form_widget(form.filter) }}
+                <div class="searchbut"><input type="submit" value="{% trans %}Search{% endtrans %}"></div>
+
+                <div class="clr"></div>
+
+            </div>
+
+
+        </form>
+    </div>
+    <!-- Mid Container End -->
+
+    <script>
+        function pageInit(){
+            $('#advanced_search_region').change(function () {
+                modifySearchForm($(this), $('#advanced_search_area'));
+            });
+        }
+        $(window).load(function () {
+            pageInit();
+        });
+    </script>
+
+{% endblock %}
+{% block mobile_content %}
+    <div class="nymain_mobile">
+        <div class="mid_content search_main">
+
+        </div>
+    </div>
+{% endblock %}

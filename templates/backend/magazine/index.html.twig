@@ -1,0 +1,132 @@
+{% extends "backend/layout.html.twig" %}
+
+{% block content %}
+
+    {{ include('backend/header.html.twig', { 'header': 'מגזין', 'icon': 'newspaper' }) }}
+
+    <div class="page_content magazine_content">
+
+        <div class="ui segment">
+
+            <h2 class="ui header right">
+                <i class="line chart icon"></i>
+                <div class="content">
+                    SEO
+                </div>
+            </h2>
+
+            <div class="clear"></div>
+            <br>
+
+            <form class="ui form" id="magazine_page_seo">
+                <div class="ui label">Title</div>
+                <div class="field">
+                    <input type="text" name="title" value="{{ seo.title }}">
+                </div>
+
+                <div class="ui label">Meta Description</div>
+                <div class="field">
+                    <textarea name="description">{{ seo.description }}</textarea>
+                </div>
+
+                <input type="hidden" name="page" value="{{ seo.page }}">
+
+            </form>
+
+            <br><br>
+            <div class="ui one column centered grid">
+                <button class="ui labeled icon pink big approve button right" onclick="updatePageSeo($('#magazine_page_seo'));">
+                    <i class="save icon"></i>
+                    לשמור
+                </button>
+            </div>
+            <br><br>
+
+
+
+
+        </div>
+
+
+        <div class="ui segment">
+
+
+
+            <h2 class="ui header right">
+                <i class="list icon"></i>
+                <div class="content">
+                    רשימת המאמרים
+                </div>
+            </h2>
+
+
+            <div class="left">
+
+                <a href="{{ path('admin_magazine_article') }}">
+                    <button class="ui labeled icon pink approve large button right">
+                        <i class="write icon"></i>
+                        הוסף מאמר
+                    </button>
+                </a>
+
+
+
+            </div>
+
+            <div class="clear"></div>
+
+
+            <table class="ui basic celled table articles">
+                <thead>
+                    <tr>
+                        <th>כותרת</th>
+                        <th>תאריך</th>
+                        <th>מופיע בעמוד הראשי</th>
+                        <th>פעיל</th>
+                        <th>להסיר</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for article in articles %}
+                        <tr>
+                            <td class="alignRight">
+                                <a href="{{ path('admin_magazine_article_edit', {'id': article.id}) }}" class="article_name">{{ article.name }}</a>
+                                <input type="hidden" class="article_id" value="{{ article.id }}">
+                            </td>
+                            <td>
+                                {{ article.date|date('d-m-Y') }}
+                            </td>
+                            <td>
+                                <div class="ui checkbox toggle small homepage">
+                                    <input type="checkbox" {% if article.isOnHomePage %}checked="checked"{% endif %}>
+                                    <label></label>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="ui checkbox toggle small">
+                                    <input type="checkbox" {% if article.isActive %}checked="checked"{% endif %}>
+                                    <label></label>
+                                </div>
+                            </td>
+                            <td>
+                                <i class="trash outline big link black icon circular delete"></i>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+
+        </div>
+
+
+
+
+
+
+    </div>
+
+
+{% endblock %}

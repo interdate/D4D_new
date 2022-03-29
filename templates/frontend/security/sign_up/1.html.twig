@@ -1,0 +1,170 @@
+{% if errors %}
+    <div class="errors">
+        <div class="ui orange message">
+            <div class="content">
+                <div class="header">
+                    {% trans %}מספר נתונים חסרים. יש למלא את כל הנתונים בשדות המסומנים.{% endtrans %}
+                </div>
+                <p>
+                    {{ form_errors(form.agree) }}
+                    {{ form_errors(form.username) }}
+                    {{ form_errors(form.password.first) }}
+                    {{ form_errors(form.email.first) }}
+                    {{ form_errors(form.phone) }}
+                </p>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+
+<div class="inner_form_bot">
+    <div class="main_form">
+        <h1>{% trans %}הירשם{% endtrans %}</h1>
+
+        <div class="mfrm_field cf {% if form.username.vars.errors|length %}error{% endif %}">
+            {{ form_label(form.username) }}
+            {{ form_widget(form.username) }}
+        </div>
+
+        <div class="mfrm_field cf {% if form.password.first.vars.errors|length %}error{% endif %}">
+            {{ form_label(form.password.first) }}
+            {{ form_widget(form.password.first) }}
+            <div style="font-size:12px;display: inline;margin-right: 24px;" class="phone-descr">(לפחות 7 תווים)</div>
+        </div>
+        <div class="mfrm_field cf">
+            {{ form_label(form.password.second) }}
+            {{ form_widget(form.password.second) }}
+            <div style="font-size:12px;display: inline;margin-right: 24px;" class="phone-descr">(לפחות 7 תווים)</div>
+        </div>
+        <div class="mfrm_field cf {% if form.email.first.vars.errors|length %}error{% endif %}">
+            {{ form_label(form.email.first) }}
+            {{ form_widget(form.email.first) }}
+        </div>
+        <div class="mfrm_field cf">
+            {{ form_label(form.email.second) }}
+            {{ form_widget(form.email.second) }}
+
+        </div>
+
+        <div class="mfrm_field cf">
+            {{ form_label(form.gender) }}
+
+            <div class="mselect1 cf">
+                {{ form_widget(form.gender) }}
+                <input type="hidden" class="graphic_data_1" value="url(images/male.png)">
+                <input type="hidden" class="graphic_data_2" value="url(images/female.png)">
+                <div class="gpic"></div>
+            </div>
+
+            <div class="notice">
+                <div>
+                    <span class="she"></span>
+                    אישה
+                </div>
+                <div>
+                    <span class="he"></span>
+                    גבר
+                </div>
+            </div>
+        </div>
+       <div class="mfrm_field cf" id="birthday1">
+            <span class="she"></span>
+            {{ form_label(form.birthday1) }}
+            <div class="mselect2">
+                {{ form_widget(form.birthday1.year) }}
+                {{ form_widget(form.birthday1.month) }}
+                {{ form_widget(form.birthday1.day) }}
+            </div>
+        </div>
+        <div class="mfrm_field cf">
+            <span class="he"></span>
+            {{ form_label(form.birthday) }}
+            <div class="mselect2">
+                {{ form_widget(form.birthday.year) }}
+                {{ form_widget(form.birthday.month) }}
+                {{ form_widget(form.birthday.day) }}
+            </div>
+        </div>
+{#        {% dump(form.birthday1) %}#}
+{#        {% if form.birthday1 %}#}
+
+{#        {% endif %}#}
+        <div class="mfrm_field cf">
+            {{ form_label(form.region) }}
+            <div class="mselect3">
+                {{ form_widget(form.region) }}
+            </div>
+        </div>
+        <div class="mfrm_field cf">
+            {{ form_label(form.city) }}
+            <div class="mselect3">
+                {{ form_widget(form.city, {'attr': {'class': 'ui search dropdown'}}) }}
+            </div>
+        </div>
+        {#<div class="mfrm_field cf">
+            {{ form_label(form.area) }}
+            <div class="mselect3">
+                {{ form_widget(form.area) }}
+            </div>
+        </div>
+        <div class="mfrm_field cf">
+            {{ form_label(form.zipCode) }}
+            <div class="mselect3">
+                {{ form_widget(form.zipCode) }}
+            </div>
+        </div>#}
+        <div class="mfrm_field cf">
+            {{ form_label(form.phone) }}
+            {{ form_widget(form.phone) }}
+            <div style="font-size:12px;display: inline;margin-right: 24px;" class="phone-descr">(למספר זה יישלח קוד להפעלת החשבון)</div>
+        </div>
+        <div class="checkdiv cf">
+            <div class="left">
+                <div class="ui checkbox">
+                    {{ form_widget(form.agree) }}
+                    <label></label>
+                </div>
+            </div>
+            <div class="left"  style="width: 90%">
+                <p>
+                <label for="sign_up_one_agree">* {% trans %} אני מסכים/ה{% endtrans %} <a href="{{ path('pages_page', {'uri': terms.uri}) }}" target="_blank">לתנאי השימוש</a> {% trans %}באתר{% endtrans %}</label>
+                </p>
+
+            </div>
+            <div class="clr"></div>
+        </div>
+        <div style="margin-top: 28px" class="checkdiv cf">
+            <div class="left">
+                <div class="ui checkbox">
+                    {{ form_widget(form.isSentEmail) }}
+                    <label></label>
+                </div>
+            </div>
+            <div class="left"  style="width: 90%">
+               {{ form_label(form.isSentEmail) }}
+            </div>
+            <div class="clr"></div>
+        </div>
+        <div style="margin-top: 28px" class="checkdiv cf">
+            <div class="left">
+                <div class="ui checkbox">
+                    {{ form_widget(form.isSentPush) }}
+                    <label></label>
+                </div>
+            </div>
+            <div class="left"  style="width: 90%">
+                {{ form_label(form.isSentPush) }}
+            </div>
+            <div class="clr"></div>
+        </div>
+        <p style="font-size: 14px;margin-top: 15px">*פרטי הטלפון והאימייל אינם חשופים לשאר המשתתפים</p>
+        <div class="btn btn-continue">
+            <a class="nextstage">{% trans %}המשך <span class="icon-next-arrow"><img src="../images/harshama-next-arrow.png"/></span>{% endtrans %}</a>
+            <input type="submit" id="next_stage" class="hidden">
+        </div>
+    </div>
+</div>
+
+
+

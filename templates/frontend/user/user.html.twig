@@ -1,0 +1,371 @@
+{% extends "frontend/main_layout.html.twig" %}
+
+
+{% block container %}
+
+    {% set currentUser = app.user.id == user.id  %}
+    {% set settings = getSettings() %}
+    {% set minutesNumberConsideredAsOnline = settings.userConsideredAsOnlineAfterLastActivityMinutesNumber %}
+    {% set daysNumberConsideredAsNew = settings.getUserConsideredAsNewAfterDaysNumber %}
+
+
+    <!-- Mid Container -->
+    <div class="inner_content profile_inner user-section">
+        <input type="hidden" class="userId" value="{{ user.id }}">
+        <!-- Profile Desktop -->
+        <div class="wrap profile_desktop">
+            <div class="profile-top">
+
+                <div class="lft{% if not user.isPaying %} no_after{% endif %}">
+                    <a class="pgal" href="#" style="background-image: url({% if user.getMainPhoto is not null %}{{ user.getMainPhoto.getWebPath }}{% else %}{{ user.getNoPhoto }}{% endif %})">
+                        {#<img src="{% if user.getMainPhoto is not null %}{{ user.getMainPhoto.getWebPath }}{% else %}{{ user.getNoPhoto }}{% endif %}" alt="profile">#}
+                    </a>
+                </div>
+
+                <div class="rgt">
+                    <div class="member-dtl">
+                        <div class="m-dtl-lft">
+                            <div class="ptitle"><h1><span{% if not user.isNew(daysNumberConsideredAsNew) %} class="no_after"{% endif %}>{{ user.username }}</span> </h1></div>
+                            <p>
+                                <span>{{ user.age }},</span>
+                                <span>{{ user.zipCode.area.region.name }},</span>
+                                <span>{{ user.zipCode.area.name }}</span>
+                            </p>
+                        </div>
+                        {% if not currentUser %}
+                            <div class="m-dtl-rgt">
+                                <div class="send-btn"><a href="{{ path('messenger_dialog_open',{'userId': app.user.id, 'contactId': user.id}) }}"><span>{% trans %}Send Message{% endtrans %}</span></a></div>
+                                {% if not app.user.isAddLike(user) %}<div class="send-btn like_click" userId="{{ user.id }}"><a href="#" class="btn2"><span>{% trans %}Like{% endtrans %}</span></a></div>{% endif %}
+                            </div>
+                        {% endif %}
+                        <div class="clr"></div>
+                    </div>
+                    {% if not currentUser %}
+                        <div class="profile-nav">
+                            <ul>
+                                <li><a href="{{ path('messenger_dialog_open',{'userId': app.user.id, 'contactId': user.id}) }}">{% trans %}Send Message{% endtrans %}</a></li>
+                                {% if not app.user.isAddFavorite(user.id) %}<li><a class="add_to_fav" href="#">{% trans %}Add to Favorites{% endtrans %}</a></li>{% endif %}
+                                {% if not app.user.isAddBlackListed(user.id) %}<li><a class="add_to_black_list" href="#">{% trans %}Block{% endtrans %}</a></li>{% endif %}
+                                {% if not app.user.isAddLike(user) %}<li class="like_click" userId="{{ user.id }}"><a href="#">{% trans %}Like{% endtrans %}</a></li>{% endif %}
+                                <li><a class="report_abuse" href="#">{% trans %}Report Abuse{% endtrans %}</a></li>
+                                {% if user.isOnline(minutesNumberConsideredAsOnline) %}
+                                    <li class="icon"><a href="{{ path('messenger_dialog_open',{'userId': app.user.id, 'contactId': user.id}) }}">{% trans %}Online{% endtrans %}</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="clr"></div>
+            </div>
+
+            <div class="report-cont hidden">
+                <textarea placeholder="{% trans %}Comments{% endtrans %}"></textarea>
+                <input type="hidden" value="{{ user.id }}" class="memberId">
+                <div class="btn-wrapper">
+                    <button class="btn" id="report1">{% trans %}Send{% endtrans %}</button>
+                    <button class="btn" style="background-color: #8c8c8b;" id="report-cancel1">{% trans %}Cancel{% endtrans %}</button>
+                </div>
+            </div>
+
+            <div class="profile-bottom">
+                <div class="lft">
+                    {% if user.gender.id == 1 %}
+                        <p class="cf"><span class="lft_left">{% trans %}Status{% endtrans %}</span><span class="lft_right">{{ user.status.name }}</span></p>
+                        <p class="cf"><span class="lft_left">{% trans %}Net Worth{% endtrans %}</span><span class="lft_right">{{ user.netWorth.name }}</span></p>
+                        <p class="cf"><span class="lft_left">{% trans %}Annual Income{% endtrans %}</span><span class="lft_right">{{ user.income.name }}</span></p>
+                    {% endif %}
+                    <p class="cf">
+                        <span class="lft_left">{% trans %}Here For{% endtrans %}</span>
+                        <span class="lft_right">
+                        {% for purpose in user.purposes %}
+                            {{ purpose.name }}{% if not loop.last %},{% endif %}
+                        {% endfor %}
+                    </span>
+                    </p>
+                    <p class="cf"><span class="lft_left">{% trans %}Zodiac{% endtrans %}</span><span class="lft_right">{{ user.zodiac.name }}</span></p>
+                    <p class="cf"><span class="lft_left">{% trans %}Height{% endtrans %}</span><span class="lft_right">{{ user.getHeight(true) }}</span></p>
+                    <p class="cf"><span class="lft_left">{% trans %}Body Type{% endtrans %}</span><span class="lft_right">{{ user.body.name }}</span></p>
+                    <p class="cf"><span class="lft_left">{% trans %}Ethnicity{% endtrans %}</span><span class="lft_right">{{ user.ethnicity.name }}</span></p>
+                    <p class="cf"><span class="lft_left">{% trans %}Hair Color{% endtrans %}</span><span class="lft_right">{{ user.hair.name }}</span></p>
+                    <p class="cf"><span class="lft_left">{% trans %}Eye Color{% endtrans %}</span><span class="lft_right">{{ user.eyes.name }}</span></p>
+                    <p class="cf"><span class="lft_left">{% trans %}Education{% endtrans %}</span><span class="lft_right">{{ user.education.name }}</span></p>
+                    {% if user.occupation|length %}
+                        <p class="cf"><span class="lft_left">{% trans %}Occupation{% endtrans %}</span><span class="lft_right">{{ user.occupation }}</span></p>
+                    {% endif %}
+                    <p class="cf"><span class="lft_left">{% trans %}Relationship Status{% endtrans %}</span><span class="lft_right">{{ user.relationshipStatus.name }}</span></p>
+                    <p class="cf"><span class="lft_left">{% trans %}Children{% endtrans %}</span><span class="lft_right">{{ user.children.name }}</span></p>
+                    <p class="cf"><span class="lft_left">{% trans %}Smokes{% endtrans %}</span><span class="lft_right">{{ user.smoking.name }}</span></p>
+                    <p class="cf"><span class="lft_left">{% trans %}Drinks{% endtrans %}</span><span class="lft_right">{{ user.drinking.name }}</span></p>
+                    <p class="cf"><span class="lft_left">{% trans %}Religion{% endtrans %}</span><span class="lft_right">{{ user.religion.name }}</span></p>
+                    <p class="cf">
+                        <span class="lft_left">{% trans %}Languages{% endtrans %}</span>
+                        <span class="lft_right">
+                            {% for language in user.languages %}
+                                {{ language.name }}{% if not loop.last %},{% endif %}
+                            {% endfor %}
+                        </span>
+                    </p>
+                    <p class="cf">
+                        <span class="lft_left">{% trans %}Hobbies{% endtrans %}</span>
+                        <span class="lft_right">
+                            {% for hobby in user.hobbies %}
+                                {{ hobby.name }}{% if not loop.last %},{% endif %}
+                            {% endfor %}
+                        </span>
+                    </p>
+                    <p class="cf">
+                        <span class="lft_left">{% trans %}Special Features{% endtrans %}</span>
+                        <span class="lft_right">
+                        {% for feature in user.features %}
+                            {{ feature.name }}{% if not loop.last %},{% endif %}
+                        {% endfor %}
+                    </span>
+                    </p>
+                </div>
+                <div class="rgt">
+                    <div class="img-sec">
+                        <ul class="clearfix">
+                            {% if user.getMainPhoto is not null %}
+                                <li><a class="pgal" href="#" style="background-image:url({{ user.getMainPhoto.getFaceWebPath }});"></a></li>
+                            {% endif %}
+                            {% for photo in user.photos %}
+                                {% if photo.isValid and photo.isMain == false %}
+                                    <li><a class="pgal" href="#" style="background-image:url({{ photo.getFaceWebPath }}{#photo.getFaceWebPath#});"></a></li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="popup pgal_popup">
+                        <div class="popup_div">
+                            <div class="pgal_top cf"><div class="close"><img alt="close" src="/images/popupclose.png" /></div></div>
+                            <div class="pgal_bot">
+                                <ul class="popslider">
+                                    {% if user.getMainPhoto is not null %}
+                                        <li class="pgalslid" style="background:url({{ user.getMainPhoto.getWebPath }}) no-repeat center center; background-size:contain; height: 100%;"></li>
+                                    {% endif %}
+                                    {% for photo in user.photos %}
+                                        {% if photo.isValid and photo.isMain == false %}
+                                            <li class="pgalslid" style="background:url({{ photo.getWebPath }}) no-repeat center center; background-size:contain; height: 100%;"></li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <h6>{% trans %}About Me{% endtrans %}</h6>
+                    <p>{{ user.about }}</p>
+                    <h6>{% trans %}What I'm Looking for{% endtrans %}</h6>
+                    <p>{{ user.looking }}</p>
+                </div>
+                <div class="clr"></div>
+            </div>
+            {% if not currentUser %}
+                <div class="profile-nav nav2">
+                    <ul>
+                        <li><a href="{{ path('messenger_dialog_open',{'userId': app.user.id, 'contactId': user.id}) }}">{% trans %}Send Message{% endtrans %}</a></li>
+                        {% if not app.user.isAddFavorite(user.id) %}<li><a class="add_to_fav" href="#">{% trans %}Add to Favorites{% endtrans %}</a></li>{% endif %}
+                        {% if not app.user.isAddBlackListed(user.id) %}<li><a class="add_to_black_list" href="#">{% trans %}Block{% endtrans %}</a></li>{% endif %}
+                        {% if not app.user.isAddLike(user) %}<li class="like_click" userId="{{ user.id }}"><a href="#">{% trans %}Like{% endtrans %}</a></li>{% endif %}
+                        <li><a class="report_abuse" href="#">{% trans %}Report Abuse{% endtrans %}</a></li>
+                        {% if user.isOnline(minutesNumberConsideredAsOnline) %}
+                            <li class="icon"><a href="{{ path('messenger_dialog_open',{'userId': app.user.id, 'contactId': user.id}) }}">{% trans %}Online{% endtrans %}</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
+            <div class="report-cont hidden">
+                <textarea placeholder="Comments"></textarea>
+                <input type="hidden" value="{{ user.id }}" class="memberId">
+                <div class="btn-wrapper">
+                    <button class="btn" id="report">{% trans %}Send{% endtrans %}</button>
+                    <button class="btn" style="background-color: #8c8c8b;" id="report-cancel">{% trans %}Cancel{% endtrans %}</button>
+                </div>
+            </div>
+        </div>
+        <!-- Profile Desktop End -->
+        <!-- Profile Mobile -->
+        <div class="profile_mobile">
+            <button onclick="window.history.back();" class="topBackBtn circular ui icon button">
+                <i class="angle left icon"></i>
+            </button>
+            {% if not currentUser %}
+                <div class="pm_icons">
+                    <ul class="cf">
+                        <li><a href="{{ path('messenger_dialog_open',{'userId': app.user.id, 'contactId': user.id}) }}"><img alt="message" src="/images/pmsgbot.png" /></a></li>
+                        <li class="like_click{% if app.user.isAddLike(user) %} inList{% endif %}" userId="{{ user.id }}"><a href="#"><img alt="message" src="/images/plikebot.png" /></a></li>
+                        <li><a class="add_to_fav{% if app.user.isAddFavorite(user.id) %} inList{% endif %}" href="#"><img alt="message" src="/images/paddbot.png" /></a></li>
+                    </ul>
+                </div>
+            {% endif %}
+            {% if user.isPaying %}
+                <div class="paying"></div>
+            {% endif %}
+            <div class="profile_slider">
+                {% if user.getMainPhoto is not null %}
+                <div class="psimg"><a href="#" style="background:url({{ user.getMainPhoto.getWebPath }}) no-repeat center center; background-size:contain;"></a></div>
+                    {% for photo in user.photos %}
+                        {% if photo.isValid and photo.isMain == false %}
+                            <div class="psimg"><a href="#" style="background:url({{ photo.getWebPath }}) no-repeat center center; background-size:contain;"></a></div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="psimg"><a href="#" style="background:url({{ user.getNoPhoto }}) no-repeat #fff center center; background-size:contain;"></a></div>
+                {% endif %}
+            </div>
+            <div class="popup pgal_popup1">
+                <div class="popup_div popup_div1">
+                    <div class="pgal_top1 cf"><div class="close"><img alt="close" src="/images/psclose.png" /></div></div>
+                    {% if not currentUser %}
+                        <div class="pm_icons">
+                            <ul class="cf">
+                                <li><a href="{{ path('messenger_dialog_open',{'userId': app.user.id, 'contactId': user.id}) }}"><img alt="message" src="/images/pmsgbot.png" /></a></li>
+                                <li class="like_click{% if app.user.isAddLike(user) %} inList{% endif %}" userId="{{ user.id }}"><a href="#"><img alt="message" src="/images/plikebot.png" /></a></li>
+                                <li><a class="add_to_fav{% if app.user.isAddFavorite(user.id) %} inList{% endif %}" href="#"><img alt="message" src="/images/paddbot.png" /></a></li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <div class="pgal_bot1">
+                        <ul class="popslider">
+                            {% if user.getMainPhoto is not null %}
+                                <li class="pgalslid1" style="background:url({{ user.getMainPhoto.getWebPath }}) no-repeat center center; background-size:contain;"></li>
+                                {% for photo in user.photos %}
+                                    {% if photo.isValid %}
+                                        <li class="pgalslid1" style="background:url({{ photo.getWebPath }}) no-repeat center center; background-size:contain;"></li>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <li class="pgalslid1"  style="background:url({{ user.getNoPhoto }}) no-repeat #fff center center; background-size:contain;"></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="profile_detailmob">
+                <div class="pmtitle">
+                    {% if user.isNew(daysNumberConsideredAsNew) %}<div class="new_mob"></div>{% endif %}
+                    {% if user.isOnline(minutesNumberConsideredAsOnline) %}<div class="online_mob"></div>{% endif %}
+                    <strong>{{ user.username }},</strong> {{ user.age }} <span>{{ user.zipCode.area.region.name }}</span>
+                </div>
+                {#
+                <div class="buttons_mob">
+                    <button class="report_abuse ui black medium black button"><i class="icon announcement thumbs"></i>{% trans %}Report Abuse{% endtrans %}</button>
+                    {% if not app.user.isAddBlackListed(user.id) %}
+                        <button class="add_to_black_list ui black medium button"><i class="icon lock thumbs"></i>{% trans %}Block{% endtrans %}</button>
+                    {% endif %}
+                </div>
+
+                <div class="report-cont hidden">
+                    <textarea placeholder="{% trans %}Comments{% endtrans %}"></textarea>
+                    <input type="hidden" value="{{ user.id }}" class="memberId">
+                    <div class="btn-wrapper">
+                        <button class="btn report">{% trans %}Send{% endtrans %}</button>
+                        <button class="btn report-cancel" style="background-color: #8c8c8b;">{% trans %}Cancel{% endtrans %}</button>
+                    </div>
+                </div>
+                #}
+
+                <div class="pmdetail cf">
+                    <ul class="pmbotul">
+                        <li><span class="one">{% trans %}Relationship Status{% endtrans %}</span><span class="two">{{ user.relationshipStatus.name }}</span></li>
+                        <li><span class="one">{% trans %}Zodiac{% endtrans %}</span><span class="two">{{ user.zodiac.name }}</span></li>
+                        {% if user.gender.id == 1 %}
+                            <li><span class="one">{% trans %}Status{% endtrans %}</span><span class="two">{{ user.status.name }}</span></li>
+                            <li><span class="one">{% trans %}Net Worth{% endtrans %}</span><span class="two">{{ user.netWorth.name }}</span></li>
+                            <li><span class="one">{% trans %}Annual Income{% endtrans %}</span><span class="two">{{ user.income.name }}</span></li>
+                        {% endif %}
+                        <li>
+                            <span class="one">{% trans %}Here For{% endtrans %}</span>
+                            <span class="two">
+
+                            {% for purpose in user.purposes %}
+                                {{ purpose.name }}{% if not loop.last %},{% endif %}
+                            {% endfor %}
+
+                        </span>
+                        </li>
+                        <li><span class="one">{% trans %}Height{% endtrans %}</span><span class="two">{{ user.getHeight(true) }}</span></li>
+                        <li><span class="one">{% trans %}Body Type{% endtrans %}</span><span class="two">{{ user.body.name }}</span></li>
+                        <li><span class="one">{% trans %}Ethnicity{% endtrans %}</span><span class="two">{{ user.ethnicity.name }}</span></li>
+                        <li><span class="one">{% trans %}Hair Color{% endtrans %}</span><span class="two">{{ user.hair.name }}</span></li>
+                        <li><span class="one">{% trans %}Eye Color{% endtrans %}</span><span class="two">{{ user.eyes.name }}</span></li>
+                        <li><span class="one">{% trans %}Education{% endtrans %}</span><span class="two">{{ user.education.name }}</span></li>
+                        {% if user.occupation|length %}
+                            <li><span class="one">{% trans %}Occupation{% endtrans %}</span><span class="two">{{ user.occupation }}</span></li>
+                        {% endif %}
+
+                        <li><span class="one">{% trans %}Children{% endtrans %}</span><span class="two">{{ user.children.name }}</span></li>
+                        <li><span class="one">{% trans %}Smokes{% endtrans %}</span><span class="two">{{ user.smoking.name }}</span></li>
+                        <li><span class="one">{% trans %}Drinks{% endtrans %}</span><span class="two">{{ user.drinking.name }}</span></li>
+                        <li><span class="one">{% trans %}Religion{% endtrans %}</span><span class="two">{{ user.religion.name }}</span></li>
+                        <li>
+                            <span class="one">{% trans %}Languages{% endtrans %}</span>
+                            <span class="two">
+                                {% for language in user.languages %}
+                                    {{ language.name }}{% if not loop.last %},{% endif %}
+                                {% endfor %}
+                            </span>
+                        </li>
+                        <li>
+                            <span class="one">{% trans %}Hobbies{% endtrans %}</span>
+                            <span class="two">
+                                {% for hobby in user.hobbies %}
+                                    {{ hobby.name }}{% if not loop.last %},{% endif %}
+                                {% endfor %}
+                            </span>
+                        </li>
+                        {% if not user.features is empty %}
+                        <li>
+                            <span class="one">{% trans %}Special Features{% endtrans %}</span>
+                            <span class="two">
+                                {% for feature in user.features %}
+                                    {{ feature.name }}{% if not loop.last %},{% endif %}
+                                {% endfor %}
+                            </span>
+                        </li>
+                        {% endif %}
+                        <li><span class="one">{% trans %}Looking for{% endtrans %}</span><span class="two">{{ user.looking }}</span></li>
+                        <li><span class="one">{% trans %}About me{% endtrans %}</span><span class="two">{{ user.about }}</span></li>
+                    </ul>
+                    {#
+                    {% if not currentUser %}
+                        <div class="pbot_con">
+                            <ul class="cf">
+                                <li><a href="{{ path('messenger_dialog_open',{'userId': app.user.id, 'contactId': user.id}) }}"><img alt="message" src="/images/pmsgbot.png" /></a></li>
+                                {% if not app.user.isAddLike(user) %}<li class="like_click" userId="{{ user.id }}"><a href="#"><img alt="like" src="/images/plikebot.png" /></a></li>{% endif %}
+                                {% if not app.user.isAddFavorite(user.id) %}<li><a class="add_to_fav" href="#"><img alt="add" src="/images/paddbot.png" /></a></li>{% endif %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    #}
+                </div>
+                {% if not currentUser %}
+                    <div class="buttons_mob">
+                        <button class="report_abuse ui black medium black button"><i class="icon announcement thumbs{# thumbs outline down#}"></i>{% trans %}Report Abuse{% endtrans %}</button>
+
+                        <button class="add_to_black_list ui black medium button{% if app.user.isAddBlackListed(user.id) %} hidden{% endif %}"><i class="icon lock thumbs"></i>{% trans %}Block{% endtrans %}</button>
+
+                        <button class="delete_from_black_list ui black medium button{% if not app.user.isAddBlackListed(user.id) %} hidden{% endif %}"><i class="icon unlock thumbs"></i>{% trans %}Unblock{% endtrans %}</button>
+
+                    </div>
+                    <div class="report-cont hidden">
+                        <textarea placeholder="{% trans %}Comments{% endtrans %}"></textarea>
+                        <input type="hidden" value="{{ user.id }}" class="memberId">
+                        <div class="btn-wrapper">
+                            <button class="btn report" >{% trans %}Send{% endtrans %}</button>
+                            <button class="btn report-cancel" style="background-color: #8c8c8b;" >{% trans %}Cancel{% endtrans %}</button>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Profile Mobile End -->
+    </div>
+
+
+
+
+{% endblock %}

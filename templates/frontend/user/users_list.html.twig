@@ -1,0 +1,81 @@
+{% set settings = getSettings() %}
+{% set minutesNumberConsideredAsOnline = settings.userConsideredAsOnlineAfterLastActivityMinutesNumber %}
+{% set daysNumberConsideredAsNew = settings.getUserConsideredAsNewAfterDaysNumber %}
+
+
+{% set add_to_fav = true %}
+{% set delete_from_fav = false %}
+{% set add_to_black_list = true %}
+{% set delete_from_black_list = false %}
+
+{% set route = app.request.attributes.get('_route') %}
+
+{% if route == 'user_manage_list_favorited' %}
+    {% set add_to_fav = false %}
+    {% set delete_from_fav = true %}
+{% else %}
+    {% if route == 'user_list_favorited' %}
+        {% set add_to_fav = false %}
+    {% else %}
+        {% if route == 'user_manage_list_black_listed' %}
+            {% set delete_from_black_list = true %}
+            {% set add_to_black_list = false %}
+        {% else %}
+            {% if route == 'user_list_black_listed' %}
+                {% set add_to_black_list = false %}
+            {% endif %}
+        {% endif %}
+
+    {% endif %}
+{% endif %}
+
+
+{% if users|length == 0 %}
+    <div class="no-result ui message info"><div style="margin: 0 auto; width: 130px;"><i class="child icon left"></i>{% trans %}No Results{% endtrans %}</div></div>
+{% endif %}
+
+{% for user in users %}
+    {% set userDistance = getDistance(app.user,user) %}
+    <div class="new-msec user-section">
+
+        <input type="hidden" class="userId" value="{{ user.id }}">
+        <input type="hidden" class="userGenderId" value="{{ user.gender.id }}">
+
+        <div class="new-msec-top clearfix">
+            <div class="new-msec-img{% if not user.isPaying %} no_after{% endif %}">
+                <a href="{{ path('view_user', {id: user.id}) }}" style="background-image: url({% if user.getMainPhoto is not null %}{{ user.getMainPhoto.getFaceWebPath }}{% else %}{{ user.getNoPhoto }}{% endif %});">
+                    {#<img src="{% if user.getMainPhoto is not null %}{{ user.getMainPhoto.getFaceWebPath }}{% else %}{{ user.getNoPhoto }}{% endif %}" alt="member">#}
+                </a>
+            </div>
+            <div class="new-msec-dtl">
+                <h5><span{% if not user.isNew(daysNumberConsideredAsNew) %} class="no_after"{% endif %}><a href="{{ path('view_user', {id: user.id}) }}">{{ user.username }}</a></span></h5>
+                {% if app.user.id != user.id %}<div class="send-btn"><a href="{{ path('messenger_dialog_open',{'userId': app.user.id, 'contactId': user.id}) }}"><span>{% trans %}Send Message{% endtrans %}</span></a></div>{% endif %}
+                {% if userDistance %}<div class="distance"><span>{{ userDistance }} mi</span></div>{% endif %}
+                <div class="clr"></div>
+
+                <p>{{ user.age }}</p>
+
+                <p>{{ user.zipCode.area.region.name }}</p>
+                <p class="pd">{{ user.about|length > 50 ? user.about|slice(0, 50) ~ '...' : user.about  }}</p>
+            </div>
+        </div>
+        <div class="profile-nav">
+            <ul>
+                {% if app.user.id != user.id %}<li><a href="{{ path('messenger_dialog_open',{'userId': app.user.id, 'contactId': user.id}) }}">{% trans %}Send Message{% endtrans %}</a></li>{% endif %}
+                <li><a href="{{ path('view_user', {id: user.id}) }}">{% trans %}Full Profile{% endtrans %}</a></li>
+                {% if not app.user.isAddLike(user) %}<li class="like_click" userId="{{ user.id }}"><a href="#">{% trans %}Like{% endtrans %}</a></li>{% endif %}
+                {% if add_to_fav %}{% if not app.user.isAddFavorite(user.id) %}<li><a class="add_to_fav" href="#">{% trans %}Add to Favorites{% endtrans %}</a></li>{% endif %}{% endif %}
+                {% if delete_from_fav %}<li><a class="delete_from_fav" href="#">{% trans %}Remove from Favorites{% endtrans %}</a></li>{% endif %}
+                {% if add_to_black_list %}{% if not app.user.isAddBlackListed(user.id) %}<li><a class="add_to_black_list" href="#">{% trans %}Block{% endtrans %}</a></li>{% endif %}{% endif %}
+                {% if delete_from_black_list %}<li><a class="delete_from_black_list" href="#">{% trans %}Unblock{% endtrans %}</a></li>{% endif %}
+                {% if user.isOnline(minutesNumberConsideredAsOnline) %}
+                    <li class="icon"><a href="{{ path('messenger_dialog_open',{'userId': app.user.id, 'contactId': user.id}) }}">{% trans %}Online{% endtrans %}</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    <!-- End -->
+
+{% endfor %}
+
+

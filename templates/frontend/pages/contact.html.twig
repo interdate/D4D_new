@@ -1,0 +1,98 @@
+{% extends "frontend/layout.html.twig" %}
+
+{% block title %}{{ parent() }} - Contact Us{% endblock %}
+{% block meta_description %}{% endblock %}
+
+{% block content %}
+
+    <div class="mid_content magazin1">
+        <div class="mid_title">
+            <h1>Contact us</h1>
+        </div>
+        <div class="magazin_main">
+            <div class="magtext" style="background: #ededec;">
+                <div class="harsama-midsec">
+
+                    {% if sent %}
+                        <br><div class="contact-success">{% trans %}Thanks! the message was sent successfully.{% endtrans %}</div><br><br>
+                    {% else %}
+
+                    <form method="post" novalidate>
+
+                        <div class="errors{% if form.vars.valid %} hidden{% endif %} empty_fields" style="margin-bottom: 10px;margin-right: 20px;">
+                            <div class="ui orange message">
+                                <div class="content">
+                                    <div class="header">
+                                        {% trans %}Please complete the marked fields{% endtrans %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="hmaformsec">
+                            <div class="mfrm_field cf{% if form.email.vars.errors|length %} error{% endif %}">
+                                <div class="label">{{ form_label(form.email) }}</div>
+                                <div class="inputdiv">{{ form_widget(form.email) }}</div>
+                                <div class="clear"></div>
+                                {% if form.email.vars.errors|length %}
+                                    <div class="ui orange message mini">{{ form_errors(form.email) }}</div>
+                                {% endif %}
+                            </div>
+
+                            <br>
+
+                            <div class="mfrm_field cf{% if form.subject.vars.errors|length %} error{% endif %}">
+                                <div class="label">{{ form_label(form.subject) }}</div>
+                                <div class="inputdiv">{{ form_widget(form.subject) }}</div>
+                                <div class="clear"></div>
+                                {% if form.subject.vars.errors|length %}
+                                    <div class="ui orange message mini">{{ form_errors(form.subject) }}</div>
+                                {% endif %}
+                            </div>
+                            <br>
+
+                            <div class="mfrm_field cf{% if form.text.vars.errors|length %} error{% endif %}">
+                                <div class="label">{{ form_label(form.text) }}</div>
+                                <div class="textarea about_field">{{ form_widget(form.text) }}</div>
+                                <div class="clear"></div>
+                                {% if form.text.vars.errors|length %}
+                                    <div class="ui orange message mini">{{ form_errors(form.text) }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <input type="submit" class="hidden" id="send">
+
+                        {{ form_rest(form) }}
+
+                    </form>
+
+                    {% endif %}
+
+                </div>
+                {% if not sent %}
+                <div class="clearfix"></div>
+                <div class="main_sub" style="padding: 20px 20px 30px 0px;">
+                    <input type="button" value="{% trans %}Send{% endtrans %}" class="free contact_submit">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <script>
+        function pageInit(){
+
+        }
+    </script>
+
+{% endblock %}
+{% block mobile_content %}
+    <div class="nymain_mobile"{% if not app.user %} style="padding-top:220px"{% endif %}>
+        <button onclick="window.history.back();" class="topBackBtn circular ui icon button">
+            <i class="angle left icon"></i>
+        </button>
+        <div class="mid_content magazin1">
+
+        </div>
+    </div>
+{% endblock %}

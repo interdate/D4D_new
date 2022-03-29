@@ -1,0 +1,93 @@
+{% extends "frontend/layout.html.twig" %}
+
+{% block title %}
+    {{ parent() }} - {% trans %}Dialog{% endtrans %}
+{% endblock %}
+
+{% block content %}
+    <div class="mid_content hadaot_mid2">
+        <div class="mid_title"><h1>{% trans %}Dialog{% endtrans %}</h1></div>
+        <div class="msg_div">
+            <div class="msg_title">
+                <a href="{{ path('view_user', {id: contact.id}) }}">
+                    <span class="conv_photo" style="background-image: url(' {% if contact.getMainPhoto != null  %} {{ contact.getMainPhoto.getFaceWebPath }} {% else %} {{ contact.getNoPhoto }} {% endif %} ');"></span>
+                </a>
+                <span style="background: transparent; ">{% trans %}A conversation with{% endtrans %} <a href="{{ path('view_user', {id: contact.id}) }}">{{ contact.username }}</a></span>
+                <input type="hidden" value="{{ contact.id }}" >
+            </div>
+            <div class="msg_body" class="scrollbar1">
+                <div id="dialog" >
+                {% for message in history %}
+                    {% set class =  message.from == dialog.user.id ? 'msg_text2' : '' %}
+                    {%
+                    set status = message.from == dialog.user.id
+                    ? message.isRead
+                    ? 'read'
+                    : 'unread'
+                    : ''
+                    %}
+
+                    {%
+                    set unreadMessage  = message.from == dialog.user.id
+                    ? message.isRead
+                    ? ''
+                    : '<input type="hidden" class="unreadMessage" value="' ~ message.id ~ '">'
+                    %}
+
+                    <div class="msg_text cf {{ class }} {{ status }} message messageSection" id="dialogMessageSection_{{ message.id }}">
+                        {{ message.text|replace({ '%PAYMENT_LINK%': path('user_homepage') })|raw }}
+                        <span class="mdate">{{ message.dateTime }}</span>
+                    </div>
+                    {{ unreadMessage|raw }}
+                    <div class="clr"></div>
+                {% endfor %}
+                    <div id="scroll_end" class="clr" style="width: 100%;height: 1px;"></div>
+                </div>
+
+
+                <div class="smileimg" id="show_emoticons"><a><img src="/images/smile.png" alt=""></a></div>
+                <div class="clr"></div>
+                <div class="send_message_area">
+
+                    <textarea cols="5" rows="5" class="msg_replybot" id="dialog_textarea" placeholder="{% trans %}Reply...{% endtrans %}"></textarea>
+                    <div class="msg_but"><input name="" type="submit" value="{% trans %}Send{% endtrans %}" onclick="dialog.sendMessage($('textarea#dialog_textarea'));"></div>
+                </div>
+
+                <input type="hidden" value="{{ contact.id }}" id="contactId" />
+                <input type="hidden" value="{{ contact.username }}" id="contactNickname" />
+                <input type="hidden" value="{{ app.user.username }}" id="userNickname" />
+                <input type="hidden" value="{{ app.user.id }}" id="curentUserId" />
+                <input type="hidden" value="{% if app.user.getMainPhoto != null  %} {{ app.user.getMainPhoto.getFaceWebPath }} {% else %} {{ app.user.getNoPhoto }} {% endif %}" id="curentUserImage" />
+
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block mobile_content %}
+    <div class="nymain_mobile">
+    <div class="mid_content hadaot_mid2">
+        <button onclick="window.history.back();" class="topBackBtn circular ui icon button">
+            <i class="angle left icon"></i>
+        </button>
+        <div class="mid_title"><h3>{% trans %}Messages{% endtrans %}</h3></div>
+        <div class="msg_div">
+            <div class="msg_title">
+                <a href="{{ path('view_user', {id: contact.id}) }}">
+                    <span style="background-image: url(' {% if contact.getMainPhoto != null  %} {{ contact.getMainPhoto.getFaceWebPath }} {% else %} {{ contact.getNoPhoto }} {% endif %} ');">{% trans %}A conversation with{% endtrans %} {{ contact.username }}</span>
+                </a>
+                <input type="hidden" value="{{ contact.id }}">
+            </div>
+            <div class="msg_body" class="scrollbar1">
+                <div id="dialog_mob" >
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

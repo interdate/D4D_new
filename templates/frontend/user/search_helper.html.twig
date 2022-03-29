@@ -1,0 +1,10 @@
+<div>
+    <div id="advanced_search_area">
+        {% for area in form.area %}
+            <div class="ui checkbox two">
+                {{ form_widget(area) }}
+                {{ form_label(area) }}
+            </div>
+        {% endfor %}
+    </div>
+</div>

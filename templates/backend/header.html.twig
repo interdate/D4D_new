@@ -1,0 +1,42 @@
+<div id="header">
+    <div class="right" id="header_wrapper">
+        <h1 class="ui header">
+            <i class="{{ icon }} icon"></i>
+            <div class="content">
+                {{ header }}
+                {% if sub_header is defined %}<div class="sub header">{{ sub_header }}</div>{% endif %}
+            </div>
+        </h1>
+        {% if count is defined %}
+            <div class="ui header left" style="margin-top: -60px;margin-left: 40px;">
+                <div class="content ui label red" style="font-size: 15px;text-align: center">
+                    <div class="sub header" style="font-weight: bold;margin-bottom: 2px;">כמות משתמשים</div>
+                    <span id="count_results">{% if count == 0 %}<img src="/images/load_p.gif" style="margin: -20px 0px;" width="60" />{% else %}{{ count }}{% endif %}</span>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="left" id="search">
+        <button class="ui icon button massive">
+            <i class="icon sidebar"></i>
+        </button>
+    </div>
+
+    <div class="left" id="homepage">
+        <a href="{{ path('user_homepage') }}" target="_blank">
+            <button class="ui icon button massive">
+                <i class="icon home"></i>
+            </button>
+        </a>
+    </div>
+
+    <div class="left" id="logout">
+        <button class="ui icon button massive" onclick="window.location.href='{{ path('logout') }}'">
+            <i class="icon power"></i>
+        </button>
+    </div>
+
+</div>
+
+<div class="clear"></div>

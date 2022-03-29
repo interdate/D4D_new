@@ -1,0 +1,82 @@
+{% if errors %}
+    <div class="errors">
+        <div class="ui orange message">
+            <div class="content">
+                <div class="header">
+                    {% trans %}Please complete fields below{% endtrans %}
+                </div>
+                <p>
+                    {{ form_errors(form.username) }}
+                    {{ form_errors(form.email.first) }}
+                    {{ form_errors(form.phone) }}
+                </p>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+
+
+
+<div class="inner_form_bot">
+    <div class="main_form">
+
+        <div class="mfrm_field cf {% if form.username.vars.errors|length %}error{% endif %}">
+            {{ form_label(form.username) }}
+            {{ form_widget(form.username) }}
+        </div>
+
+        <div class="mfrm_field cf {% if form.email.first.vars.errors|length %}error{% endif %}">
+            {{ form_label(form.email.first) }}
+            {{ form_widget(form.email.first) }}
+        </div>
+        <div class="mfrm_field cf">
+            {{ form_label(form.email.second) }}
+            {{ form_widget(form.email.second) }}
+
+        </div>
+
+        <div class="mfrm_field cf">
+            {{ form_label(form.birthday) }}
+            <div class="mselect2">
+                {{ form_widget(form.birthday.month) }}
+                {{ form_widget(form.birthday.day) }}
+                {{ form_widget(form.birthday.year) }}
+            </div>
+        </div>
+        <div class="mfrm_field cf">
+            {{ form_label(form.region) }}
+            <div class="mselect3">
+                {{ form_widget(form.region) }}
+            </div>
+        </div>
+        <div class="mfrm_field cf">
+            {{ form_label(form.area) }}
+            <div class="mselect3">
+                {{ form_widget(form.area) }}
+            </div>
+        </div>
+        <div class="mfrm_field cf">
+            {{ form_label(form.zipCode) }}
+            <div class="mselect3">
+                {{ form_widget(form.zipCode) }}
+            </div>
+        </div>
+        {#
+        <div class="mfrm_field cf {% if form.phone.vars.errors|length %}error{% endif %}{% if app.user.gender.id == 1 %} hidden{% endif %}">
+            {{ form_label(form.phone) }}
+            {{ form_widget(form.phone) }}
+        </div>
+        #}
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+

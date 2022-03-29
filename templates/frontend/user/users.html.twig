@@ -1,0 +1,158 @@
+{% extends "frontend/layout.html.twig" %}
+
+{% block content %}
+
+
+	<div class="mid_content">
+		{% if app.user %}
+		<div class="mid_search">
+			<div class="mid_title mhover"><h3>{% trans %}Quick Search{% endtrans %}</h3></div>
+			<div class="msearch_div ms_div2">
+
+				<form action="{{ path('user_search_results') }}" method="post" class="qs">
+
+					<input type="hidden" class="form_helper_url" value="{{ path('quick_search_helper') }}">
+
+					<div class="mlocation">
+						<div class="m-between">
+							<div class="ms_left">{% trans %}Distance:{% endtrans %}</div>
+							<div class="ms_right">
+                                {{ form_widget(form.distance) }}
+								<span class="dist">{% trans %}Miles from my location{% endtrans %}</span>
+							</div>
+							<div class="ms_left" style="display: inline-block;">{% trans %}Age between:{% endtrans %}</div>
+							<div class="ms_right">
+								{{ form_widget(form.ageFrom) }}
+								<span class="band">&amp;</span>
+								{{ form_widget(form.ageTo) }}
+							</div>
+
+						</div>
+
+						<div class="msarea-left">
+							<h6>{% trans %}Area:{% endtrans %}</h6>
+							<div class="ma_right checkdiv">
+
+								{% for region in form.region %}
+									<div class="lchk{% if loop.index % 2 == 0 %} lchkright{% endif %} cf">
+										<div class="ui checkbox">
+											{{ form_widget(region) }}
+											{{ form_label(region) }}
+										</div>
+									</div>
+								{% endfor %}
+
+							</div>
+							<div class="ms_but"><input type="submit" value="{% trans %}Search{% endtrans %}"></div>
+							<div class="clr"></div>
+						</div>
+						<div class="clr"></div>
+					</div>
+
+				</form>
+
+				<div class="left_sep"><span>{% trans %}Or{% endtrans %}</span></div>
+
+				<form action="{{ path('user_search_results') }}" method="post" class="qs">
+
+					<input type="hidden" id="quickSearch_filter" name="quickSearch[filter]" value="lastActivity">
+
+					<div class="msearch_nick cf">
+						<div class="s_nick_lft cf">
+							{{ form_label(form.username) }}
+							{{ form_widget(form.username) }}
+						</div>
+						<div class="ms_but"><input type="submit" value="{% trans %}Search{% endtrans %}"></div>
+						<div class="clr"></div>
+					</div>
+
+				</form>
+
+
+				<div class="left_sep"><span>{% trans %}Or{% endtrans %}</span></div>
+				<div class="ms_advbut"><a href="{{ path('user_search_advanced') }}">{% trans %}Advanced Search{% endtrans %}</a></div>
+			</div>
+		</div>
+		{% endif %}
+
+		<div class="new-mem">
+			<div class="mid_title"><h3>{{ header }}</h3></div>
+
+			{% if app.user %}
+
+				{% set filter = data is not defined ? 'lastActivity' : data.filter %}
+
+				<div class="member cf">
+					<div class="mem-left">{% trans %}Sort By{% endtrans %}</div>
+					<div class="mem-right">
+						<div class="sortby">
+							<select id="search_filter">
+								<option value="distance"{% if filter == 'distance' %} selected="selected"{% endif %}>{% trans %}Distance{% endtrans %}</option>
+								<option value="new"{% if filter == 'new' %} selected="selected"{% endif %}>{% trans %}New Members{% endtrans %}</option>
+								{% if data.withPhoto is not defined or not data.withPhoto %}
+									<option value="photo" {% if filter == 'photo' %} selected="selected"{% endif %}>{% trans %}Photo Owners{% endtrans %}</option>
+								{% endif %}
+								<option value="lastActivity"{% if filter == 'lastActivity' or filter == '' %} selected="selected"{% endif %}>{% trans %}Last Visit{% endtrans %}</option>
+								<option value="popularity"{% if filter == 'popularity' %} selected="selected"{% endif %}>{% trans %}Popularity{% endtrans %}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+			{% endif %}
+
+			<form action="{{ app.request.requesturi }}" method="post" id="search_filter_form">
+				<input type="hidden" name="is_mobile" value="0" />
+
+				{% if data is defined %}
+					{% for key,value in data %}
+						{% if data[key] is iterable %}
+							{% for key2,value2 in data[key] %}
+								<input type="hidden" name="advanced_search[{{ key }}][{{ key2 }}]" value="{{ value2 }}" />
+							{% endfor %}
+						{% else %}
+							<input type="hidden" name="advanced_search[{{ key }}]" value="{{ value }}" id="advanced_search_{{ key }}" />
+						{% endif %}
+					{% endfor %}
+				{% else %}
+					<input type="hidden" name="advanced_search[filter]" value="{{ filter }}" id="advanced_search_filter" />
+				{% endif %}
+
+				<input type="submit" class="hidden">
+
+			</form>
+
+			{% if app.user %}
+				<input type="hidden" id="page" value="2">
+				<div class="desktop_results">
+					{{ include ('frontend/user/users_list.html.twig') }}
+				</div>
+			{% else %}
+				<input type="hidden" id="page" value="2">
+				<div class="desktop_results">
+					{{ include ('frontend/user/users_public_list.html.twig') }}
+				</div>
+				{# {{ include ('frontend/user/users_mobile.html.twig') }} #}
+				{#<div class="pages usersResults">
+					{% if data.filter != 'popularity' %}
+						{{ knp_pagination_render(users) }}
+					{% endif %}
+				</div>#}
+			{% endif %}
+
+
+		</div>
+	</div>
+
+	<script>
+		jQuery(document).ready(function ($) {
+			if ($('.nymain_mobile').css('display') == 'block' || $(window).width() < 641) {
+				$('#search_filter_form input[name="is_mobile"]').val(1);
+			}
+		});
+	</script>
+{% endblock %}
+
+{% block mobile_content %}
+	{{ include ('frontend/user/users_mobile.html.twig') }}
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "backend/layout.html.twig" %}
+
+{% block content %}
+
+    {% if list == 'WordBlocked' %}
+        {% set header = 'Bloced Word' %}
+        {% set icon = 'write' %}
+        {% set hebTitle = 'מילים' %}
+    {% elseif list == 'EmailBlocked' %}
+        {% set header = 'Bloced Email' %}
+        {% set icon = 'mail outline' %}
+        {% set hebTitle = 'מיילים' %}
+    {% elseif list == 'PhoneBlocked' %}
+        {% set header = 'Bloced Phone' %}
+        {% set icon = 'call' %}
+        {% set hebTitle = 'טלפונים' %}
+    {% endif %}
+
+    {{ include('backend/header.html.twig', { 'header': header, 'icon': icon }) }}
+
+    <div class="page_content">
+
+        {% if item.id > 0 %}
+
+        <a href="{{ path('admin_blocked_lists_list', {'list': list}) }}" class="link" style="margin-right: 30px;">
+            רשימת {{ hebTitle }}
+        </a>
+
+        /
+
+        {{ item.value }}
+
+        {% endif %}
+
+
+        <div class="ui segment article">
+
+            <h2 class="ui header right">
+                <i class="write icon"></i>
+                <div class="content">
+                    {% set title = item.id > 0 ? 'עריכת ' : 'הוספת ' %}
+                    {{ title }}{{ hebTitle }}
+                </div>
+            </h2>
+
+
+            <div class="clear"></div>
+
+
+            <form class="ui form" id="article_form" method="post">
+
+                <div class="ui big ribbon label">{{ form_label(form.value) }}</div>
+                <div class="field">
+                    {{ form_widget(form.value) }}
+                </div>
+
+
+
+
+                <div class="ui divider"></div>
+                <br>
+                <br>
+
+                <div class="ui one column centered grid">
+                    <button class="ui labeled icon pink approve big button right">
+                        <i class="save icon"></i>
+                        לשמור
+                    </button>
+                </div>
+
+                {{ form_rest(form) }}
+
+            </form>
+
+            <br>
+            <br>
+
+
+            <div class="clear"></div>
+
+
+        </div>
+
+    </div>
+
+
+
+{% endblock %}

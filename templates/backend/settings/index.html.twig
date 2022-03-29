@@ -1,0 +1,179 @@
+{% extends "backend/layout.html.twig" %}
+
+{% block content %}
+
+    {{ include('backend/header.html.twig', { 'header': 'הגדרות', 'icon': 'settings' }) }}
+
+    <div class="page_content settings_content">
+
+        <div class="ui segment settings">
+
+
+            <form class="ui form" method="post">
+
+                <h4 class="ui center aligned icon header">
+                    <i class="circular mail red icon"></i>
+                    דואלים
+                </h4>
+
+
+
+                <div class="field">
+                    <div class="ui big ribbon label">{{ form_label(form.reportEmail) }}</div>
+                    <br><br>
+                    {{ form_widget(form.reportEmail) }}
+                </div>
+                <br>
+
+                <div class="field">
+                    <div class="ui big ribbon label">{{ form_label(form.contactEmail) }}</div>
+                    <br><br>
+                    {{ form_widget(form.contactEmail) }}
+                </div>
+                <br>
+
+
+
+                <h4 class="ui center aligned icon header">
+                    <i class="circular chat red icon"></i>
+                    הודעות
+                </h4>
+
+
+
+                <div class="field">
+                    <div class="ui big ribbon label">{{ form_label(form.deleteMessagesAfterDaysNumber) }}</div>
+                    <br><br>
+                    {{ form_widget(form.deleteMessagesAfterDaysNumber) }}
+                </div>
+                <br>
+
+                <div class="field">
+                    <div class="ui big ribbon label">{{ form_label(form.sendMessageUsersNumber) }}</div>
+                    <br><br>
+                    {{ form_widget(form.sendMessageUsersNumber) }}
+                </div>
+                <br>
+
+                <h4 class="ui center aligned icon header">
+                    <i class="circular users red icon"></i>
+                    חיפוש חברים
+                </h4>
+
+                <div class="field">
+                    <div class="ui big ribbon label">{{ form_label(form.usersPerPage) }}</div>
+                    <br><br>
+                    {{ form_widget(form.usersPerPage) }}
+                </div>
+                <br>
+
+                <h4 class="ui center aligned icon header">
+                    <i class="circular checkmark red icon"></i>
+                    כללי
+                </h4>
+
+                <div class="field">
+                    <div class="ui big ribbon label">{{ form_label(form.isCharge) }}</div>
+                    <br><br>
+                    <div class="ui compact segment">
+                        <div class="ui slider fitted checkbox">
+                            {{ form_widget(form.isCharge) }}
+                            <label></label>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                <div class="field">
+                    <div class="ui big ribbon label">{{ form_label(form.messagePopularityDaysNumber) }}</div>
+                    <br><br>
+                    {{ form_widget(form.messagePopularityDaysNumber) }}
+                </div>
+                <br>
+
+                <div class="field">
+                    <div class="ui big ribbon label">{{ form_label(form.userConsideredAsOnlineAfterLastActivityMinutesNumber) }}</div>
+                    <br><br>
+                    {{ form_widget(form.userConsideredAsOnlineAfterLastActivityMinutesNumber) }}
+                </div>
+                <br>
+
+                <div class="field">
+                    <div class="ui big ribbon label">{{ form_label(form.userConsideredAsNewAfterDaysNumber) }}</div>
+                    <br><br>
+                    {{ form_widget(form.userConsideredAsNewAfterDaysNumber) }}
+                </div>
+                <br>
+
+                {{ form_rest(form) }}
+
+
+                <div class="clear"></div>
+                <br><br><br>
+
+
+                <div class="ui one column centered grid">
+                    <button class="ui labeled icon red approve big button right">
+                        <i class="save icon"></i>
+                        לשמור
+                    </button>
+                </div>
+
+                <br><br><br>
+
+
+            </form>
+
+
+            <h4 class="ui center aligned icon header">
+                <i class="circular barcode red icon"></i>
+                קופונים
+            </h4>
+                <a href="{{ path('admin_coupon_add') }}">
+                    <button class="ui labeled icon orange approve large button right">
+                        <i class="add square icon"></i>
+                        הוסף קופון
+                    </button>
+                </a>
+            <table class="ui basic celled table coupons">
+                <thead>
+                <tr>
+                    <th>כותרת</th>
+                    <th>פעיל</th>
+                    <th>להסיר</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for coupon in coupons %}
+                    <tr>
+                        <td class="alignRight">
+                            <a href="{{ path('admin_coupon_edit', {'id': coupon.id}) }}" class="page_name">{{ coupon.name }}</a>
+                            <input type="hidden" class="coupon_id" value="{{ coupon.id }}">
+                        </td>
+
+                        <td>
+                            <div class="ui checkbox toggle small">
+                                <input type="checkbox" {% if coupon.isActive %}checked="checked"{% endif %}>
+                                <label></label>
+                            </div>
+                        </td>
+
+                        <td>
+                            <i class="trash outline big link black icon circular delete"></i>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <a href="{{ path('admin_coupon_add') }}">
+                <button class="ui labeled icon orange approve large button right">
+                    <i class="add square icon"></i>
+                    הוסף קופון
+                </button>
+            </a>
+        </div>
+
+    </div>
+
+
+{% endblock %}

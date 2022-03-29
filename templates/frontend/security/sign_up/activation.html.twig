@@ -1,0 +1,62 @@
+{% extends "frontend/main_layout.html.twig" %}
+
+{% block container %}
+
+    <!-- Mid Container -->
+    <div class="inner_content">
+        <div class="wrap">
+            <div class="inner_form">
+                <div class="inner_form_bot">
+                    <div class="main_form">
+                        <h1>{% trans %}הפעלת חשבון{% endtrans %}</h1>
+
+                        {% if app.user.isActivated %}
+                            <div class="ui olive tiny message">{% trans %}חשבונך הופעל בהצלחה!{% endtrans %}</div>
+                            <div class="div4" style="padding: 0px;">
+                                <a href="{{ path('homepage') }}">{% trans %}למעבר לאתר{% endtrans %}</a>
+                            </div>
+                        {% else %}
+
+                            {% if error %}
+                                <div class="ui red tiny message">{{ errorMessage }}</div>
+                            {% endif %}
+
+
+                            {% if (resent == false) %}
+                                <form id="activation" method="get" action="{{ path('sign_up_activation') }}">
+                                    <input type="hidden" name="userEmail" value="{{ app.user.email }}">
+                                    <label for="code">
+                                        לצורך הפעלת החשבון יש להזין את הקוד שנשלח אלייך ב SMS
+                                    </label>
+                                    <div style="margin-top: 27px;" class="mfrm_field">
+                                    <input type="text" name="code" value="" placeholder="קוד">
+                                    </div>
+                                    <div class="clear"></div>
+                                    <div class="main_sub" style="padding: 20px 20px 30px 0px;">
+                                        <input type="submit" onclick="$('#activation').submit();" value="שלח" class="free send contact_submit">
+                                    </div>
+                                </form>
+{#                                <br class="ui tiny message">#}
+{#                                    {% trans %}#}
+{#                                        <p>תודה על הרשמתכם לאתר.<p/>#}
+
+{#                                        <p>כעת נשלח לדואל עמו נרשמתם לאתר לינק לאישור הרישום.<br/>#}
+{#                                        הכנסו לדואל שלכם והקישו על הלינק לסיום הרישום.<p/>#}
+
+{#                                        במידה ואינכם מוצאים את המייל שלנו, עיינו בתיבת ההודעות החסומות (ספאם).#}
+{#                                    {% endtrans %}#}
+{#                                </div>#}
+
+                            {% endif %}
+
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

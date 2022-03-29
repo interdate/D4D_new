@@ -1,0 +1,38 @@
+{% if pageCount > 1 %}
+     
+    <div class="ui borderless menu paging">
+        {% if first is defined and current != first %}
+            <a href="{{ path(route, query|merge({(pageParameterName): first})) }}" class="icon item">
+                <i class="step forward icon"></i>
+            </a>
+        {% endif %}
+
+        {% if previous is defined %}
+            <a href="{{ path(route, query|merge({(pageParameterName): previous})) }}" class="icon item">
+                <i class="long arrow left icon"></i>
+            </a>
+        {% endif %}
+
+        {% for page in pagesInRange %}
+            {% if page != current %}
+                <a href="{{ path(route, query|merge({(pageParameterName): page})) }}" class="item">{{ page }}</a>
+            </span>
+            {% else %}
+                <a class="item active">{{ page }}</a>
+            {% endif %}
+
+        {% endfor %}
+
+        {% if next is defined %}
+            <a href="{{ path(route, query|merge({(pageParameterName): next})) }}" class="icon item">
+                <i class="long arrow right icon"></i>
+            </a>
+        {% endif %}
+
+        {% if last is defined and current != last %}
+            <a href="{{ path(route, query|merge({(pageParameterName): last})) }}" class="icon item">
+                <i class="step backward icon"></i>
+            </a>
+        {% endif %}
+    </div>
+{% endif %}

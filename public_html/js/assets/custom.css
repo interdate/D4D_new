@@ -1,0 +1,113 @@
+@font-face {
+  font-family: "Myriad Hebrew";
+  src: url(fonts/myriad-_541.otf) format('opentype');
+}
+
+.select-icon {
+    display: none;
+}
+
+.alert-tappable {
+    text-align: right;
+    direction: rtl;
+}
+
+.alert-radio-icon, .alert-checkbox-icon {
+    left: auto;
+    right: 13px;
+}
+
+.profile {
+    /*background: url(http://nysugardaddy.wee.co.il/media/photos/358/219-face.png);*/
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    margin: 0 auto;
+    border: 5px solid #363e48;
+    margin-top: -35px;
+    margin-bottom: 10px;
+}
+
+#the_area {
+    background: url(../assets/img/icons/new-arena.png) center no-repeat;
+    width: 28px;
+    height: 26px;
+    margin-right: 16px;
+    background-size: contain;
+}
+
+#inbox {
+    background: url(../assets/img/icons/inbox.png) center no-repeat;
+    width: 30px;
+    height: 20px;
+    margin-left: 3px;
+    margin-right: 16px;
+    background-size: contain;
+}
+
+page-search .scroll-content{
+    margin-top: 45px !important;
+}
+
+page-search .content-ios .scroll-content{
+    margin-top: 30px !important;
+}
+
+#notifications {
+    background: url(../assets/img/icons/notifications_ft.png) center no-repeat;
+    width: 28px;
+    height: 22px;
+    margin-right: 16px;
+    background-size: contain;
+}
+
+#edit_photos {
+    background: url(../assets/img/icons/edit_photos.png) center no-repeat;
+    width: 24px;
+    height: 22px;
+    margin-left: 2px;
+    background-size: contain;
+}
+
+#change_password {
+    background: url(../assets/img/icons/change_password.png) center no-repeat;
+    width: 24px;
+    height: 22px;
+    margin-left: 2px;
+    background-size: contain;
+}
+
+#freeze_account {
+    background: url(../assets/img/icons/freeze_account.png) center no-repeat;
+    width: 24px;
+    height: 22px;
+    margin-left: 2px;
+    background-size: contain;
+}
+
+.right {
+    float: right;
+}
+
+.alert-head {
+    text-align: right !important;
+
+}
+
+.toolbar-content-ios{
+    height: 76%;
+    /*margin-top: 6.7%;*/
+}
+
+.bar-buttons-ios{
+    height: 73%;
+    /*margin-top: 5.7%;*/
+}
+
+.bottom{
+  padding-bottom: 60px !important;
+  width: 100%;
+  height: 1px;
+}

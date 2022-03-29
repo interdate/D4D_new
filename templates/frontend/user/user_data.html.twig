@@ -1,0 +1,102 @@
+{% set settings = getSettings() %}
+    {% set minutesNumberConsideredAsOnline = settings.userConsideredAsOnlineAfterLastActivityMinutesNumber %}
+    {% set daysNumberConsideredAsNew = settings.getUserConsideredAsNewAfterDaysNumber %}
+
+
+<!-- Mid Container -->
+<div class="inner_content profile_inner user-section" style="padding:45px 0px 0px;">
+    <input type="hidden" class="userId" value="{{ user.id }}">
+    <!-- Profile Desktop -->
+    <div class="wrap profile_desktop">
+        <div class="profile-top">
+
+            <div class="lft{% if not user.isPaying %} no_after{% endif %}">
+                <img src="{% if user.getMainPhoto is not null %}{{ user.getMainPhoto.getFaceWebPath }}{% else %}{{ user.getNoPhoto }}{% endif %}" alt="profile">
+            </div>
+
+            <div class="rgt">
+                <div class="member-dtl">
+                    <div class="m-dtl-lft">
+                        <div class="ptitle"><h1><span{% if not user.isNew(daysNumberConsideredAsNew) %} class="no_after"{% endif %}>{{ user.username }}</span> </h1></div>
+                        <p>
+                            <span>{{ user.age }},</span>
+                            <span>{{ user.zipCode.area.region.name }},</span>
+                            <span>{{ user.zipCode.area.name }}</span>
+                        </p>
+                    </div>
+
+                    <div class="m-dtl-rgt">
+                        <div class="send-btn"><a href="{{ path('sign_up') }}"><span>{% trans %}Send Message{% endtrans %}</span></a></div>
+                        <div class="send-btn" ><a href="{{ path('sign_up') }}" class="btn2"><span>{% trans %}Like{% endtrans %}</span></a></div>
+                    </div>
+                    <div class="clr"></div>
+                </div>
+                    <div class="profile-nav">
+                        <ul>
+                            <li><a href="{{ path('sign_up') }}">{% trans %}Send Message{% endtrans %}</a></li>
+                            <li><a href="{{ path('sign_up') }}">{% trans %}Add to Favorites{% endtrans %}</a></li>
+                            <li><a class="add_to_black_list" href="{{ path('sign_up') }}">{% trans %}Block{% endtrans %}</a></li>
+                            <li><a href="{{ path('sign_up') }}">{% trans %}Like{% endtrans %}</a></li>
+                            <li><a class="report_abuse" href="{{ path('sign_up') }}">{% trans %}Report Abuse{% endtrans %}</a></li>
+                            {% if user.isOnline(minutesNumberConsideredAsOnline) %}
+                                <li class="icon"><a href="{{ path('sign_up') }}">{% trans %}Online{% endtrans %}</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+            </div>
+
+            <div class="clr"></div>
+        </div>
+
+    </div>
+    <!-- Profile Desktop End -->
+    <!-- Profile Mobile -->
+    <div class="profile_mobile">
+
+            <div class="pm_icons">
+
+                <ul class="cf">
+                    <li><a href="{{ path('sign_up') }}"><img alt="message" src="/images/pmsg1.png" /></a></li>
+                    <li><a href="{{ path('sign_up') }}"><img alt="message" src="/images/plike.png" /></a></li>
+                    <li><a href="{{ path('sign_up') }}"><img alt="message" src="/images/padd.png" /></a></li>
+                </ul>
+            </div>
+        {% if user.isPaying %}
+            <div class="paying"></div>
+        {% endif %}
+        <div class="profile_slider">
+            {% if user.getMainPhoto is not null %}
+                {% for photo in user.photos %}
+                    {% if photo.isValid %}
+                        <div onclick="window.location.href='{{ path('sign_up') }}';" class="psimg"><a href="{{ path('sign_up') }}" style="background:url({{ photo.getFaceWebPath }}) no-repeat center center; background-size:cover;"></a></div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div onclick="window.location.href='{{ path('sign_up') }}';" class="psimg"><a href="{{ path('sign_up') }}" style="background:url({{ user.getNoPhoto }}) #fff no-repeat center center; background-size:cover;"></a></div>
+            {% endif %}
+        </div>
+
+        <div class="profile_detailmob">
+            <div class="pmtitle">
+                <strong>{{ user.username }},</strong> {{ user.age }} <span>{{ user.zipCode.area.region.name }}</span>
+            </div>
+            <div class="pmdetail cf">
+                    <div class="pbot_con">
+                        <ul class="cf">
+                            <li><a href="{{ path('sign_up') }}"><img alt="message" src="/images/pmsgbot.png" /></a></li>
+                            <li><a href="{{ path('sign_up') }}"><img alt="like" src="/images/plikebot.png" /></a></li>
+                            <li><a href="{{ path('sign_up') }}"><img alt="add" src="/images/paddbot.png" /></a></li>
+                        </ul>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <!-- Profile Mobile End -->
+</div>
+ <script>
+     $(document).ready(function () {
+         $('.left_content, .nmobile_footer').remove();
+         $('.hatraotinner_content').css({'padding-bottom': '30px'});
+     });
+
+ </script>

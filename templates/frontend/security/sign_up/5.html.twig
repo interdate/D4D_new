@@ -1,0 +1,50 @@
+{% if errors %}
+    <div class="errors">
+        <div class="ui orange message">
+            <div class="content">
+                <div class="header">
+                    {% trans %}מלא את השדות בהמשך{% endtrans %}
+                </div>
+                <p>
+                    {{ form_errors(form.about) }}
+                    {{ form_errors(form.looking) }}
+                </p>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+
+<div class="inner_form_bot">
+    <div class="main_form">
+        {#<h1>More About Me</h1>#}
+
+
+        <div class="about_field cf {% if form.about.vars.errors|length %}error{% endif %}">
+            <label for="{{ form.about.vars.id }}">{{ form.about.vars.label|raw }}</label>
+            {{ form_widget(form.about) }}
+        </div>
+
+        <div class="about_field cf {% if form.looking.vars.errors|length %}error{% endif %}">
+            <label for="{{ form.looking.vars.id }}">{{ form.looking.vars.label|raw }}</label>
+            {{ form_widget(form.looking) }}
+        </div>
+
+
+        <div class="main_sub main_sub4 cf" style="width: 100%;margin:0px auto;">
+            <a class="back" onclick="$('#prev_stage').click()">{% trans %}חזור{% endtrans %}</a>
+            <a class="next nextstage" onclick="gtag_report_conversion();">{% trans %}הבא{% endtrans %}</a>
+            <input type="submit" id="prev_stage" name="flow_signUp_transition" value="back" formnovalidate="formnovalidate">
+            <input type="submit" id="next_stage">
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+

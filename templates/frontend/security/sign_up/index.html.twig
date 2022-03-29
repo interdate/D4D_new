@@ -1,0 +1,69 @@
+{% extends "frontend/main_layout.html.twig" %}
+
+{% block title %}חילופי זוגות | סווינגרס | החלפת זוגות{% endblock %}
+{% block meta_description %}זיגזוג, אתר חילופי זוגות המוביל בישראל, המקום בו סווינגרס מכירים זוגות . אם אתם רוצים להכיר swingers איכותיים ולחלוק חוויות של החלפת זוגות - זה המקום בשבילכם.{% endblock %}
+{% block meta_keywords %}ZIGZUG , זיגזוג חילופי זוגות , סווינגרס, הכרויות{% endblock %}
+
+{% block container %}
+
+
+    {% set step = flow is defined ? flow.getCurrentStepNumber() : 4 %}
+
+    <!-- Mid Container -->
+    <div class="inner_content" style="padding-top: 90px;">
+        <div class="wrap">
+            <div class="inner_form">
+                <div class="inner_form_top">
+                    <ul>
+                        <li {% if step >= 1 %}class="active"{% endif %}> <span class="ftext">{% trans %}הירשם{% endtrans %}</span></li>
+                        <li {% if step >= 2 %}class="active"{% endif %}> <span class="ftext">{% trans %}צור פרופיל{% endtrans %}</span></li>
+{#
+                        <li {% if step >= 3 %}class="active"{% endif %}><span class="fnumber">3</span> <span class="ftext">{% trans %}עוד אודותי{% endtrans %}</span></li>
+#}
+                        <li {% if step >= 4 %}class="active"{% endif %}> <span class="ftext">{% trans %}הוסף תמונה{% endtrans %}</span></li>
+                    </ul>
+                    <div class="clr"></div>
+                </div>
+
+                <form action="{{ path('sign_up') }}" method="post" enctype="multipart/form-data" id="sign_up_form" novalidate>
+
+                    <input type="hidden" id="form_helper_url" value="{{ path('sign_up_helper') }}">
+
+                    <div class="errors hidden empty_fields">
+                        <div class="ui orange message">
+                            <div class="content">
+                                <div class="header">
+                                    {% trans %}מספר נתונים חסרים. יש למלא את כל הנתונים בשדות המסומנים.{% endtrans %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if step < 4 %}
+                        {% if step == 1 %}
+                            {{ include ('frontend/security/sign_up/' ~ step ~ '.html.twig', {'form': form, 'terms': terms}) }}
+                        {% else %}
+                            {{ include ('frontend/security/sign_up/' ~ step ~ '.html.twig', {'form': form}) }}
+                        {% endif %}
+                    {% else %}
+                        {{ include ('frontend/security/sign_up/photos.html.twig') }}
+                        {#{% if app.request.attributes.get('_route') == 'sign_up_photos' %}
+                            {{ include ('frontend/security/sign_up/photos.html.twig') }}
+                        {% else %}
+                            {{ include ('frontend/security/sign_up/photo.html.twig') }}
+                        {% endif %}#}
+                    {% endif %}
+
+                    {% if form is defined %}
+                        {{ form_rest(form) }}
+                    {% endif %}
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

@@ -1,0 +1,323 @@
+{% if errors %}
+    <div class="errors">
+        <div class="ui orange message">
+            <div class="content">
+                <div class="header">
+                    {% trans %}אנא מלאו את כל השדות הנדרשים!{% endtrans %}
+                </div>
+                {% if checkboxErr['meetingTime'] is defined %}
+                        {{ checkboxErr['meetingTime'] }}
+                    <br>
+                {% endif %}
+                {% if checkboxErr['lookingForGender'] is defined %}
+                        {{ checkboxErr['lookingForGender'] }}
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+
+<div class="inner_form_bot">
+    <div class="main_form {% if flow.getFormData.gender.id == 2 %} user_zigzug {% endif %}">
+
+
+        <h2>{% trans %}תאור כללי{% endtrans %}</h2>
+        <div class="mfrm_field cf">
+            <span class="he"></span>
+            {{ form_label(form.height) }}
+            <div class="mselect3">
+                {{ form_widget(form.height) }}
+            </div>
+        </div>
+        {% if flow.getFormData.gender.id == 2 %}
+            <div class="mfrm_field cf">
+                <span class="she"></span>
+                {{ form_label(form.height1) }}
+                <div class="mselect3">
+                    {{ form_widget(form.height1) }}
+                </div>
+            </div>
+        {% endif %}
+        <div class="mfrm_field weight_field cf">
+            <span class="he"></span>
+            <label for="{{ form.weight.vars.id }}">{{ form.weight.vars.label|raw }}</label>
+            <div class="mselect3">
+                {{ form_widget(form.weight) }}
+            </div>
+        </div>
+        {% if flow.getFormData.gender.id == 2 %}
+            <div class="mfrm_field weight_field cf">
+                <span class="she"></span>
+                <label for="{{ form.weight.vars.id }}">{{ form.weight.vars.label|raw }}</label>
+                <div class="mselect3">
+                    {{ form_widget(form.weight1) }}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="mfrm_field cf">
+            <span class="he"></span>
+            {{ form_label(form.hair) }}
+            <div class="mselect3">
+                {{ form_widget(form.hair) }}
+            </div>
+        </div>
+
+        {% if flow.getFormData.gender.id == 2 %}
+
+            <div class="mfrm_field cf">
+                <span class="she"></span>
+                {{ form_label(form.hair1) }}
+                <div class="mselect3">
+                    {{ form_widget(form.hair1) }}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="mfrm_field cf">
+            <span class="he"></span>
+            {{ form_label(form.hairStyle) }}
+            <div class="mselect3">
+                {{ form_widget(form.hairStyle) }}
+            </div>
+        </div>
+
+        {% if flow.getFormData.gender.id == 2 %}
+
+            <div class="mfrm_field cf">
+                <span class="she"></span>
+                {{ form_label(form.hairStyle1) }}
+                <div class="mselect3">
+                    {{ form_widget(form.hairStyle1) }}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="mfrm_field cf">
+            <span class="he"></span>
+            {{ form_label(form.eyes) }}
+            <div class="mselect3">
+                {{ form_widget(form.eyes) }}
+            </div>
+        </div>
+
+        {% if flow.getFormData.gender.id == 2 %}
+
+            <div class="mfrm_field cf">
+                <span class="she"></span>
+                {{ form_label(form.eyes1) }}
+                <div class="mselect3">
+                    {{ form_widget(form.eyes1) }}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="mfrm_field cf">
+            <span class="he"></span>
+            {{ form_label(form.body) }}
+            <div class="mselect3">
+                {{ form_widget(form.body) }}
+            </div>
+        </div>
+
+        {% if flow.getFormData.gender.id == 2 %}
+
+            <div class="mfrm_field cf">
+                <span class="she"></span>
+                {{ form_label(form.body1) }}
+                <div class="mselect3">
+                    {{ form_widget(form.body1) }}
+                </div>
+            </div>
+        {% endif %}
+
+        <h2 style="clear:both">{% trans %}קצת על עצמי{% endtrans %}</h2>
+
+        <div class="mfrm_field cf">
+            {{ form_label(form.relationshipStatus) }}
+            <div class="mselect3">
+                {{ form_widget(form.relationshipStatus) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field cf">
+            {{ form_label(form.children) }}
+            <div class="mselect3">
+                {{ form_widget(form.children) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field cf">
+            <span class="he"></span>
+            {{ form_label(form.countryOfOrigin) }}
+            <div class="mselect3">
+                {{ form_widget(form.countryOfOrigin) }}
+            </div>
+        </div>
+        {% if flow.getFormData.gender.id == 2 %}
+
+            <div class="mfrm_field cf">
+                <span class="she"></span>
+                {{ form_label(form.countryOfOrigin1) }}
+                <div class="mselect3">
+                    {{ form_widget(form.countryOfOrigin1) }}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="mfrm_field cf">
+            <span class="he"></span>
+            {{ form_label(form.ethnicity) }}
+            <div class="mselect3">
+                {{ form_widget(form.ethnicity) }}
+            </div>
+        </div>
+        {% if flow.getFormData.gender.id == 2 %}
+
+            <div class="mfrm_field cf">
+                <span class="she"></span>
+                {{ form_label(form.ethnicity1) }}
+                <div class="mselect3">
+                    {{ form_widget(form.ethnicity1) }}
+                </div>
+            </div>
+        {% endif %}
+
+
+        <div class="mfrm_field cf">
+            <span class="he"></span>
+            {{ form_label(form.sexPref) }}
+            <div class="mselect3">
+                {{ form_widget(form.sexPref) }}
+            </div>
+        </div>
+        {% if flow.getFormData.gender.id == 2 %}
+
+            <div class="mfrm_field cf">
+                <span class="she"></span>
+                {{ form_label(form.sexPref1) }}
+                <div class="mselect3">
+                    {{ form_widget(form.sexPref1) }}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="mfrm_field cf">
+            <span class="he"></span>
+            {{ form_label(form.experience) }}
+            <div class="mselect3">
+                {{ form_widget(form.experience) }}
+            </div>
+        </div>
+        {% if flow.getFormData.gender.id == 2 %}
+
+            <div class="mfrm_field cf">
+                <span class="she"></span>
+                {{ form_label(form.experience1) }}
+                <div class="mselect3">
+                    {{ form_widget(form.experience1) }}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="mfrm_field cf">
+            <span class="he"></span>
+            {{ form_label(form.smoking) }}
+            <div class="mselect3">
+                {{ form_widget(form.smoking) }}
+            </div>
+        </div>
+        {% if flow.getFormData.gender.id == 2 %}
+
+            <div class="mfrm_field cf">
+                <span class="she"></span>
+                {{ form_label(form.smoking1) }}
+                <div class="mselect3">
+                    {{ form_widget(form.smoking1) }}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="mfrm_field cf">
+            <span class="he"></span>
+            {{ form_label(form.drinking) }}
+            <div class="mselect3">
+                {{ form_widget(form.drinking) }}
+            </div>
+        </div>
+        {% if flow.getFormData.gender.id == 2 %}
+
+            <div class="mfrm_field cf">
+                <span class="she"></span>
+                {{ form_label(form.drinking1) }}
+                <div class="mselect3">
+                    {{ form_widget(form.drinking1) }}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="about_field cf {% if form.about.vars.errors|length %}error{% endif %}">
+            <label for="{{ form.about.vars.id }}">{{ form.about.vars.label|raw }}</label>
+            {{ form_widget(form.about) }}
+        </div>
+
+        <h2>{% trans %}מה אני/אנחנו מחפש/ים{% endtrans %}</h2>
+
+        <div class="about_field cf {% if form.looking.vars.errors|length %}error{% endif %}">
+            <label for="{{ form.looking.vars.id }}">{{ form.looking.vars.label|raw }}</label>
+            {{ form_widget(form.looking) }}
+        </div>
+
+        <div class="long_field cf {% if checkboxErr['lookingForGender'] is defined %}error{% endif %}">
+            <div class="long_label ">{{ form_label(form.lookingForGender) }}</div>
+            <div class="langchk checkdiv cf">
+                {% for lookingForGender in form.lookingForGender %}
+                    <div class="chkinner checkbox_cont_1">
+                        <div class="ui checkbox">
+                            {{ form_widget(lookingForGender) }}
+                            {{ form_label(lookingForGender) }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="long_field cf {% if checkboxErr['meetingTime'] is defined %}error{% endif %}">
+            <div class="long_label">{{ form_label(form.meetingTime) }}</div>
+            <div class="langchk checkdiv cf">
+                {% for meetingTime in form.meetingTime %}
+                    <div class="chkinner checkbox_cont_1">
+                        <div class="ui checkbox">
+                            {{ form_widget(meetingTime) }}
+                            {{ form_label(meetingTime) }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="main_sub main_sub4 cf" style="width: 100%;margin:0px auto;">
+            <a class="back" onclick="$('#prev_stage').click()">{% trans %}חזור{% endtrans %}</a>
+            <a class="next nextstage">{% trans %}הבא{% endtrans %}</a>
+            <input type="submit" id="prev_stage" name="flow_signUp_transition" value="back"
+                   formnovalidate="formnovalidate">
+            <input type="submit" id="next_stage">
+        </div>
+
+
+        <div class="main_sub main_sub4 cf">
+
+        </div>
+
+
+{#
+        {{ form_row(form._token) }}
+#}
+    </div>
+</div>
+
+

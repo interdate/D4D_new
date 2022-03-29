@@ -1,0 +1,53 @@
+{% set add_to_fav = true %}
+{% set delete_from_fav = false %}
+{% set delete_from_black_list = false %}
+
+{% set route = app.request.attributes.get('_route') %}
+
+{% if route == 'user_manage_list_favorited' %}
+    {% set add_to_fav = false %}
+    {% set delete_from_fav = true %}
+{% elseif route == 'user_list_favorited' %}
+    {% set add_to_fav = false %}
+{% elseif route == 'user_manage_list_black_listed' %}
+    {% set add_to_fav = false %}
+    {% set delete_from_black_list = true %}
+{% elseif route == 'user_list_black_listed' %}
+    {% set add_to_black_list = false %}
+{% endif %}
+{% set settings = getSettings() %}
+{% set minutesNumberConsideredAsOnline = settings.userConsideredAsOnlineAfterLastActivityMinutesNumber %}
+{% set daysNumberConsideredAsNew = settings.getUserConsideredAsNewAfterDaysNumber %}
+
+{% if users|length == 0 %}
+    <div class="no-result ui message info"><div style="margin: 0 auto; width: 130px;"><i class="child icon left"></i>{% trans %}No Results{% endtrans %}</div></div>
+{% endif %}
+
+{% for user in users %}
+    {% set userDistance = getDistance(app.user,user) %}
+    <li class="user-section">
+        <input type="hidden" class="userId" value="{{ user.id }}">
+        <input type="hidden" class="userGenderId" value="{{ user.gender.id }}">
+        {% if user.isOnline(minutesNumberConsideredAsOnline) %}
+        <div class="online"></div>
+        {% endif %}
+        {% if user.isPaying %}
+            <div class="paying"></div>
+        {% endif %}
+        <div class="nyul_img">
+            <a href="{{ path('view_user', {id: user.id}) }}" style="background:url({% if user.getMainPhoto is not null %}{{ user.getMainPhoto.getFaceWebPath }}{% else %}{{ user.getNoPhoto }}{% endif %}) no-repeat center; background-size:cover;">
+                <div class="nyimg_text">
+                    {{ user.username }}, {{ user.age }}<span>{{ user.zipCode.area.region.name }}</span>
+                    {% if userDistance %}<div class="distance"><span>{{ userDistance }} mi</span></div>{% endif %}
+                </div>
+            </a>
+        </div>
+        <div class="nyul_bot cf">
+            <div class="nyinner"{% if app.user.id == user.id %} style="opacity: 0.5;"{% endif %}><a {% if app.user.id == user.id %}onclick="return false;" {% endif %}href="{% if app.user.id != user.id %}{{ path('messenger_dialog_open',{'userId': app.user.id, 'contactId': user.id}) }}{% endif %}"><span class="nyimg"><img class="dimg" alt="message" src="/images/nearmsg.png" /><img class="mimg" alt="message" src="/images/mobmsg.png" /></span>{% trans %}Message{% endtrans %}</a></div>
+            <div class="nyinner like_click{% if app.user.isAddLike(user) %} inList{% endif %}" userId="{{ user.id }}"><a><span class="nyimg"><img class="dimg" alt="message" src="/images/nearlike.png" /><img class="mimg" alt="like" src="/images/moblike.png" /></span>{% trans %}Like{% endtrans %}</a></div>
+            {% if add_to_fav %}<div class="nyinner{% if app.user.isAddFavorite(user.id) %} inList{% endif %}"><a class="add_to_fav" href="#"><span class="nyimg"><img class="dimg" alt="message" src="/images/nearadd.png" /><img class="mimg" alt="add" src="/images/mobadd.png" /></span>{% trans %}Add{% endtrans %}</a></div>{% endif %}
+            {% if delete_from_fav %}<div class="nyinner"><a class="delete_from_fav" href="#"><span class="nyimg"><img class="dimg" alt="message" src="/images/managefavicon.png" /><img class="mimg" alt="add" src="/images/managefavicon.png" /></span>{% trans %}Remove{% endtrans %}</a></div>{% endif %}
+            {% if delete_from_black_list %}<div class="nyinner"><a class="delete_from_black_list" href="#"><span class="nyimg"><img class="dimg" alt="message" src="/images/manageblockicon.png" /><img class="mimg" alt="add" src="/images/manageblockicon.png" /></span>{% trans %}Unblock{% endtrans %}</a></div>{% endif %}
+        </div>
+    </li>
+{% endfor %}

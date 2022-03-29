@@ -1,0 +1,295 @@
+{% extends 'frontend/main_layout.html.twig' %}
+
+
+
+{% block container %}
+
+    {% set routeName = app.request.get('_route') %}
+    {% set routeArr = routeName|split('_') %}
+    {% set parentPageName = routeArr[0] %}
+
+
+    {% if routeName == 'user_users_online' or not app.user or routeName == 'user_homepage' %}
+        {% set sidebarHeader = 'חברים חדשים' %}
+        {% set sidebarHeaderLink = path('user_users_new') %}
+        {% set sidebarUsers = getNewUsers() %}
+    {% else %}
+        {% set sidebarHeader = 'אונליין' %}
+        {% set sidebarHeaderLink = path('user_users_online') %}
+        {% set sidebarUsers = getUsersOnline() %}
+        {% set sidebarStat = true %}
+    {% endif %}
+
+    {% if app.user %}
+
+{#
+        {% set statistics = getStatistics() %}
+#}
+        {% set sidebarStat = false %}
+
+    {% endif %}
+
+    <!-- Middle Container -->
+    <div class="hatraotinner_content{% if app.user %} user-login{% endif %}">
+        <div class="wrap">
+            <!-- Left Container -->
+            <div class="left_content">
+                <!-- Left Welcome -->
+                {% if app.user %}
+                    <div class="leftul left_welcome">
+                        <div class="ui button free-today">
+                            <img class="" src="/assets/img/free_today.png">
+                            <span>{% if app.user.isFreeToday() %}הסר מפנויים היום{% else %}הצטרף לפנויים היום{% endif %}</span>
+                        </div>
+                        <div class="left_title"><h3>{% trans %}ברוך הבא{% endtrans %}, <a href="{{ path('view_user', {id: app.user.id}) }}" target="_blank"><span>{{ app.user.username }}</span></a></h3></div>
+                        <ul>
+                            <li class="cf"><div class="left_icon"><img alt="message" src="/images/msgicon.png" /></div><span class="left_text"><a href="{{ path('messenger') }}">{% trans %}הודעות{% endtrans %}</a></span><span class="left_no inbox_count">{{ statistics.newMessagesNumber }}</span></li>
+                            <li class="cf"><div class="left_icon"><img alt="online" src="/images/onlineicon.png" /></div><span class="left_text"><a href="{{ path('user_users_online') }}">{% trans %}חברים אונליין{% endtrans %}</a></span><span class="left_no online_count">{{ statistics.users_online }}</span></li>
+                            <li class="cf" onclick="openPopup(); return false;"><div class="left_icon"><img alt="arena" src="/images/arenaicon.png" /></div><span class="left_text"><a href="">{% trans %}הזירה{% endtrans %}</a></span></li>
+                            <li class="cf"><div class="left_icon"><img alt="notification" src="/images/notificationicon.png" /></div><span class="left_text"><a href="{{ path('user_notifications') }}">{% trans %}התראות מהזירה{% endtrans %}</a></span>{% if statistics.newNotificationsNumber > 0 %}<span class="left_no arena_count">{{ statistics.newNotificationsNumber }}</span>{% endif %}</li>
+                            {#<li class="cf"><div class="left_icon"><img alt="near" src="/images/nearicon.png" /></div><span class="left_text"><a href="#">Near Me</a></span></li>#}
+                        </ul>
+                    </div>
+                    <!-- Left Welcome End -->
+                    <!-- Left Interest -->
+                    <div class="leftul left_interest">
+                        <div class="left_title"><h3>{% trans %}רשימות{% endtrans %}</h3></div>
+                        <ul>
+                            <li class="cf">
+                                <div class="left_icon"><img alt="view" src="/images/viewicon.png" /></div>
+                                <span class="left_text"><a href="{{ path('user_list_viewed') }}">{% trans %}צפיתי בהם{% endtrans %}</a></span>
+                                <span{% if statistics.viewed == 0 %} style="display: none;"{% endif %} class="left_no viewed_count">{{ statistics.viewed }}</span>
+                            </li>
+                            <li class="cf">
+                                <div class="left_icon"><img alt="viewme" src="/images/viewme.png" /></div>
+                                <span class="left_text"><a href="{{ path('user_list_viewed_me') }}">{% trans %}צפו בי{% endtrans %}</a></span>
+                                <span{% if statistics.viewedMe == 0 %} style="display: none;"{% endif %} class="left_no viewedMe_count">{{ statistics.viewedMe }}</span>
+                            </li>
+                            <li class="cf">
+                                <div class="left_icon"><img alt="contact" src="/images/contacticon.png" /></div>
+                                <span class="left_text"><a href="{{ path('user_list_connected') }}">{% trans %}פניתי אליהם{% endtrans %}</a></span>
+                                <span{% if statistics.connected == 0 %} style="display: none;"{% endif %} class="left_no connected_count">{{ statistics.connected }}</span>
+                            </li>
+                            <li class="cf">
+                                <div class="left_icon"><img alt="contactme" src="/images/contactmeicon.png" /></div>
+                                <span class="left_text"><a href="{{ path('user_list_connected_me') }}">{% trans %}פנו אלי{% endtrans %}</a></span>
+                                <span{% if statistics.connectedMe == 0 %} style="display: none;"{% endif %} class="left_no connectedMe_count">{{ statistics.connectedMe }}</span>
+                            </li>
+                            <li class="cf">
+                                <div class="left_icon"><img alt="favorite" src="/images/favoriticon.png" /></div>
+                                <span class="left_text"><a href="{{ path('user_manage_list_favorited') }}">{% trans %}צרפתי למועדפים{% endtrans %}</a></span>
+                                <span{% if statistics.favorited == 0 %} style="display: none;"{% endif %} class="left_no favorited_count">{{ statistics.favorited }}</span>
+                            </li>
+                            <li class="cf">
+                                <div class="left_icon"><img alt="favoriteme" src="/images/favmeicon.png" /></div>
+                                <span class="left_text"><a href="{{ path('user_list_favorited_me') }}">{% trans %}צרפו אותי למועדפים{% endtrans %}</a></span>
+                                <span{% if statistics.favoritedMe == 0 %} style="display: none;"{% endif %} class="left_no favoritedMe_count">{{ statistics.favoritedMe }}</span>
+                            </li>
+                            <li class="cf">
+                                <div class="left_icon"><img alt="block" src="/images/blockedicon.png" /></div>
+                                <span class="left_text"><a href="{{ path('user_manage_list_black_listed') }}">{% trans %}חסומים{% endtrans %}</a></span>
+                                <span{% if statistics.blacklisted == 0 %} style="display: none;"{% endif %} class="left_no blacklisted_count">{{ statistics.blacklisted }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Left Interest End -->
+                {% endif %}
+                {% set sidebarForm = getQuickSearchSidebarForm() %}
+
+                <!-- Left Search -->
+                <div class="left_search">
+                    <div class="mhover left_title active"><h3>{% trans %}חיפוש מהיר{% endtrans %}</h3></div>
+                    <div class="lsearch_div" style="display: block;">
+
+                        <form action="{{ path('user_search_results') }}" method="post" id="quick_search_sidebar_form">
+
+                            <input type="hidden" class="form_helper_url" value="{{ path('quick_search_sidebar_helper') }}">
+                            <div class="between cf">
+                                <div class="ls_left" style="line-height: 1;margin-top: 8px;">{% trans %}מין{% endtrans %}</div>
+                                <div class="ls_right">
+                                    {{ form_widget(sidebarForm.gender) }}
+                                </div>
+                            </div>
+
+                            <div class="between cf">
+                                <div class="ls_left" style="line-height: 1;">{% trans %}גיל{% endtrans %}</div>
+                                <div class="ls_right">
+                                    <span class="band">מ-</span>
+                                    {{ form_widget(sidebarForm.ageFrom) }}
+                                    <span class="band">עד</span>
+                                    {{ form_widget(sidebarForm.ageTo) }}
+                                </div>
+                            </div>
+                            <div class="lsulookingForGender cf">
+                                <div class="ls_right" style="width:45px;">{% trans %}שמחפשים{% endtrans %}</div>
+                                <div class="ls_left checkdiv" style="width:185px; float: left; margin: -4px 0px 10px -20px">
+                                    {% for lookingForGender in sidebarForm.lookingForGender %}
+                                        <div class="ui checkbox left sidebar_checkbox{% if loop.last %} last{% endif %}">
+                                            {{ form_widget(lookingForGender) }}
+                                            {{ form_label(lookingForGender) }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="lsarea cf">
+                                <div class="ls_left" style="width:100%;">{% trans %}באזור{% endtrans %}</div>
+                                <div class="ls_right checkdiv" style="width:185px;">
+                                    {% for region in sidebarForm.region %}
+                                        <div class="ui checkbox left sidebar_checkbox{% if loop.last %} last{% endif %}">
+                                            {{ form_widget(region) }}
+                                            {{ form_label(region) }}
+                                        </div>
+
+                                        {{ loop.index % 2 == 0 ? '<div class="clr"></div>' : '' }}
+
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="ls_but"><input type="submit" value="{% trans %}חיפוש{% endtrans %}"></div>
+                            <div class="left_sep"><span>{% trans %}או{% endtrans %}</span></div>
+                            <div class="search_nick cf">
+                                <label>{% trans %}חיפוש לפי שם משתמש{% endtrans %}</label>
+                                {{ form_widget(sidebarForm.username) }}
+                            </div>
+                            <div class="ls_but">
+                                <input type="submit" value="{% trans %}חיפוש{% endtrans %}">
+                            </div>
+                            <div class="left_sep">
+                                <span>{% trans %}או{% endtrans %}</span>
+                            </div>
+                            <div class="ls_advbut">
+                                <a href="{{ path('user_search_advanced') }}">{% trans %}חיפוש מתקדם{% endtrans %}</a>
+                            </div>
+
+
+                            {{ form_rest(sidebarForm) }}
+
+
+                        </form>
+                    </div>
+                </div>
+                {% if not app.user %}
+                <div class="mid_title" style="margin-top: 18px"><h3><a style="display: block" href="{{ path('sign_up') }}">{% trans %}הצטרפו לפנויים היום{% endtrans %}</a></h3></div>
+                {% endif %}
+
+                <!-- Left Search End -->
+                {% if app.user %}
+                <!-- Left My Profile -->
+                <div class="leftul left_myprofile">
+                    <div class="left_title"><h3>{% trans %}ניהול חשבון{% endtrans %}</h3></div>
+                    <ul>
+                        <li class="cf"><div class="left_icon"><img alt="editicon" src="/images/editprofileicon.png" /></div><a href="{{ path('user_profile') }}">{% trans %}עריכת פרופיל{% endtrans %}</a></li>
+                        <li class="cf"><div class="left_icon"><img alt="editphoto" src="/images/editphotoicon.png" /></div><a href="{{ path('user_profile', {'tab': 4}) }}">{% trans %}עריכת תמונות{% endtrans %}</a></li>
+                        {#
+                        <li class="cf"><div class="left_icon"><img alt="managefavicon" src="/images/managefavicon.png" /></div><a href="{{ path('user_manage_list_favorited') }}">Manage Favorites List</a></li>
+                        <li class="cf"><div class="left_icon"><img alt="manageblockicon" src="/images/manageblockicon.png" /></div><a href="{{ path('user_manage_list_black_listed') }}">Manage Blocked List</a></li>
+                        #}
+                        <li class="cf"><div class="left_icon"><img alt="freezeicon" src="/images/freezeicon.png" /></div><a href="{{ path('user_freeze_account') }}">{% trans %}הקפאת חשבון{% endtrans %}</a></li>
+                        <li class="cf"><div class="left_icon"><img alt="changepassicon" src="/images/changepassicon.png" /></div><a href="{{ path('user_change_password') }}">{% trans %}שנה סיסמה{% endtrans %}</a></li>
+                        <li class="cf"><div class="left_icon"><img alt="changepassicon" src="/images/settings.png" /></div><a href="{{ path('user_settings') }}">{% trans %}הגדרות{% endtrans %}</a></li>
+                    </ul>
+                </div>
+                <!-- Left My Profile End -->
+                {% endif %}
+                <!-- Left Banners -->
+                {#
+                <div class="left_banner3 left_banner"><span>Banner</span></div>
+                #}
+                <!-- Left Banners End -->
+            </div>
+            <!-- Left Container End -->
+
+
+            <!-- Mid Container -->
+            {% block content %}{% endblock %}
+            <!-- Mid Container End -->
+
+
+            <!-- Right Container -->
+
+            {% if app.request.attributes.get('_route') != 'users_public_list_user' %}
+
+                <div class="right_content">
+                    <div class="left_title">
+
+                        {% if app.user %}
+                            <h3 class="cf">
+                                {% if sidebarStat %}<span class="no">({{ statistics.users_online }})</span>{% endif %}
+                                <span class="text" onclick="window.location.href='{{ sidebarHeaderLink }}'">{{ sidebarHeader }}</span>
+                            </h3>
+                        {% else %}
+                            <h3 class="cf">{{ sidebarHeader }}</h3>
+                        {% endif %}
+                    </div>
+                    <!-- Right Online -->
+                    <div class="right_online">
+                        <ul class="cf">
+
+                            {% for user in sidebarUsers %}
+
+
+                                <li{{ loop.index % 2 == 0 ? ' class="even"' : '' }}>
+                                    <a href="{% if app.user %}{{ path('view_user', {id: user.id}) }}{% else %}{{ path('users_public_list_user', {id: user.id}) }}{% endif %}"{% if app.user %} target="_blank"{% endif %} style="background-image:url({% if user.getMainPhoto is not null %}{{ user.getMainPhoto.getFaceWebPath }}{% else %}{{ user.getNoPhoto }}{% endif %});" {% if app.user %}class="f1"{% endif %}>
+                                        <div class="online_text">
+                                            <span>{{ user.username }}, {{ user.age }} </span>
+                                        </div>
+
+                                    </a>
+                                    <input type="hidden" class="userId" value="{{ user.id }}">
+                                    <input type="hidden" class="userGenderId" value="{{ user.gender.id }}">
+                                </li>
+
+                            {% endfor %}
+
+                        </ul>
+                    </div>
+                    <!-- Right Online End -->
+                    <!-- Right Banners -->
+
+                    {#
+                    <div class="right_banner right_banner1"><span>Banner</span></div>
+                    <div class="right_banner right_banner2"><span>Banner</span></div>
+                    <div class="right_banner right_banner3"><span>Banner</span></div>
+                    #}
+                    <!-- Right Banners End -->
+                </div>
+                <!-- Right Container End -->
+
+
+            {% endif %}
+
+            <div class="clr"></div>
+
+
+        </div>
+    </div>
+
+
+    <input type="hidden" id="no_photo_url_1" value="/images/no_photo_1.jpg">
+    <input type="hidden" id="no_photo_url_2" value="/images/no_photo_2.jpg">
+
+    {% block mobile_content %}{% endblock %}
+    {% if app.user %}
+
+        <input type="hidden" id="current_user_gender" value="{{ app.user.gender.id }}">
+        <input type="hidden" id="search_filter_by_default" value="lastActivity">
+        <input type="hidden" id="search_url_when_switching_filter" value="{{ app.request.requesturi }}">
+
+    {% else %}
+        <input type="hidden" id="search_url_when_switching_filter" value="{{ path('users_public_list', {'page': 1}) }}">
+    {% endif %}
+
+
+    {%  if app.request.get('empty_region') == 'true' %}
+        <div id="empty_region">
+            <div class="dialog">
+
+                <p>אנא מלאו איזור מגורים ועיר מגורים ובסיום לחצו 'שמירה'.</p>
+                <input type="button" value="סגור" style=" margin: 0 auto; display: block;">
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+

@@ -1,0 +1,21 @@
+            {% if users|length == 0 %}
+                <div class="no-result ui message info"><div style="margin: 0 auto; width: 130px;"><i class="child icon left"></i>{% trans %}No Results{% endtrans %}</div></div>
+            {% endif %}
+
+            {% for user in users %}
+                <li class="user-section">
+                    <input type="hidden" class="userId" value="{{ user.id }}">
+                    <input type="hidden" class="userGenderId" value="{{ user.gender.id }}">
+                    <div class="nyul_img">
+                        <a href="{{ path('users_public_list_user', {'id': user.id}) }}" style="background:url({% if user.getMainPhoto is not null %}{{ user.getMainPhoto.getFaceWebPath }}{% else %}{{ user.getNoPhoto }}{% endif %}) no-repeat; background-size:cover;">
+                            <div class="nyimg_text">{{ user.username }}, {{ user.age }}<span>{{ user.zipCode.area.region.name }}</span></div>
+                        </a>
+                    </div>
+                    <div class="nyul_bot cf">
+                        <div class="nyinner"><a href="{{ path('sign_up') }}"><span class="nyimg"><img class="dimg" alt="message" src="/images/nearmsg.png" /><img class="mimg" alt="message" src="/images/mobmsg.png" /></span>{% trans %}Message{% endtrans %}</a></div>
+                        <div class="nyinner"><a href="{{ path('sign_up') }}"><span class="nyimg"><img class="dimg" alt="message" src="/images/nearlike.png" /><img class="mimg" alt="like" src="/images/moblike.png" /></span>{% trans %}Like{% endtrans %}</a></div>
+                        <div class="nyinner"><a href="{{ path('sign_up') }}"><span class="nyimg"><img class="dimg" alt="message" src="/images/nearadd.png" /><img class="mimg" alt="add" src="/images/mobadd.png" /></span>{% trans %}Add{% endtrans %}</a></div>
+                    </div>
+                </li>
+            {% endfor %}
+

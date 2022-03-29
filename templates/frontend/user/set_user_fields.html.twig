@@ -1,0 +1,56 @@
+<div class="bg-shadow">
+</div>
+
+{{ form_start(form, {attr: {action: path('set_user_fields')}}) }}
+<div class="popup-form">
+    <h2>בחר את המיקום שלך בבקשה</h2>
+    {% if errors %}
+        <div class="errors">
+            <div class="ui orange message">
+                <div class="content">
+                    <div class="header">
+                        {% trans %}מספר נתונים חסרים. יש למלא את כל הנתונים בשדות המסומנים.{% endtrans %}
+                    </div>
+                    <p>
+                        {{ form_errors(form.username) }}
+                        {{ form_errors(form.email.first) }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="inner_form_bot">
+            <div class="main_form">
+
+                <div class="mfrm_field cf">
+                    {{ form_label(form.region) }}
+                    <div class="mselect3">
+                        {{ form_widget(form.region) }}
+                    </div>
+                </div>
+                <div class="mfrm_field cf">
+                    {{ form_label(form.city) }}
+                    <div class="mselect3">
+                        {{ form_widget(form.city) }}
+                    </div>
+                </div>
+                {#<div class="mfrm_field cf">
+                    {{ form_label(form.area) }}
+                    <div class="mselect3">
+                        {{ form_widget(form.area) }}
+                    </div>
+                </div>#}
+                <input type="button" value="{% trans %}שמירה{% endtrans %}" class="right" onclick="saveDataFields();" style="margin-top: 15px;">
+
+            </div>
+        </div>
+    </div>
+{{ form_end(form) }}
+
+
+
+
+
+
+

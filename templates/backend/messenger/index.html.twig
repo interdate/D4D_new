@@ -1,0 +1,109 @@
+{% extends "backend/layout.html.twig" %}
+
+{% block content %}
+
+    {{ include('backend/header.html.twig', { 'header': 'הודעות', 'icon': 'chat' }) }}
+
+    <div class="page_content messages_content">
+
+
+
+        <div class="ui segment">
+
+
+
+            <h2 class="ui header right">
+                <i class="{{ icon }} icon"></i>
+                <div class="content">
+                    {{ title }}
+                </div>
+            </h2>
+
+            <div class="left">
+                <button class="ui labeled icon black approve large button right" id="removeSelectedMessages">
+                    <i class="trash icon"></i>
+                    להסיר הודעות מסומנות
+                </button>
+            </div>
+            <div class="left" style="margin-right: 10px">
+                <a class="ui labeled icon violet approve large button right" href="{{ path('admin_messenger_send') }}">
+                    <i class="send outline icon"></i>
+                    שליחת הודעת מערכת
+                </a>
+            </div>
+
+
+
+
+
+            <div class="clear"></div>
+
+
+            <table class="ui basic celled table messages">
+                <thead>
+                <tr>
+                    <th>
+                        <div class="ui checkbox" id="sel_all">
+                            <input type="checkbox">
+                            <label></label>
+                        </div>
+                    </th>
+                    <th>שולח</th>
+                    <th>מקבל</th>
+                    <th>הודעה</th>
+                    <th>תאריך</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for item in messages %}
+                    <tr class="row">
+                        <td class="sel_item">
+                            <div class="ui checkbox">
+                                <input type="checkbox" value="{{ item.messageId }}" >
+                                <label></label>
+                            </div>
+                        </td>
+
+                        <td>
+                            <button class="ui icon button profile">
+                                <i class="icon user"></i>
+                            </button>
+                            <a href="{{ path('admin_messenger_user', {'userId': item.fromUser, 'page': 1 }) }}">{{ item.fromUsername }}</a>
+                            <input type="hidden" class="userId" value="{{ item.fromUser }}">
+                        </td>
+                        <td>
+                            <button class="ui icon button profile">
+                                <i class="icon user"></i>
+                            </button>
+                            <a href="{{ path('admin_messenger_user', {'userId': item.toUser, 'page': 1 }) }}">{{ item.toUsername }}</a>
+                            <input type="hidden" class="userId" value="{{ item.toUser }}">
+                        </td>
+
+                        <td class="text">{{ item.message | raw}}</td>
+                        <td class="date">{{ item.date|date('d/m/Y H:i:s') }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+                <tfoot>
+                <tr>
+                    <th colspan="5">
+                        {{ include ('backend/messenger/pagination.html.twig') }}
+                    </th>
+                </tr>
+                </tfoot>
+            </table>
+
+
+        </div>
+
+
+
+
+
+
+    </div>
+
+
+{% endblock %}

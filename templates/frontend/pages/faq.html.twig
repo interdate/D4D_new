@@ -1,0 +1,55 @@
+{% extends "frontend/layout.html.twig" %}
+
+{% block title %}{{ parent() }} - {{ seo.title }}{% endblock %}
+{% block meta_description %}{{ seo.description }}{% endblock %}
+
+{% block content %}
+    <div class="mid_content faq_main">
+        <div class="mid_title"><h1>{% trans %}FAQ{% endtrans %}</h1></div>
+        <div class="faq_div">
+            {% for category in categories %}
+                {% set i = loop.index + 1 %}
+                <div class="faq_inner">
+                    <div class="faqin_title"><h4>{{ category.name }}</h4></div>
+                    <div class="faq_text">
+                        <ul>
+                            {% for faq in category.faq %}
+                                {% if faq.isActive %}
+                                    <li>
+                                        <div class="faq_quest faq_quest{{ i }}">{{ faq.name }}</div>
+                                        <div class="faq_ans faq_ans{{ i }}">
+                                            <span>{{ faq.content }}</span>
+                                        </div>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        jQuery(document).ready(function(){
+            pageInit();
+
+        });
+        function pageInit(){
+            $('.faq_quest').click(function(e) {
+                e.preventDefault();
+                $('.faq_quest').removeClass('active');
+                $('.faq_ans').slideUp(300);
+                $(this).next('.faq_ans').slideToggle(300);
+                $(this).toggleClass('active');
+            }).first().click();
+        }
+    </script>
+
+{% endblock %}
+{% block mobile_content %}
+    <div class="nymain_mobile">
+        <div class="mid_content faq_main">
+
+        </div>
+    </div>
+{% endblock %}

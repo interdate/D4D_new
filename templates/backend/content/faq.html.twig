@@ -1,0 +1,83 @@
+
+{% block content %}
+
+    {% set header = faq.id > 0 ? 'עריכת שאלה' : 'הוספת שאלה' %}
+
+    <h1 class="ui grey header right">
+        <i class="help icon"></i>
+        <div class="content">{{ header }}</div>
+    </h1>
+
+    <div class="left close">
+        <i class="icon remove circle olive big" onclick="$.kfModal.close();"></i>
+    </div>
+
+    <div class="clear"></div>
+
+    <div class="ui segment">
+
+        <form class="ui form" id="faq_form" method="post">
+
+            <input type="hidden" value="2" name="active_tab">
+
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.category) }}</div>
+                <div class="field">
+                    {{ form_widget(form.category) }}
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.name) }}</div>
+                <div class="field">
+                    {{ form_widget(form.name) }}
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui grey large horizontal label">{{ form_label(form.content) }}</div>
+                <div class="field">
+                    {{ form_widget(form.content) }}
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui grey large horizontal label">
+                    {{ form_label(form.isActive) }}
+                </div>
+                <div class="ui compact segment">
+                    <div class="ui slider fitted checkbox">
+                        {{ form_widget(form.isActive) }}
+                        <label></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui divider"></div>
+
+            <br>
+            <br>
+
+            <div class="ui one column centered grid">
+                <button type="button" class="ui labeled icon green approve large button right" onclick="saveFaq({% if faq.id > 0 %}{{  faq.id }}{% endif %});">
+                    <i class="save icon"></i>
+                    לשמור
+                </button>
+            </div>
+
+            {{ form_rest(form) }}
+
+        </form>
+
+        <br>
+        <br>
+
+
+        <div class="clear"></div>
+
+
+    </div>
+
+
+
+{% endblock %}

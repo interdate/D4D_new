@@ -1,0 +1,170 @@
+
+
+
+
+
+<div class="inner_form_bot">
+    <div class="main_form">
+        <h1>{% trans %}Add Photo{% endtrans %}</h1>
+        {% if not app.user.hasPhotos %}
+            <div class="criteriot">
+                <div class="ui list">
+                    <div class="item">
+                        <i class="checkmark box icon"></i>
+                        <div class="content">
+                            {% trans %}Photos must be of yourself, and you must be recognizable in the photo.{% endtrans %}
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="checkmark box icon"></i>
+                        <div class="content">
+                            {% trans %}Photos must not contain nudity or sexual content.{% endtrans %}
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="checkmark box icon"></i>
+                        <div class="content">
+                            {% trans %}Illustrations, drawings or caricatures will not be approved.{% endtrans %}
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="checkmark box icon"></i>
+                        <div class="content">
+                            {% trans %}Photos with minors will not be approved.{% endtrans %}
+                        </div>
+                    </div>
+                </div>
+
+                <p>{% trans %}For more information see{% endtrans %} <a href="{{ path('pages_page', {'uri': page_policy.uri}) }}">{{ page_policy.name }}</a></p>
+            </div>
+        {% endif %}
+        {% if (app.user.gender.id == 2 and not app.user.hasPhotos) %}
+            <p>{% trans %}* You need upload at least one photo.{% endtrans %}</p>
+        {% endif %}
+        {% if not app.user.hasValidPhotos %}
+            <p>{% trans %}* To enter The Arena you need at least one approved photo.{% endtrans %}</p>
+        {% endif %}
+        <input type="hidden" id="save_photo_url" value="{{ path('user_photo') }}">
+        <input type="hidden" id="photos_url" value="{{ path('user_profile', {'tab': 4}) }}">
+        <div id="my-photos">
+            {% for photo in app.user.photos %}
+
+                <div class="photo_field cf photo">
+                    <div class="div1"><img alt="" src="{{ photo.getWebPath }}"></div>
+                    <div class="div2">
+                        <span>{% trans %}Main Photo{% endtrans %}</span>
+                        <div class="ui toggle checkbox mainPhoto"{% if not photo.isValid %} style="z-index: -1;"{% endif %}>
+                            <input type="radio" name="radio" value="{{ photo.id }}"{{ photo.isMain ? ' checked="checked"' : '' }}>
+                            <label></label>
+                        </div>
+                    </div>
+
+                    <div class="div3">
+                        <span>{% trans %}Status{% endtrans %}</span>
+                        <p>{% transchoice photo.isValid %}
+                            {0} Waiting for approval|{1} Approved
+                            {% endtranschoice %}
+                         {#   {% if photo.isValid %}{% trans %}Approved{% endtrans %}{% else %}Waiting for approval{% endif %}  #}
+                        </p></div>
+                    <div class="div4"><a href="#" class="removePhoto" id="{{ photo.id }}">{% trans %}Delete{% endtrans %}</a></div>
+                </div>
+
+            {% endfor %}
+        </div>
+
+        <div class="browser_field">
+            <div class="filediv">
+                <div class="hfile">
+                    <label for="photo"><strong>{% trans %}Browse{% endtrans %}</strong><span>&nbsp;</span></label>
+                    <input type="file" name="photo" id="photo">
+                    <input type="hidden" name="file_url" id="file_url" value="" />
+                    <input type="hidden" id="mainPhotoAlreadyExists" name="mainPhotoAlreadyExists" value="{{ app.user.hasPhotos ? 1 : 0 }}">
+                    <input type="submit" class="hidden">
+                </div>
+            </div>
+        </div>
+
+        <div class="clr"></div>
+
+        <div class="ui indicating progress uploadPhotoProgress">
+            <div class="bar" id="upload_photo_progress"></div>
+            <div class="label" id="upload_photo_label">{% trans %}Upload:{% endtrans %} <span>0</span>%</div>
+        </div>
+
+        {% if app.user.hasPhotos %}
+            <div class="criteriot">
+                <div class="ui list">
+                    <div class="item">
+                        <i class="checkmark box icon"></i>
+                        <div class="content">
+                            {% trans %}Photos must be of yourself, and you must be recognizable in the photo.{% endtrans %}
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="checkmark box icon"></i>
+                        <div class="content">
+                            {% trans %}Photos must not contain nudity or sexual content.{% endtrans %}
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="checkmark box icon"></i>
+                        <div class="content">
+                            {% trans %}Illustrations, drawings or caricatures will not be approved.{% endtrans %}
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="checkmark box icon"></i>
+                        <div class="content">
+                            {% trans %}Photos with minors will not be approved.{% endtrans %}
+                        </div>
+                    </div>
+                </div>
+
+                <p>{% trans %}For more information see{% endtrans %} <a href="{{ path('pages_page', {'uri': page_policy.uri}) }}">{{ page_policy.name }}</a></p>
+            </div>
+        {% endif %}
+
+        <div class="form_text">
+            <p>{% trans %}Good photos can really make your profile stand out, so we strongly encourage you post a number of them. NYRichdate reserve
+                the right to crop or reject photos as needed to keep a clean, attractive, appropriate atmosphere on the site. Once uploaded,
+                photos can take up to 48 hours to be reviewed before they are visible on your profile. Please read our photo guidelines before
+                uploading a photo.{% endtrans %}<br>
+                {% trans %}Image files must be received in an approved format (jpg, jpeg, png, gif) and should be less than 15MB{% endtrans %}
+            </p>
+            <p>{% trans %}Having trouble uploading a photo? Send the photo to{% endtrans %} <a href="mailto:info@nyrichdate.com">info@nyrichdate.com</a> {% trans %}along with your nickname or the email you
+                registered with, and we'll upload it to your profile.{% endtrans %}</p>
+        </div>
+        <div class="main_sub main_sub4 cf"><a href="{{ path('user_homepage') }}">{% trans %}Finish{% endtrans %}</a></div>
+    </div>
+</div>
+
+
+<div class="ui small basic modal">
+    <div class="ui icon header">
+        <i class="trash icon"></i>
+        {% trans %}Are you sure?{% endtrans %}
+    </div>
+    <div class="content"><p></p></div>
+    <div class="ui center aligned grid">
+        <div class="actions">
+            <div class="ui red cancel inverted button">
+                <i class="remove icon"></i>
+                {% trans %}Cancel{% endtrans %}
+            </div>
+
+            <div class="ui green ok inverted button">
+                <i class="checkmark icon"></i>
+                {% trans %}Confirm{% endtrans %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+

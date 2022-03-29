@@ -1,0 +1,587 @@
+{% extends "backend/layout.html.twig" %}
+
+{% block content %}
+
+    {{ include('backend/header.html.twig', { 'header': 'תוכן', 'icon': 'text file' }) }}
+
+
+
+    <div class="page_content">
+
+        <div class="ui one column grid">
+            <div class="column">
+                <div class="ui segment">
+                    <h2 class="ui header right">
+                        <i class="file outline icon"></i>
+                        <div class="content">
+                            באנרים
+                        </div>
+                    </h2>
+
+                    <div class="left">
+                        <a href="{{ path('admin_add_banner') }}">
+                            <button class="ui labeled icon orange approve large button right">
+                                <i class="add square icon"></i>
+                                הוסף
+                            </button>
+                        </a>
+                    </div>
+
+                    <div class="clear"></div>
+
+
+                    <table class="ui basic celled table banners">
+                        <thead>
+                        <tr>
+                            <th>שם</th>
+                            <th>תמונה</th>
+                            <th>קישור</th>
+                            <th>פעיל</th>
+                            <th>מחק</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for banner in banners %}
+                            <tr>
+                                <td class="alignRight">
+                                    <a href="{{ path('admin_content_banner_edit', {'id': banner.id}) }}"
+                                       class="{{ banner.name }} {{ banner.img }}">{{ banner.name }}</a>
+                                    <span class="clicks">לחצו {{ banner.clickCount }} פעמים</span>
+                                    <input type="hidden" class="page_id" value="{{ banner.id }}">
+                                </td>
+
+                                <td style="padding: 2px;">
+                                    <form enctype="multipart/form-data">
+                                        <label for="image">
+                                            <img src="{{ asset(banner.img) }}" width="157px" alt="">
+                                        </label>
+                                        <input type="file" name="image" id="image" class="hidden">
+                                    </form>
+                                </td>
+
+                                <td style="padding: 4px;">
+                                    {{ banner.href }}
+                                </td>
+                                <td>
+                                    <div class="ui checkbox toggle small bannerActive">
+                                        <input type="checkbox" data-id="{{ banner.id }}" {% if banner.isActive %}checked="checked"{% endif %}>
+                                        <label></label>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <i class="trash outline big link black icon circular delete deleteBanner"></i>
+                                </td>
+                                <input type="hidden" class="banner_id" name="banner_id" value="{{ banner.id }}">
+                            </tr>
+                        {% endfor %}
+                        {#<tr>#}
+                        {#<td class="alignRight">#}
+                        {#<a href="{{ path('admin_content_payment_edit') }}" class="page_name">רכישת מנוי בגרינדייט</a>#}
+                        {#</td>#}
+                        {#<td>#}
+                        {#<div class="ui checkbox toggle small disabled">#}
+                        {#<input type="checkbox" checked="checked">#}
+                        {#<label></label>#}
+                        {#</div>#}
+                        {#</td>#}
+
+                        {#<td>#}
+
+                        {#</td>#}
+                        {#</tr>#}
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="ui two column grid">
+
+            <div class="column">
+                <div class="ui segment">
+                    <h2 class="ui header">
+                        <i class="home icon"></i>
+                        <div class="content">
+                            עמוד כניסה
+                        </div>
+                    </h2>
+
+                    <div class="clear"></div>
+
+
+                    <h3 class="ui horizontal divider header">
+                        <i class="line chart olive icon"></i>
+                        SEO
+                    </h3>
+
+                    <br>
+
+
+                    <form class="ui form" id="home_page_seo">
+                        <div class="ui label">Title</div>
+                        <div class="field">
+                            <input type="text" name="title" value="{{ homePageSeo.title }}">
+                        </div>
+
+                        <div class="ui label">Meta Description</div>
+                        <div class="field">
+                            <textarea name="description">{{ homePageSeo.description }}</textarea>
+                        </div>
+
+                        <input type="hidden" name="page" value="{{ homePageSeo.page }}">
+
+                    </form>
+
+
+                    <br><br>
+                    <div class="ui one column centered grid">
+                        <button class="ui labeled icon orange approve button right" onclick="updatePageSeo($('#home_page_seo'));">
+                            <i class="save icon"></i>
+                            לשמור
+                        </button>
+                    </div>
+                    <br>
+
+
+
+
+                    <h3 class="ui horizontal divider header">
+                        <i class="photo olive icon"></i>
+                        תמונות מתחלפות
+                    </h3>
+
+                    <div class="ui special cards slides">
+                        {% for slide in slides %}
+                            <div class="card olive">
+                                <div class="blurring dimmable image">
+                                    <div class="ui dimmer">
+                                        <div class="content">
+                                            <div class="center">
+                                                <div class="ui inverted button edit_slide">Edit</div>
+                                                <input type="hidden" value="{{ slide.id }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <img src="{{ slide.getFileWebPath }}" width="100%" class="slide" id="slide_{{ slide.id }}">
+                                </div>
+
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <br>
+
+                    <h3 class="ui horizontal divider header">
+                        <i class="attach olive icon"></i>
+                        כותרות וטקסטים
+                    </h3>
+
+                    <br>
+
+                    <div class="ui basic accordion">
+
+                      {#  <div class="title">
+                            <h4 class="ui horizontal header">
+                                <i class="users olive icon"></i>
+                                {{ homePageBlocks[0].name }}
+                            </h4>
+                            <div class="ui divider"></div>
+
+                        </div>
+                        <div class="content">
+                            <form class="ui form" id="home_page_block_1">
+                                <div class="field">
+                                    <div class="ui small buttons headers">
+                                        {% for i in 1..5 %}
+                                            <div class="ui button{% if homePageBlocks[0].headerType == 'h' ~ i %} olive{% endif %}">h{{ i }}</div>
+                                            {% if not loop.last %}<div class="or"></div>{% endif %}
+                                        {% endfor %}
+                                        <input type="hidden" name="headerType" value="{{ homePageBlocks[0].headerType }}">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <input type="text" name="name" value="{{ homePageBlocks[0].name }}">
+                                </div>
+
+                                <div class="field">
+                                    <textarea name="block1">{{ homePageBlocks[0].block1 }}</textarea>
+                                </div>
+
+                                <div class="field">
+                                    <textarea name="block2">{{ homePageBlocks[0].block2 }}</textarea>
+                                </div>
+
+                                <div class="field">
+                                    <textarea name="block3">{{ homePageBlocks[0].block3 }}</textarea>
+                                </div>
+
+                                <div class="field">
+                                    <textarea name="block4">{{ homePageBlocks[0].block4 }}</textarea>
+                                </div>
+                            </form>
+
+                            <br><br>
+
+                            <div class="ui one column centered grid">
+                                <button class="ui labeled icon orange approve button right" onclick="updateHomePageBlock($('#home_page_block_1'), 1)">
+                                    <i class="save icon"></i>
+                                    לשמור
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div class="mar_top"></div>#}
+
+                        {#<div class="title">
+                            <h4 class="ui horizontal header">
+                                <i class="search olive icon"></i>
+                                {{ homePageBlocks[1].name }}
+                            </h4>
+                            <div class="ui divider"></div>
+                        </div>
+                        <div class="content">
+                            <form class="ui form" id="home_page_block_2">
+                                <div class="field">
+                                    <div class="ui small buttons headers">
+                                        {% for i in 1..5 %}
+                                            <div class="ui button{% if homePageBlocks[1].headerType == 'h' ~ i %} olive{% endif %}">h{{ i }}</div>
+                                            {% if not loop.last %}<div class="or"></div>{% endif %}
+                                        {% endfor %}
+                                        <input type="hidden" name="headerType" value="{{ homePageBlocks[1].headerType }}">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <input type="text" name="name" value="{{ homePageBlocks[1].name }}">
+                                </div>
+                            </form>
+                            <br><br>
+                            <div class="ui one column centered grid">
+                                <button class="ui labeled icon orange approve button right" onclick="updateHomePageBlock($('#home_page_block_2'), 2)">
+                                    <i class="save icon"></i>
+                                    לשמור
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mar_top"></div>#}
+                        <div class="mar_top"></div>
+
+                        <div class="title">
+                            <h4 class="ui horizontal header">
+                                {{ homePageBlocks[1].name | raw }}
+                            </h4>
+                            <div class="ui divider"></div>
+                        </div>
+                        <div class="content">
+                            <form class="ui form" id="home_page_block_2">
+                                <div class="field">
+                                    <div class="ui small buttons headers">
+                                        {% for i in 1..5 %}
+                                            <div class="ui button{% if homePageBlocks[1].headerType == 'h' ~ i %} olive{% endif %}">h{{ i }}</div>
+                                            {% if not loop.last %}<div class="or"></div>{% endif %}
+                                        {% endfor %}
+                                        <input type="hidden" name="headerType" value="{{ homePageBlocks[1].headerType }}">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <input type="text" name="name" value="{{ homePageBlocks[1].name }}">
+                                </div>
+                                <div class="field">
+                                    <textarea name="block1">{{ homePageBlocks[1].block1 }}</textarea>
+                                </div>
+                            </form>
+                            <br><br>
+                            <div class="ui one column centered grid">
+                                <button class="ui labeled icon orange approve button right" onclick="updateHomePageBlock($('#home_page_block_2'), 2)">
+                                    <i class="save icon"></i>
+                                    לשמור
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mar_top"></div>
+
+                        <div class="title">
+                            <h4 class="ui horizontal header">
+                                {{ homePageBlocks[2].name }}
+                            </h4>
+                            <div class="ui divider"></div>
+                        </div>
+                        <div class="content">
+                            <form class="ui form" id="home_page_block_3">
+                                <div class="field">
+                                    <div class="ui small buttons headers">
+                                        {% for i in 1..5 %}
+                                            <div class="ui button{% if homePageBlocks[2].headerType == 'h' ~ i %} olive{% endif %}">h{{ i }}</div>
+                                            {% if not loop.last %}<div class="or"></div>{% endif %}
+                                        {% endfor %}
+                                        <input type="hidden" name="headerType" value="{{ homePageBlocks[2].headerType }}">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <input type="text" name="name" value="{{ homePageBlocks[2].name }}">
+                                </div>
+                            </form>
+
+                            <br><br>
+                            <div class="ui one column centered grid">
+                                <button class="ui labeled icon orange approve button right" onclick="updateHomePageBlock($('#home_page_block_3'), 3)">
+                                    <i class="save icon"></i>
+                                    לשמור
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mar_top"></div>
+
+                        <div class="title">
+                            <h4 class="ui horizontal header">
+                                <i class="newspaper olive icon"></i>
+                                {{ homePageBlocks[3].name }}
+                            </h4>
+                            <div class="ui divider"></div>
+                        </div>
+                        <div class="content">
+                            <form class="ui form" id="home_page_block_4">
+                                <div class="field">
+                                    <div class="ui small buttons headers">
+                                        {% for i in 1..5 %}
+                                            <div class="ui button{% if homePageBlocks[3].headerType == 'h' ~ i %} olive{% endif %}">h{{ i }}</div>
+                                            {% if not loop.last %}<div class="or"></div>{% endif %}
+                                        {% endfor %}
+                                        <input type="hidden" name="headerType" value="{{ homePageBlocks[3].headerType }}">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <input type="text" name="name" value="{{ homePageBlocks[3].name }}">
+                                </div>
+                            </form>
+                            <br><br>
+                            <div class="ui one column centered grid">
+                                <button class="ui labeled icon orange approve button right" onclick="updateHomePageBlock($('#home_page_block_4'), 4)">
+                                    <i class="save icon"></i>
+                                    לשמור
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mar_top"></div>
+
+                        {#<div class="title">
+                            <h4 class="ui horizontal header">
+                                <i class="add user olive icon"></i>
+                                {{ homePageBlocks[4].name }}
+                            </h4>
+                            <div class="ui divider"></div>
+                        </div>
+                        <div class="content">
+                            <form class="ui form" id="home_page_block_5">
+                                <div class="field">
+                                    <div class="ui small buttons headers">
+                                        {% for i in 1..5 %}
+                                            <div class="ui button{% if homePageBlocks[4].headerType == 'h' ~ i %} olive{% endif %}">h{{ i }}</div>
+                                            {% if not loop.last %}<div class="or"></div>{% endif %}
+                                        {% endfor %}
+                                        <input type="hidden" name="headerType" value="{{ homePageBlocks[4].headerType }}">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <input type="text" name="name" value="{{ homePageBlocks[4].name }}">
+                                </div>
+                                <div class="field">
+                                    <textarea name="block1">{{ homePageBlocks[4].block1 }}</textarea>
+                                </div>
+                            </form>
+                            <br><br>
+                            <div class="ui one column centered grid">
+                                <button class="ui labeled icon orange approve button right" onclick="updateHomePageBlock($('#home_page_block_5'), 5)">
+                                    <i class="save icon"></i>
+                                    לשמור
+                                </button>
+                            </div>
+
+                        </div>#}
+
+                        <div class="mar_top"></div>
+
+                        <div class="title">
+                            <h4 class="ui horizontal header">
+                                <i class="mobile olive icon"></i>
+                                {{ homePageBlocks[5].name }}
+                            </h4>
+                            <div class="ui divider"></div>
+                        </div>
+                        <div class="content">
+                            <form class="ui form" id="home_page_block_6">
+                                <div class="field">
+                                    <div class="ui small buttons headers">
+                                        {% for i in 1..5 %}
+                                            <div class="ui button{% if homePageBlocks[5].headerType == 'h' ~ i %} olive{% endif %}">h{{ i }}</div>
+                                            {% if not loop.last %}<div class="or"></div>{% endif %}
+                                        {% endfor %}
+                                        <input type="hidden" name="headerType" value="{{ homePageBlocks[5].headerType }}">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <input type="text" name="name" value="{{ homePageBlocks[5].name }}">
+                                </div>
+                                <div class="field">
+                                    <textarea name="block1">{{ homePageBlocks[5].block1 }}</textarea>
+                                </div>
+                            </form>
+                            <br><br>
+                            <div class="ui one column centered grid">
+                                <button class="ui labeled icon orange approve button right" onclick="updateHomePageBlock($('#home_page_block_6'), 6)">
+                                    <i class="save icon"></i>
+                                    לשמור
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mar_top"></div>
+
+
+                    </div>
+
+
+
+                    <br>
+
+                </div>
+                <div class="ui segment faq">
+
+                    {{ include('backend/content/faq_section.html.twig', { 'faqCategories': faqCategories, 'active_tab': 1 }) }}
+
+                </div>
+
+            </div>
+
+            <div class="column">
+                <div class="ui segment">
+                    <h2 class="ui header right">
+                        <i class="file outline icon"></i>
+                        <div class="content">
+                            עמודים
+                        </div>
+                    </h2>
+
+                    <div class="left">
+                        <a href="{{ path('admin_content_page') }}">
+                            <button class="ui labeled icon orange approve large button right">
+                                <i class="add square icon"></i>
+                                הוסף
+                            </button>
+                        </a>
+                    </div>
+
+                    <div class="clear"></div>
+
+
+                    <table class="ui basic celled table pages">
+                        <thead>
+                        <tr>
+                            <th>כותרת</th>
+                            <th>פעיל</th>
+                            <th>להסיר</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for page in pages %}
+                            <tr>
+                                <td class="alignRight">
+                                    <a href="{{ path('admin_content_page_edit', {'id': page.id}) }}" class="page_name">{{ page.name }}</a>
+                                    <input type="hidden" class="page_id" value="{{ page.id }}">
+                                </td>
+
+                                <td>
+                                    <div class="ui checkbox toggle small">
+                                        <input type="checkbox" {% if page.isActive %}checked="checked"{% endif %}>
+                                        <label></label>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <i class="trash outline big link black icon circular delete"></i>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td class="alignRight">
+                                <a href="{{ path('admin_content_payment_edit') }}" class="page_name">רכישת מנוי בזיגזוג</a>
+                            </td>
+                            <td>
+                                <div class="ui checkbox toggle small disabled">
+                                    <input type="checkbox" checked="checked">
+                                    <label></label>
+                                </div>
+                            </td>
+
+                            <td>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+                <div class="ui segment">
+
+                    <h2 class="ui header right" style="margin-top: 5px;">
+                        <i class="sort content descending icon"></i>
+                        כותרות בפוטר
+                    </h2>
+
+                    <div class="clear"></div>
+
+                    <div class="ui form footerHeaders">
+                        <div class="field">
+                            <div class="ui icon input">
+                                <input type="text" name="name" value="{{ footerHeaders[0].name }}">
+                                <input type="hidden" value="{{ footerHeaders[0].id }}">
+                                <i class="inverted orange circular save link icon"></i>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="ui icon input">
+                                <input type="text" name="name" value="{{ footerHeaders[1].name }}">
+                                <input type="hidden" value="{{ footerHeaders[1].id }}">
+                                <i class="inverted orange circular save link icon"></i>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="ui icon input">
+                                <input type="text" name="name" value="{{ footerHeaders[2].name }}">
+                                <input type="hidden" value="{{ footerHeaders[2].id }}">
+                                <i class="inverted orange circular save link icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+{% endblock %}

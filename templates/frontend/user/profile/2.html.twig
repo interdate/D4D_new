@@ -1,0 +1,192 @@
+{% if errors %}
+    <div class="errors">
+        <div class="ui orange message">
+            <div class="content">
+                <div class="header">
+                    {% trans %}Please complete fields below{% endtrans %}
+                </div>
+                <p>
+                    {{ form_errors(form.purposes) }}
+                    {{ form_errors(form.languages) }}
+                </p>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+
+
+<div class="inner_form_bot">
+    <div class="main_form">
+
+
+            <h2>{% trans %}Background{% endtrans %}</h2>
+
+            <div class="mfrm_field cf">
+                {{ form_label(form.relationshipStatus) }}
+                <div class="mselect3">
+                    {{ form_widget(form.relationshipStatus) }}
+                </div>
+            </div>
+
+            <div class="mfrm_field cf">
+                {{ form_label(form.children) }}
+                <div class="mselect3">
+                    {{ form_widget(form.children) }}
+                </div>
+            </div>
+
+            <div class="mfrm_field cf">
+                {{ form_label(form.ethnicity) }}
+                <div class="mselect3">
+                    {{ form_widget(form.ethnicity) }}
+                </div>
+            </div>
+
+            <div class="mfrm_field cf">
+                {{ form_label(form.religion) }}
+                <div class="mselect3">
+                    {{ form_widget(form.religion) }}
+                </div>
+            </div>
+
+            <div class="long_field cf {% if form.languages.vars.errors|length %}error{% endif %}">
+                <div class="long_label">{{ form_label(form.languages) }}</div>
+                <div class="langchk checkdiv cf">
+                    {% for language in form.languages %}
+                        <div class="chkinner checkbox_cont_1">
+                            <div class="ui checkbox">
+                                {{ form_widget(language) }}
+                                {{ form_label(language) }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mfrm_field cf">
+                {{ form_label(form.education) }}
+                <div class="mselect3">
+                    {{ form_widget(form.education) }}
+                </div>
+            </div>
+
+            <div class="mfrm_field cf">
+                {{ form_label(form.occupation) }}
+                {{ form_widget(form.occupation) }}
+            </div>
+
+            <div class="mfrm_field cf">
+                {{ form_label(form.smoking) }}
+                <div class="mselect3">
+                    {{ form_widget(form.smoking) }}
+                </div>
+            </div>
+
+            <div class="mfrm_field cf">
+                {{ form_label(form.drinking) }}
+                <div class="mselect3">
+                    {{ form_widget(form.drinking) }}
+                </div>
+            </div>
+
+            <div class="long_field cf {% if form.purposes.vars.errors|length %}error{% endif %}">
+                <div class="long_label ">{{ form_label(form.purposes) }}</div>
+                <div class="checkboxes purposes cf">
+                    {% for purpose in form.purposes %}
+                        <div class="block left">
+                            <div class="ui checkbox">
+                                {{ form_widget(purpose) }}
+                                {{ form_label(purpose) }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if app.user.gender.id == 1 %}
+
+            <div class="mform_finance">
+                <h2>{% trans %}Fiancial Info{% endtrans %}</h2>
+                <div class="mfrm_field cf">
+                    {{ form_label(form.status) }}
+                    <div class="mselect3">
+                        {{ form_widget(form.status) }}
+                    </div>
+                </div>
+
+                <div class="mfrm_field cf">
+                    {{ form_label(form.netWorth) }}
+                    <div class="mselect3">
+                        {{ form_widget(form.netWorth) }}
+                    </div>
+                </div>
+
+                <div class="mfrm_field cf">
+                    {{ form_label(form.income) }}
+                    <div class="mselect3">
+                        {{ form_widget(form.income) }}
+                    </div>
+                </div>
+
+            </div>
+
+
+                <h2>{% trans %}Appearance{% endtrans %}</h2>
+
+                {% else %}
+                    <h3>{% trans %}How good I look{% endtrans %}</h3>
+                {% endif %}
+
+
+                <div class="mfrm_field cf">
+                    {{ form_label(form.height) }}
+                    <div class="mselect3">
+                        {{ form_widget(form.height) }}
+                    </div>
+                </div>
+
+                <div class="mfrm_field cf">
+                    {{ form_label(form.body) }}
+                    <div class="mselect3">
+                        {{ form_widget(form.body) }}
+                    </div>
+                </div>
+
+                <div class="mfrm_field cf">
+                    {{ form_label(form.eyes) }}
+                    <div class="mselect3">
+                        {{ form_widget(form.eyes) }}
+                    </div>
+                </div>
+
+                <div class="mfrm_field cf">
+                    {{ form_label(form.hair) }}
+                    <div class="mselect3">
+                        {{ form_widget(form.hair) }}
+                    </div>
+                </div>
+
+                <div class="long_field cf {% if form.features.vars.errors|length %}error{% endif %}">
+                    <div class="long_label">{{ form_label(form.features) }}</div>
+                    <div class="langchk checkdiv cf">
+                        {% for feature in form.features %}
+                            <div class="chkinner checkbox_cont_1"{% if feature.vars.value == 3 and app.user.gender.id == 2 %} style="display: none;" {% endif %}>
+                                <div class="ui checkbox">
+                                    {{ form_widget(feature) }}
+                                    {{ form_label(feature) }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+
+
+
+    </div>
+</div>
+
+
+
+

@@ -1,0 +1,140 @@
+{% extends "backend/layout.html.twig" %}
+
+{% block content %}
+
+    {{ include('backend/header.html.twig', { 'header': 'Push', 'icon': '' }) }}
+
+    <div class="page_content messages_content">
+
+        <div class="ui segment">
+            <form class="ui form" id="sendMessageToUsersGroupe" method="post" ac>
+                <h2 class="ui header left">
+{#                    <i class="{{ icon }} icon"></i>#}
+                    <div class="content">
+{#                        {{ title }}#}
+                    </div>
+                </h2>
+
+
+{#                <div class="right" style="clear: none;margin-right: 5px;">#}
+{#                    <label class="left" style="line-height: 40px;">דוחות</label>#}
+{#                </div>#}
+
+
+                <div class="clear"></div>
+
+                {% if send %}
+                    <div class="ui success visible message" style="max-width: 300px;margin: 0 auto;">
+                        <i class="close icon"></i>
+                        <p style="text-align: center;">Massage was successfully send!</p>
+                    </div>
+                {% endif %}
+
+                <br>   שדה ״לינק לאתר / לאפליקציה״ -
+                <br>  לאפליקציה זה עמוד שקיים בתוך האפליקציה כמו עמוד הביית, הודעות, זירה..
+                <br>  לאתר זה עמוד מהאתר כמו מגזין (צריחה להיות אפשרות להיכנס לעמוד הזה בלי לעשות לוגין)
+                <br>
+                <br>  -  web link שדה
+                <br>  ״לינק לאתר / לאפליקציה״ זה מה שיפתח מהפוש לאפליקציה.
+                <br>  מה שיפתח למי שקיבל פוש במובייל / בדסקטופ ישלך לעמוד הזה (אפשר לשלוח לעמודים שצריך בשבילם לוגין)
+                <br>
+                <br>
+
+                <div class="ui big ribbon label" style="margin-bottom: 10px;margin-top: 15px;">שלח ל</div>
+                <div class="field {{  errors['reportId'] is defined ? 'error' : '' }}" style="clear: none;margin-right: 15px;margin-top: 2px;min-width: 100px;">
+
+                    <select name="reportId" id="reportId" class="ui search dropdown ">
+                        <option value="">בחר דוח</option>
+                        {% for report in reports %}
+                            <option value="{{ report.id }}">{{ report.name }}</option>
+                        {% endfor %}
+                    </select>
+{#                    <div class="error">#}
+{#                        {{ error }}#}
+{#                    </div>#}
+                </div>
+
+                <div class="ui big ribbon label" style="margin-bottom: 10px;margin-top: 15px;">Title Push</div>
+                <div class="field {{  errors['titleMess'] is defined ? 'error' : '' }}">
+                    <input type="text" name="titleMess" id="titleMess">
+                </div>
+
+
+                <div class="ui big ribbon label" style="margin-bottom: 10px;margin-top: 15px;">Text Push</div>
+                <div class="field {{  errors['textMessage'] is defined ? 'error' : '' }}">
+                    <textarea name="message" id="textMessage"></textarea>
+                </div>
+
+
+                <div class="ui big ribbon label" style="margin-bottom: 10px;margin-top: 15px;">
+                    לינק לאתר / אפליקציה
+                </div>
+                <div class="field">
+                    <input type="radio" name="type" value="linkOut" id="" checked>  אתר
+                    <input type="radio" name="type" value="app" id=""> אפליקציה
+                </div>
+
+
+                <div class="site-link">
+                    <div class="ui big ribbon label" style="margin-bottom: 10px;margin-top: 15px;">
+                        לינק לאתר (בשביל האפליקציה צריך להיות אפשרות להיכנס לעמוד בלי לוגין)
+                    </div>
+                    <div class="field {{  errors['url'] is defined ? 'error' : '' }}">
+                        <input type="text" name="url" id="">
+                    </div>
+                </div>
+
+               <div class="app-link hidden">
+                   <div class="ui big ribbon label" style="margin-bottom: 10px;margin-top: 15px;">
+                       עמוד בתוך האפליקציה
+                   </div>
+                   <div class="field" {{  errors['app_url'] is defined ? 'error' : '' }}>
+                       <input type="text" name="app_url" id="" style="direction: ltr">
+                   </div>
+                   <smal>
+                       <ul>
+                           <li>/home</li>
+                           <li>/notifications (התראות מהזירה) </li>
+                           <li>/arena (הזירה)</li>
+                           <li>/show-photo (מבקשים לראות תמונות חסויות)</li>
+                           <li>/new-users </li>
+                           <li>/nearme-users </li>
+                           <li>/online-users </li>
+                       </ul>
+                   </smal>
+               </div>
+
+
+         <div class="field">
+
+             <div class="ui big ribbon label" style="margin-bottom: 10px;margin-top: 15px;">
+                 web link
+             </div>
+             <div class="field">
+                 <input type="text" name="web_url" id="">
+             </div>
+         </div>
+
+
+                <div class="">
+                    <button class="ui labeled icon violet approve large button" type="submit">
+                        <i class="send outline icon"></i>
+                        שליחת פוש למשתמשים מהדוח
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+
+
+
+    </div>
+    <script>
+        $('input[name="type"]').change(function () {
+            $('.app-link, .site-link').toggleClass('hidden')
+        })
+    </script>
+
+{% endblock %}

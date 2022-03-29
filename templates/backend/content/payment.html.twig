@@ -1,0 +1,313 @@
+{% extends "backend/layout.html.twig" %}
+
+{% block content %}
+
+    {{ include('backend/header.html.twig', { 'header': 'תוכן', 'icon': 'text file' }) }}
+
+    <script>
+        function updatePaymentTitle(form) {
+            var data = form.serialize();
+            form.siblings('div').find('button').addClass('loading');
+            form.find('input, select, textarea').prop( "disabled", true );
+
+            $.ajax({
+                url: '/admin/content/payment',
+                type: 'Post',
+                data: data,
+                error: function(response){
+                    console.log("Error:" + JSON.stringify(response));
+                },
+                success: function(response){
+                    form.siblings('div').find('button').removeClass('loading');
+                    form.find('input, select, textarea').prop( "disabled", false );
+                }
+            });
+        }
+    </script>
+
+    <div class="page_content">
+
+        <div class="ui two column grid">
+
+            <div class="column">
+                <div class="ui segment">
+                    <h2 class="ui header">
+                        <i class="home icon"></i>
+                        <div class="content">
+                            עריכת הרכישת מנוי
+                        </div>
+                    </h2>
+
+                    <div class="clear"></div>
+
+
+                    <h3 class="ui horizontal divider header">
+                        <i class="line chart olive icon"></i>
+                        כותרות
+                    </h3>
+
+                    <br>
+
+
+                    <form class="ui form" id="payment_title">
+                        <div class="ui label">כותרות העמוד</div>
+                        <div class="field">
+                            <input type="text" name="title" value="{{ (textBefore|length > 0) ? textBefore[0].title : '' }}">
+                        </div>
+
+                        <input type="hidden" name="id" value="1">
+
+                    </form>
+
+
+                    <br><br>
+                    <div class="ui one column centered grid">
+                        <button class="ui labeled icon orange approve button right" onclick="updatePaymentTitle($('#payment_title'));">
+                            <i class="save icon"></i>
+                            לשמור
+                        </button>
+                    </div>
+
+                </div>
+                <div class="ui segment">
+                    <h2 class="ui header right">
+                        <i class="file outline icon"></i>
+                        <div class="content">
+                            Text Before
+                        </div>
+                    </h2>
+
+                    <div class="left">
+                        <a href="{{ path('admin_payment_content_edit', {form: 'TextBeforePayment'}) }}">
+                            <button class="ui labeled icon orange approve large button right">
+                                <i class="add square icon"></i>
+                                הוסף
+                            </button>
+                        </a>
+                    </div>
+
+                    <div class="clear"></div>
+
+
+                    <table class="ui basic celled table payment">
+                        <thead>
+                        <tr>
+                            <th>text</th>
+                            <th>פעיל</th>
+                            <th>להסיר</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for textb in textBefore %}
+                            {% if textb.id != 1 %}
+                            <tr>
+                                <td class="alignRight">
+                                    <a href="{{ path('admin_payment_content_edit', {form: 'TextBeforePayment', 'id': textb.id}) }}" class="page_name">{{ textb.text|striptags|slice(0, 40) }}</a>
+                                    <input type="hidden" class="entity_id" value="{{ textb.id }}">
+                                    <input type="hidden" class="entity_name" value="TextBeforePayment">
+                                </td>
+
+                                <td>
+                                    <div class="ui checkbox toggle small">
+                                        <input type="checkbox" {% if textb.isActive %}checked="checked"{% endif %}>
+                                        <label></label>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <i class="trash outline big link black icon circular delete"></i>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="ui segment">
+                    <h2 class="ui header right">
+                        <i class="file outline icon"></i>
+                        <div class="content">
+                            Payment Subscriptions
+                        </div>
+                    </h2>
+
+                    <div class="left">
+                        <a href="{{ path('admin_payment_content_edit', {form: 'PaymentSubscription'}) }}">
+                            <button class="ui labeled icon orange approve large button right">
+                                <i class="add square icon"></i>
+                                הוסף
+                            </button>
+                        </a>
+                    </div>
+
+                    <div class="clear"></div>
+
+
+                    <table class="ui basic celled table payment">
+                        <thead>
+                        <tr>
+                            <th>title</th>
+                            <th>מחיר</th>
+                            <th>פעיל</th>
+                            <th>להסיר</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for payment in payments %}
+                            <tr>
+                                <td class="alignRight">
+                                    <a href="{{ path('admin_payment_content_edit', {form: 'PaymentSubscription', 'id': payment.id}) }}" class="page_name">{{ payment.title }}</a>
+                                    <input type="hidden" class="entity_id" value="{{ payment.id }}">
+                                    <input type="hidden" class="entity_name" value="PaymentSubscription">
+                                </td>
+
+                                <td>{{ payment.amount }}.00</td>
+
+                                <td>
+                                    <div class="ui checkbox toggle small">
+                                        <input type="checkbox" {% if payment.isActive %}checked="checked"{% endif %}>
+                                        <label></label>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <i class="trash outline big link black icon circular delete"></i>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+            <div class="column">
+                <div class="ui segment">
+                    <h2 class="ui header right">
+                        <i class="file outline icon"></i>
+                        <div class="content">
+                            Text in Table
+                        </div>
+                    </h2>
+
+                    <div class="left">
+                        <a href="{{ path('admin_payment_content_edit', {form:'TableTextPayment'}) }}">
+                            <button class="ui labeled icon orange approve large button right">
+                                <i class="add square icon"></i>
+                                הוסף
+                            </button>
+                        </a>
+                    </div>
+
+                    <div class="clear"></div>
+
+
+                    <table class="ui basic celled table payment">
+                        <thead>
+                        <tr>
+                            <th>כותרת</th>
+                            <th>פעיל</th>
+                            <th>להסיר</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for textt in tableTexts %}
+                            <tr>
+                                <td class="alignRight">
+                                    <a href="{{ path('admin_payment_content_edit', {form:'TableTextPayment', 'id': textt.id}) }}" class="page_name">{{ textt.title }}</a>
+                                    <input type="hidden" class="entity_id" value="{{ textt.id }}">
+                                    <input type="hidden" class="entity_name" value="TableTextPayment">
+                                </td>
+
+                                <td>
+                                    <div class="ui checkbox toggle small">
+                                        <input type="checkbox" {% if textt.isActive %}checked="checked"{% endif %}>
+                                        <label></label>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <i class="trash outline big link black icon circular delete"></i>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="ui segment">
+                    <h2 class="ui header right">
+                        <i class="file outline icon"></i>
+                        <div class="content">
+                            Text After
+                        </div>
+                    </h2>
+
+                    <div class="left">
+                        <a href="{{ path('admin_payment_content_edit', {form: 'TextAfterPayment'}) }}">
+                            <button class="ui labeled icon orange approve large button right">
+                                <i class="add square icon"></i>
+                                הוסף
+                            </button>
+                        </a>
+                    </div>
+
+                    <div class="clear"></div>
+
+
+                    <table class="ui basic celled table payment">
+                        <thead>
+                        <tr>
+                            <th>text</th>
+                            <th>פעיל</th>
+                            <th>להסיר</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for texta in textAfter %}
+                            <tr>
+                                <td class="alignRight">
+                                    <a href="{{ path('admin_payment_content_edit', {form: 'TextAfterPayment', 'id': texta.id}) }}" class="page_name">{{ texta.text|striptags|slice(0, 40) }}</a>
+                                    <input type="hidden" class="entity_id" value="{{ texta.id }}">
+                                    <input type="hidden" class="entity_name" value="TextAfterPayment">
+                                </td>
+
+                                <td>
+                                    <div class="ui checkbox toggle small">
+                                        <input type="checkbox" {% if texta.isActive %}checked="checked"{% endif %}>
+                                        <label></label>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <i class="trash outline big link black icon circular delete"></i>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+            </div>
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+{% endblock %}

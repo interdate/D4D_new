@@ -1,0 +1,56 @@
+{% extends "backend/layout.html.twig" %}
+
+{% block content %}
+
+    {{ include('backend/header.html.twig', { 'header': 'ניהול משתמשים', 'icon': 'users' }) }}
+
+    <div class="page_content reports_content">
+
+        <div class="ui segment compact">
+
+            <h2 class="ui header">
+                <i class="bar chart icon"></i>
+                <div class="content">
+                    דוחות
+                </div>
+            </h2>
+
+            <table class="ui basic collapsing celled table reports">
+                <thead>
+                    <tr>
+                        <th>שם</th>
+                        <th>מופיע בעמוד הראשי</th>
+                        <th>להסיר</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in reports %}
+                        <tr>
+                            <td>
+                                <a href="#" class="report_name">{{ report.name }}</a>
+                                <form action="{{ path('admin_users', {'filter': 'report'}) }}" method="post">
+                                    <input type="hidden" name="reportId" class="report_id" value="{{ report.id }}">
+                                </form>
+                            </td>
+
+                            <td>
+                                <div class="ui checkbox toggle small">
+                                    <input type="checkbox" {% if report.isFlagged %}checked="checked"{% endif %}>
+                                    <label></label>
+                                </div>
+                            </td>
+
+                            <td>
+                                <i class="trash outline big link black icon circular delete"></i>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+
+{% endblock %}

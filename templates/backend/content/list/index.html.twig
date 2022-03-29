@@ -1,0 +1,82 @@
+{% extends "backend/layout.html.twig" %}
+
+{% block content %}
+
+    {% if list == 'WordBlocked' %}
+        {% set header = 'Bloced Words' %}
+        {% set icon = 'write' %}
+        {% set hebTitle = 'מילים' %}
+    {% elseif list == 'EmailBlocked' %}
+        {% set header = 'Bloced Emails' %}
+        {% set icon = 'mail outline' %}
+        {% set hebTitle = 'מיילים' %}
+    {% elseif list == 'PhoneBlocked' %}
+        {% set header = 'Bloced Phones' %}
+        {% set icon = 'call' %}
+        {% set hebTitle = 'טלפונים' %}
+    {% elseif list == 'HairStyle' %}
+        {% set header = 'Hair Style' %}
+        {% set icon = 'hair' %}
+        {% set hebTitle = 'תסרוקת' %}
+    {% endif %}
+    {{ include('backend/header.html.twig', { 'header': header, 'icon': icon }) }}
+
+    <div class="page_content magazine_content">
+        <div class="ui segment">
+
+            <h2 class="ui header right">
+                <i class="list icon"></i>
+                <div class="content">
+                    רשימת {{ hebTitle }}
+                </div>
+            </h2>
+
+            <div class="left">
+                <a href="{{ path('admin_blocked_lists_list_edit', {'list': list, 'id': 0}) }}">
+                    <button class="ui labeled icon pink approve large button right">
+                        <i class="write icon"></i>
+                        הוסף פריט
+                    </button>
+                </a>
+            </div>
+
+            <div class="clear"></div>
+
+            <div class="ui form" id="reportItemSearch">
+                <div class="field" style="width:300px;">
+                    <input type="text" class="reportItemSearch" value="" placeholder="Start type to find value...">
+                </div>
+
+                <table class="ui basic celled table {{ list }}" list="{{ list }}">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>value</th>
+                            <th>להסיר</th>
+                        </tr>
+                    </thead>
+                    <tbody class="reportItemList">
+                        {% for item in items %}
+                            <tr>
+                                <td class="alignRight">
+                                    <a href="{{ path('admin_blocked_lists_list_edit', {'list': list, 'id': item.id}) }}" class="article_name"><i class="write icon" data-position="top center" data-content="ערוך"></i> {{ item.id }}</a>
+                                    <input type="hidden" class="item_id" value="{{ item.id }}">
+                                </td>
+
+                                <td class="item_value">
+                                    {{ item.value }}
+                                </td>
+
+                                <td>
+                                    <i class="trash outline big link black icon circular delete"></i>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

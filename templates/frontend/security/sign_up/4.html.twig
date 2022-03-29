@@ -1,0 +1,247 @@
+{% if errors %}
+    <div class="errors">
+        <div class="ui orange message">
+            <div class="content">
+                <div class="header">
+                    {% trans %}Some data is missing. Fill in all the data in the marked fields.{% endtrans %}
+                </div>
+                {{ form_errors(form.sexPref) }}
+                {{ form_errors(form.maritalStatus) }}
+                {{ form_errors(form.children) }}
+                {{ form_errors(form.ethnicOrigin) }}
+                {{ form_errors(form.religion) }}
+                {{ form_errors(form.education) }}
+                {{ form_errors(form.occupation) }}
+                {{ form_errors(form.income) }}
+
+                {% if checkboxErr['languages'] is defined %}
+                        {{ checkboxErr['languages'] }}
+                    <br>
+                {% endif %}
+                appearance
+                {{ form_errors(form.appearance) }}
+                {{ form_errors(form.bodyType) }}
+                {{ form_errors(form.height) }}
+                {{ form_errors(form.hairLength) }}
+                {{ form_errors(form.hairColor) }}
+                {{ form_errors(form.eyesColor) }}
+
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+
+<div class="inner_form_bot">
+    <div class="main_form">
+
+
+        <h2>Personal Information</h2>
+{#        <div class="mfrm_field cf {% if form.firstName.vars.errors|length %}error{% endif %}">#}
+{#            {{ form_label(form.firstName) }}#}
+{#            {{ form_widget(form.firstName) }}#}
+{#        </div>#}
+
+{#        <div class="mfrm_field cf {% if form.firstName.vars.errors|length %}error{% endif %}">#}
+{#            {{ form_label(form.lastName) }}#}
+{#            {{ form_widget(form.lastName) }}#}
+{#        </div>#}
+        <div class="mfrm_field cf">
+            {{ form_label(form.sexPref) }}
+            <div class="mselect3">
+                {{ form_widget(form.sexPref, {'attr': {'class': 'ui dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.maritalStatus) }}
+            <div class="mselect3">
+                {{ form_widget(form.maritalStatus, {'attr': {'class': 'ui dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.children) }}
+            <div class="mselect3">
+                {{ form_widget(form.children, {'attr': {'class': 'ui dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.ethnicOrigin) }}
+            <div class="mselect3">
+                {{ form_widget(form.ethnicOrigin, {'attr': {'class': 'ui search dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.religion) }}
+            <div class="mselect3">
+                {{ form_widget(form.religion, {'attr': {'class': 'ui dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.education) }}
+            <div class="mselect3">
+                {{ form_widget(form.education, {'attr': {'class': 'ui dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.occupation) }}
+            <div class="mselect3">
+                {{ form_widget(form.occupation, {'attr': {'class': 'ui dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.income) }}
+            <div class="mselect3">
+                {{ form_widget(form.income, {'attr': {'class': 'ui dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="long_field cf {% if checkboxErr['languages'] is defined %}error{% endif %}">
+            <div class="long_label ">{{ form_label(form.languages) }}</div>
+            <div class="langchk checkdiv cf">
+                {% for language in form.languages %}
+                    <div class="chkinner checkbox_cont_1">
+                        <div class="ui checkbox">
+                            {{ form_widget(language) }}
+                            {{ form_label(language) }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.appearance) }}
+            <div class="mselect3">
+                {{ form_widget(form.appearance, {'attr': {'class': 'ui dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.bodyType) }}
+            <div class="mselect3">
+                {{ form_widget(form.bodyType, {'attr': {'class': 'ui dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.height) }}
+            <div class="mselect3">
+                {{ form_widget(form.height, {'attr': {'class': 'ui dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.weight) }}
+            <div class="mselect3">
+                {{ form_widget(form.weight, {'attr': {'class': 'ui dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.hairLength) }}
+            <div class="mselect3">
+                {{ form_widget(form.hairLength, {'attr': {'class': 'ui dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.hairColor) }}
+            <div class="mselect3">
+                {{ form_widget(form.hairColor, {'attr': {'class': 'ui dropdown'}}) }}
+            </div>
+        </div>
+
+        <div class="mfrm_field weight_field cf">
+            {{ form_label(form.eyesColor) }}
+            <div class="mselect3">
+                {{ form_widget(form.eyesColor, {'attr': {'class': 'ui dropdown'}}) }}
+            </div>
+        </div>
+
+{#        <div class="mfrm_field cf {% if form.zipCode.vars.errors|length %}error{% endif %}">#}
+{#            {{ form_label(form.zipCode) }}#}
+{#            {{ form_widget(form.zipCode) }}#}
+{#        </div>#}
+
+{#        <div class="mfrm_field cf">#}
+{#            {{ form_label(form.birthday) }}#}
+{#            <div class="mselect2">#}
+{#                {{ form_widget(form.birthday.year) }}#}
+{#                {{ form_widget(form.birthday.month) }}#}
+{#                {{ form_widget(form.birthday.day) }}#}
+{#            </div>#}
+{#        </div>#}
+
+{#        #}
+
+{#        <div class="about_field cf {% if form.about.vars.errors|length %}error{% endif %}">#}
+{#            <label for="{{ form.about.vars.id }}">{{ form.about.vars.label|raw }}</label>#}
+{#            {{ form_widget(form.about) }}#}
+{#        </div>#}
+
+{#        <h2>{% trans %}מה אני/אנחנו מחפש/ים{% endtrans %}</h2>#}
+
+{#        <div class="about_field cf {% if form.looking.vars.errors|length %}error{% endif %}">#}
+{#            <label for="{{ form.looking.vars.id }}">{{ form.looking.vars.label|raw }}</label>#}
+{#            {{ form_widget(form.looking) }}#}
+{#        </div>#}
+
+{#        <div class="long_field cf {% if checkboxErr['lookingForGender'] is defined %}error{% endif %}">#}
+{#            <div class="long_label ">{{ form_label(form.lookingForGender) }}</div>#}
+{#            <div class="langchk checkdiv cf">#}
+{#                {% for lookingForGender in form.lookingForGender %}#}
+{#                    <div class="chkinner checkbox_cont_1">#}
+{#                        <div class="ui checkbox">#}
+{#                            {{ form_widget(lookingForGender) }}#}
+{#                            {{ form_label(lookingForGender) }}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                {% endfor %}#}
+{#            </div>#}
+{#            <div class="clear"></div>#}
+{#        </div>#}
+
+{#        <div class="long_field cf {% if checkboxErr['meetingTime'] is defined %}error{% endif %}">#}
+{#            <div class="long_label">{{ form_label(form.meetingTime) }}</div>#}
+{#            <div class="langchk checkdiv cf">#}
+{#                {% for meetingTime in form.meetingTime %}#}
+{#                    <div class="chkinner checkbox_cont_1">#}
+{#                        <div class="ui checkbox">#}
+{#                            {{ form_widget(meetingTime) }}#}
+{#                            {{ form_label(meetingTime) }}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                {% endfor %}#}
+{#            </div>#}
+{#            <div class="clear"></div>#}
+{#        </div>#}
+
+        <div class="main_sub main_sub4 cf" style="width: 100%;margin:0px auto;">
+            <a class="back" onclick="$('#prev_stage').click()">{% trans %}Back{% endtrans %}</a>
+            <a class="next nextstage">{% trans %}Next{% endtrans %}</a>
+            <input type="submit" id="prev_stage" name="flow_signUp_transition" value="back"
+                   formnovalidate="formnovalidate">
+            <input type="submit" id="next_stage">
+        </div>
+
+
+        <div class="main_sub main_sub4 cf">
+
+        </div>
+
+
+{#
+        {{ form_row(form._token) }}
+#}
+    </div>
+</div>
+
+

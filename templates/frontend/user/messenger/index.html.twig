@@ -1,0 +1,80 @@
+{% extends "frontend/layout.html.twig" %}
+
+{% block title %}
+    {{ parent() }} - {% trans %}Messages{% endtrans %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="mid_content hadaot_mid">
+        <div class="mid_title"><h1>{% trans %}Messages{% endtrans %}</h1></div>
+        <div class="arena_text">
+            {#
+            <p>Inbox text.....</p>
+            #}
+        </div>
+        {% if dialogs|length > 0 %}
+        <div class="nf_div">
+            <div class="nf_divinner">
+                <ul class="nful">
+                    {% for dialog in dialogs %}
+
+                        {% set url = path('messenger_dialog_open',{'userId': app.user.id, 'contactId': dialog.id}) %}
+
+                        <li>
+                            <div class="lidiv cf" onclick="window.location.href='{{ url }}';">
+                                <div class="lidiv_left cf">
+                                    <div class="lileft_img">
+                                        {% if dialog.faceWebPath != '' %}
+                                            <a href="{{ url }}"><img src="{{ dialog.faceWebPath }}" alt=""></a>
+                                        {% else %}
+                                            <a href="{{ url }}"><img src="{{ dialog.noPhoto }}"></a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="lileft_text">
+                                        <h4><a href="{{ url }}">{{ dialog.username }}</a></h4>
+                                        <p>
+                                            <a href="{{ url }}">
+                                                {% if dialog.message|length > 60 %}
+                                                    {{ dialog.message|slice(0,59) ~ '...' }}
+                                                {% else %}
+                                                    {{ dialog.message }}
+                                                {% endif %}
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="lidiv_right">
+                                    <span class="lidate">{{ dialog.date|date("m/d/Y H:i") }}</span>
+                                </div>
+                                {% if dialog.newMessagesNumber > 0 %}
+                                    <div class="newMessages" >{{ dialog.newMessagesNumber }}+</div>
+                                {% endif %}
+                            </div>
+                        </li>
+                        <!-- end -->
+
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function pageInit(){
+
+        }
+    </script>
+{% endblock %}
+
+
+
+
+{% block mobile_content %}
+    <div class="nymain_mobile">
+    <div class="mid_content hadaot_mid">
+
+    </div>
+    </div>
+{% endblock %}

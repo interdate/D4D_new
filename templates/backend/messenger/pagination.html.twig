@@ -1,0 +1,33 @@
+{% if pagination.pages_count > 1 %}
+
+    <div class="ui borderless menu paging">
+        {% if pagination.page > 1 %}
+            <a class="icon item first" href="{% if userId is defined %}{{ path(pagination.route, {'userId': userId, 'page': 1}) }}{% else %}{{ path(pagination.route, {'page': 1}) }}{% endif %}">
+                <i class="step forward icon"></i>
+            </a>
+
+            <a class="icon item previous" href="{% if userId is defined %}{{ path(pagination.route, {'userId': userId, 'page': pagination.page-1}) }}{% else %}{{ path(pagination.route, {'page': pagination.page-1}) }}{% endif %}">
+                <i class="long arrow left icon"></i>
+            </a>
+        {% endif %}
+
+        {# display p numbers only from p-4 to p+4 but don't go < 1 or > pages_count #}
+
+        {% for p in range(max(pagination.page - 5, 1), min(pagination.page + 5, pagination.pages_count)) %}
+            <a class="{% if p == pagination.page %} active current {% endif %} item page" href="{% if userId is defined %}{{ path(pagination.route, {'userId': userId, 'page': p}) }}{% else %}{{ path(pagination.route, {'page': p}) }}{% endif %}">{{ p }}</a>
+        {% endfor %}
+
+        {% if pagination.page < pagination.pages_count %}
+            <a class="icon item next" href="{% if userId is defined %}{{ path(pagination.route, {'userId': userId, 'page': pagination.page+1}) }}{% else %}{{ path(pagination.route, {'page': pagination.page+1}) }}{% endif %}">
+                <i class="long arrow right icon"></i>
+            </a>
+
+            <a class="icon item last" href="{% if userId is defined %}{{ path(pagination.route, {'userId': userId, 'page': pagination.pages_count}) }}{% else %}{{ path(pagination.route, {'page': pagination.pages_count}) }}{% endif %}">
+                <i class="step backward icon"></i>
+            </a>
+        {% endif %}
+    </div>
+
+{% endif %}
+
+

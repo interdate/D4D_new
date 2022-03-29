@@ -1,0 +1,80 @@
+{% extends "frontend/layout.html.twig" %}
+
+{% block title %}{{ parent() }} - {% if article is defined %}{{ article.title }}{% else %}{{ seo.title }}{% endif %}{% endblock %}
+{% block meta_description %}{% if article is defined %}{{ article.description }}{% else %}{{ seo.description }}{% endif %}{% endblock %}
+
+{% block content %}
+
+
+
+    <div class="mid_content magazin1">
+        <div class="mid_title">
+            {% if article is defined %}
+                <h3>{% trans %}Blog{% endtrans %}</h3>
+            {% else %}
+                <h1>{{ header }}</h1>
+            {% endif %}
+        </div>
+
+            {% if article is defined %}
+
+                <div class="magazin_main">
+                    <div class="mag_top"><{{ article.headerType  }}>{{ article.name }}</{{ article.headerType }}><span class="dicon">{{ article.date|date('m-d-Y') }}</span></div>
+                    <div class="magimg"><img alt="{{ article.imageAlt }}" src="{{ article.getFileWebPath }}"></div>
+                    <div class="magtext">
+                        {{ article.content|raw }}
+                    </div>
+                    <br><br>
+                    <a href="{{ path('magazine') }}">{% trans %}Back to Blog{% endtrans %}</a>
+                </div>
+
+            {% else %}
+                <div class="magazin_lists">
+                    <ul>
+                    {% for article in articles %}
+                        <li class="cf">
+                            <div class="maglist_img"><a href="{{ path('magazine_article', {'uri': article.uri}) }}"><img alt="{{ article.imageAlt }}" src="{{ article.getFileWebPath }}"></a></div>
+                            <div class="maglist_text">
+                                <h4><a href="{{ path('magazine_article', {'uri': article.uri}) }}">{{ article.name }}</a></h4>
+                                <span class="dicon">{{ article.date|date('m-d-Y') }}</span>
+                                <p>
+                                    {% if article.brief|length > 250 %}
+                                        {{ article.brief|slice(0,249) }}...
+                                    {% else %}
+                                        {{ article.brief }}
+                                    {% endif %}
+                                </p>
+                                <a class="mrmore" href="{{ path('magazine_article', {'uri': article.uri}) }}">{% trans %}continue...{% endtrans %}</a>
+                            </div>
+                        </li>
+                        <!-- end -->
+                    {% endfor %}
+                    </ul>
+                </div>
+                <div class="pages">
+                    {{ knp_pagination_render(articles) }}
+                </div>
+
+            {% endif %}
+
+
+
+
+
+    </div><!-- midsec end -->
+
+
+    <script>
+        function pageInit(){
+
+        }
+    </script>
+
+{% endblock %}
+{% block mobile_content %}
+    <div class="nymain_mobile">
+        <div class="mid_content magazin1">
+
+        </div>
+    </div>
+{% endblock %}

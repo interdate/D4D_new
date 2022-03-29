@@ -1,0 +1,747 @@
+{% extends 'base.html.twig' %}
+
+{% set globalSeo = getSeo() %}
+{% set downloadApp = getDownloadApp(app.request) %}
+{% block title %}{{ globalSeo.title|raw }}{% endblock %}
+
+{% block meta %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE"/>
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}ZIGZUG , זיגזוג חילופי זוגות , סווינגרס, הכרויות{% endblock %}">
+    <meta name="google-site-verification" content="DUQe_vA7hUfV_F3stQig1m5LQmLX_TCGH0t9zOsCGEs"/>
+{% endblock %}
+
+{% block stylesheets %}
+
+    <link
+            rel="stylesheet"
+            href="https://cdn.rtlcss.com/semantic-ui/2.4.1/semantic.rtl.min.css"
+            integrity="sha384-yXUIpeQfH3cuk6u6Mwu8uyJXB2R3UOLvcha1343UCMA2TA7lQ14BFmrudI6LAP8A"
+            crossorigin="anonymous">
+    {#
+        <link rel="stylesheet" href="{{ asset('libs/semantic-user/dist/semantic.min.css') }}">
+    #}
+    {% if  app.request.get('_route') == 'homepage' %}
+        <link rel="stylesheet" href="{{ asset('css/main_page.css?t=4') }}">
+    {% else %}
+        <link rel="stylesheet" href="{{ asset('css/style.css?t=4') }}">
+    {% endif %}
+
+    <link rel="stylesheet" href="{{ asset('css/messenger.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/rtl.css?u=2') }}">
+    <link rel="stylesheet" href="{{ asset('js/owl/owl.carousel.css') }}">
+    <link rel="stylesheet" href="{{ asset('js/slick/slick.css') }}">
+    <link rel="stylesheet" href="{{ asset('js/ls/ls.css') }}">
+
+
+    <link rel="stylesheet" href="{{ asset('libs/jquery.qtip/jquery.qtip.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('libs/jquery-ui/css/cupertino/jquery-ui-1.10.4.custom.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('libs/emoticons/support/skype/emoticons.css') }}">
+    <link rel="stylesheet" href="{{ asset('libs/lobibox/dist/css/animate.css') }}">
+    <link rel="stylesheet" href="{{ asset('libs/lobibox/dist/css/lobibox.css') }}">
+
+
+    <link href="{{ asset('css/perfect-scrollbar.min.css') }}" rel="stylesheet">
+
+{% endblock %}
+
+{% block js %}
+    {# <script src="{{ asset('libs/jquery/jquery-2.1.4.min.js') }}"></script>#}
+    <script src="{{ asset('js/jquery-2.1.3.min.js') }}"></script>
+    <script src="{{ asset('libs/jquery-form/jquery.form.min.js') }}"></script>
+    <script src="{{ asset('libs/semantic-user/dist/semantic.min.js') }}"></script>
+    <script src="{{ asset('js/slick/slick.js') }}"></script>
+
+    <script src="{{ asset('js/owl/owl.carousel.js') }}"></script>
+    <script src="{{ asset('js/all.js?u=1') }}"></script>
+    <script src="{{ asset('js/main.js') }}"></script>
+    <script src="{{ asset('js/ls/ls.js') }}"></script>
+    <script src="{{ asset('js/jquery.touchSwipe.min.js') }}"></script>
+
+    {% if app.user and app.request.get('_route') != 'sign_up_photo' and app.request.get('_route') != 'sign_up_photos' %}
+
+        <script src="{{ asset('libs/jquery-ui/js/jquery-ui-1.10.4.custom.min.js') }}"></script>
+        <script src="{{ asset('libs/jquery.qtip/jquery.qtip.min.js') }}"></script>
+        <script src="{{ asset('libs/emoticons/lib/emoticons.js') }}"></script>
+        <script src="{{ asset('libs/lobibox/dist/js/notifications.min.js') }}"></script>
+
+        <script src="{{ asset('js/tinyscrollbar.js') }}"></script>
+        <script src="{{ asset('js/perfect-scrollbar-with-mousewheel.min.js') }}"></script>
+        <script src="{{ asset('js/perfect-scrollbar.min.js') }}"></script>
+
+        <script src="{{ asset('js/messenger.js') }}"></script>
+        <script src="{{ asset('js/jquery.ns-autogrow.min.js') }}"></script>
+
+    {% endif %}
+
+
+    <script src="{{ asset('js/img/exif.js') }}"></script>
+    <script src="{{ asset('js/img/load-image.all.min.js') }}"></script>
+
+
+
+{% endblock %}
+
+{% block body %}
+    {% if not app.user %}
+        <style>
+            @media only screen and (max-width: 464px) {
+                .inner_content {
+                    padding-top: 240px;
+                }
+            }
+        </style>
+    {% endif %}
+
+    {% set route = app.request.attributes.get('_route') %}
+    {% set routeParams = app.request.attributes.get('_route_params') %}
+    {% set locale = app.request.locale %}
+
+    <!-- Main Container -->
+    <div class="main_container {% if app.user %}ny_main{% endif %}">
+
+        <!-- header -->
+        <div class="header{% if route != 'homepage' %} inner_header{% endif %}">
+            <!-- header main -->
+            <div class="header-main">
+                <div class="wrap clearfix">
+                    <div class="logo"><a href="{{ path('homepage') }}"><img src="/images/logo.png" alt="חילופי זוגות | סווינגרס | החלפת זוגות"></a>
+                    </div>
+                    <div class="header-right-inner">
+
+                        {% if app.user %}
+                            <div class="inner_top_sec">
+                                <div class="user">
+                                    <span class="upic"{% if app.user.getMainPhoto is not null %} style="background: none;"{% endif %}>
+                                        <a href="{{ path('view_user', {id: app.user.id}) }}" target="_blank">
+                                        <img src="{% if app.user.getMainPhoto is not null %}{{ app.user.getMainPhoto.getFaceWebPath }}{% else %}{{ app.user.getNoPhoto }}{% endif %}"
+                                             alt="">
+                                        </a>
+                                    </span>
+                                    <span class="uname">{% trans %}שלום {% endtrans %} <a
+                                                href="{{ path('view_user', {id: app.user.id}) }}" target="_blank">{{ app.user.username }}</a></span>
+                                </div>
+                                <a href="/logout">{% trans %}התנתקות{% endtrans %}</a>
+                            </div>
+                        {% endif %}
+
+                        <div class="inner_head_bot">
+
+                            {% if app.user %}
+                                {% set statistics = getStatistics() %}
+                                {% set settings = getSettings() %}
+                                <div class="inner_menu">
+                                    <div class="tglmenu"></div>
+                                    <ul class="cf">
+                                        <li{% if route == 'contact' %} class="active"{% endif %}><a
+                                                    href="{{ path('contact') }}">{% trans %}צור קשר{% endtrans %}</a>
+                                        </li>
+                                        {% if (settings.isCharge or app.user.id == 455) and not app.user.isPaying() %}
+                                            <li{% if route == 'subscription' or route == 'sign_up_subscription' %} class="active"{% endif %}>
+                                                <a href="{{ path('subscription') }}">רכישת מנוי</a></li>
+                                        {% endif %}
+                                        <li{% if route == 'faq' %} class="active"{% endif %}><a
+                                                    href="{{ path('faq') }}">{% trans %}שאלות ותשובות{% endtrans %}</a>
+                                        </li>
+
+                                        <li{% if route == 'magazine' %} class="active"{% endif %}><a
+                                                    href="{{ path('magazine') }}">{% trans %}מגזין חילופי זוגות{% endtrans %}</a>
+                                        </li>
+
+                                        <li{% if route == 'users_free_today_list' %} class="active"{% endif %}><a href="{{ path('users_free_today_list') }}">פנויים היום</a></li>
+
+                                        <li{% if route == 'messenger' or route == 'messenger_dialog_open' %} class="active"{% endif %}>
+                                            <a href="{{ path('messenger') }}">{% trans %}הודעות{% endtrans %}</a></li>
+                                        <li{% if route == 'user_homepage' %} class="active"{% endif %}><a
+                                                    href="{{ path('user_homepage') }}">{% trans %}עמוד הבית{% endtrans %}</a>
+                                        </li>
+                                    </ul>
+                                    <div class="clr"></div>
+                                    <ul class="mobile cf">
+                                        <li>
+                                            <div class="settings-icon black ui circular icon button right mini">
+                                                <i class="setting big icon"></i>
+                                            </div>
+
+                                            <ul class="submenu" style="transform:translate(-400px,0);">
+                                                <li>
+                                                    <button class="ui inverted black right button back-btn mini icon labeled">
+                                                        <i class="left chevron icon"></i>{% trans %}Back{% endtrans %}
+                                                    </button>
+                                                </li>
+                                                <li{% if route == 'user_profile' %} class="active"{% endif %}>
+                                                    <a href="{{ path('user_profile') }}">
+                                                        <div class="black ui circular icon button left"><i
+                                                                    class="icon edit-profile big"></i>
+                                                        </div>{% trans %}Edit Profile{% endtrans %}
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ path('user_profile', {'tab': 4}) }}">
+                                                        <div class="black ui circular icon button left"><i
+                                                                    class="icon edit-photos big"></i>
+                                                        </div>{% trans %}Edit Photos{% endtrans %}
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ path('view_user', {id: app.user.id}) }}" target="_blank">
+                                                        <div class="black ui circular icon button left"><i
+                                                                    class="icon street view big"></i>
+                                                        </div>{% trans %}View my profile{% endtrans %}
+                                                    </a>
+                                                </li>
+                                                <li{% if route == 'user_change_password' %} class="active"{% endif %}>
+                                                    <a href="{{ path('user_change_password') }}">
+                                                        <div class="black ui circular icon button left"><i
+                                                                    class="icon change-password big"></i>
+                                                        </div>{% trans %}עדכון סיסמה{% endtrans %}
+                                                    </a>
+                                                </li>
+                                                <li{% if route == 'user_freeze_account' %} class="active"{% endif %}>
+                                                    <a href="{{ path('user_freeze_account') }}">
+                                                        <div class="black ui circular icon button left"><i
+                                                                    class="freeze-account icon big"></i>
+                                                        </div>{% trans %}Freeze Account{% endtrans %}
+                                                    </a>
+                                                </li>
+
+                                                <li{% if route == 'user_settings' %} class="active"{% endif %}>
+                                                    <a href="{{ path('user_settings') }}">
+                                                        <div class="black ui circular icon button left"><i
+                                                                    class="icon setting big"
+                                                                    style="margin: 0px -1px 0px 0px;"></i>
+                                                        </div>{% trans %}הגדרות{% endtrans %}
+                                                    </a>
+                                                </li>
+                                                <li{% if route == 'contact' %} class="active"{% endif %}>
+                                                    <a href="{{ path('contact') }}">
+                                                        <div class="black ui circular icon button left"><i
+                                                                    class="icon mail big"
+                                                                    style="margin: -2px -1px 4px 0px;"></i>
+                                                        </div>{% trans %}צור קשר{% endtrans %}
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="/logout">
+                                                        <div class="black ui circular icon button left"><i
+                                                                    class="sign out icon big"
+                                                                    style="margin: 0px -2px 0px 2px;"></i>
+                                                        </div>{% trans %}יציאה{% endtrans %}
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('user_profile', {'tab': 4}) }}">
+                                                <div class="profile"
+                                                     style="background-image: url({% if app.user.getMainPhoto is not null %}{{ app.user.getMainPhoto.getFaceWebPath }}{% else %}{{ app.user.getNoPhoto }}{% endif %})"></div>
+                                            </a>
+                                        </li>
+                                        <li class="username"><a
+                                                    href="{{ path('view_user', {id: app.user.id}) }}" target="_blank">{{ app.user.username }}</a>
+                                        </li>
+                                        <li{% if route == 'messenger' or route == 'messenger_dialog_open' %} class="active"{% endif %}>
+                                            <a href="{{ path('messenger') }}">
+                                                <div class="black ui circular icon button left"><i
+                                                            class="activity icon big"></i></div>
+                                                <div class="menu-num inbox_count"><span>23</span>
+                                                </div>{% trans %}הודעות{% endtrans %}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" onclick="openPopup();return false;">
+                                                <div class="black ui circular icon button left"><i
+                                                            class="matches icon big"></i>
+                                                </div>{% trans %}The Arena{% endtrans %}
+                                            </a>
+                                        </li>
+                                        <li{% if route == 'user_notifications' %} class="active"{% endif %}>
+                                            <a href="{{ path('user_notifications') }}">
+                                                <div class="black ui circular icon button left"><i
+                                                            class="quickmatch icon big"></i></div>
+                                                <div class="menu-num arena_count"><span>23</span>
+                                                </div>{% trans %}התראות{% endtrans %}
+                                            </a>
+                                        </li>
+                                        <li class="contacts">
+                                            <a href="#">
+                                                <div class="black ui circular icon button left">
+                                                    <i class="icon bar chart big"></i>
+                                                </div>
+                                                {% trans %}Contacts{% endtrans %}
+                                                <div class="right icon ui black" style="margin-top: 5px;">
+                                                    <i class="icon angle right big"></i>
+                                                </div>
+                                            </a>
+                                            <ul class="submenu" style="transform:translate(-400px,0);">
+                                                <li>
+                                                    <button class="ui inverted black right button back-btn mini icon labeled">
+                                                        <i class="left chevron icon"></i>{% trans %}Back{% endtrans %}
+                                                    </button>
+
+                                                </li>
+                                                <li{% if route == 'user_list_viewed' %} class="active"{% endif %}>
+                                                    <a href="{{ path('user_list_viewed') }}">
+                                                        <div class="black ui circular icon button left"><i
+                                                                    class="icon viewed big"></i></div>
+                                                        <div class="stat menu-num{% if not statistics.viewed %} hidden{% endif %}">
+                                                            <span>{{ statistics.viewed }}</span>
+                                                        </div>{% trans %}Viewed{% endtrans %}
+                                                    </a>
+                                                </li>
+                                                <li{% if route == 'user_list_viewed_me' %} class="active"{% endif %}>
+                                                    <a href="{{ path('user_list_viewed_me') }}">
+                                                        <div class="black ui circular icon button left"><i
+                                                                    class="icon viewed-me big"></i></div>
+                                                        <div class="stat menu-num{% if not statistics.viewedMe %} hidden{% endif %}">
+                                                            <span>{{ statistics.viewedMe }}</span>
+                                                        </div>{% trans %}Viewed Me{% endtrans %}
+                                                    </a>
+                                                </li>
+                                                <li{% if route == 'user_list_connected' %} class="active"{% endif %}>
+                                                    <a href="{{ path('user_list_connected') }}">
+                                                        <div class="black ui circular icon button left"><i
+                                                                    class="icon contacted big"></i></div>
+                                                        <div class="stat menu-num{% if not statistics.connected %} hidden{% endif %}">
+                                                            <span>{{ statistics.connected }}</span>
+                                                        </div>{% trans %}Contacted{% endtrans %}
+                                                    </a>
+                                                </li>
+                                                <li{% if route == 'user_list_connected_me' %} class="active"{% endif %}>
+                                                    <a href="{{ path('user_list_connected_me') }}">
+                                                        <div class="black ui circular icon button left"><i
+                                                                    class="contacted-me icon big"></i></div>
+                                                        <div class="stat menu-num{% if not statistics.connectedMe %} hidden{% endif %}">
+                                                            <span>{{ statistics.connectedMe }}</span>
+                                                        </div>{% trans %}Contacted Me{% endtrans %}
+                                                    </a>
+                                                </li>
+                                                <li{% if route == 'user_list_favorited' %} class="active"{% endif %}>
+                                                    <a href="{{ path('user_manage_list_favorited') }}">
+                                                        <div class="black ui circular icon button left"><i
+                                                                    class="icon favorited big"></i></div>
+                                                        <div class="stat menu-num{% if not statistics.favorited %} hidden{% endif %}">
+                                                            <span>{{ statistics.favorited }}</span>
+                                                        </div>{% trans %}צרפתי למועדפים{% endtrans %}
+                                                    </a>
+                                                </li>
+                                                <li{% if route == 'user_list_favorited_me' %} class="active"{% endif %}>
+                                                    <a href="{{ path('user_list_favorited_me') }}">
+                                                        <div class="black ui circular icon button left"><i
+                                                                    class="icon favorited-me big"></i></div>
+                                                        <div class="stat menu-num{% if not statistics.favoritedMe %} hidden{% endif %}">
+                                                            <span>{{ statistics.favoritedMe }}</span>
+                                                        </div>{% trans %}צרפו אותי למועדפים{% endtrans %}
+                                                    </a>
+                                                </li>
+                                                <li{% if route == 'user_list_black_listed' %} class="active"{% endif %}>
+                                                    <a href="{{ path('user_manage_list_black_listed') }}">
+                                                        <div class="black ui circular icon button left"><i
+                                                                    class="icon blocked big"></i></div>
+                                                        <div class="stat menu-num{% if not statistics.blacklisted %} hidden{% endif %}">
+                                                            <span>{{ statistics.blacklisted }}</span>
+                                                        </div>{% trans %}Blocked{% endtrans %}
+                                                    </a>
+                                                </li>
+                                            </ul>
+
+                                        </li>
+                                        <li{% if route == 'user_mobile_search' %} class="active"{% endif %}>
+                                            <a href="{{ path('user_mobile_search') }}">
+                                                <div class="black ui circular icon button left">
+                                                    <i class="search icon big" style="margin: -2px 0 5px 0;"></i>
+                                                </div>{% trans %}Search{% endtrans %}
+                                            </a>
+                                        </li>
+                                        <li{% if route == 'contact' %} class="active"{% endif %}>
+                                            <a href="{{ path('contact') }}">
+                                                <div class="black ui circular icon button left"><i class="icon mail big"
+                                                                                                   style="margin: -2px -1px 4px 0px;"></i>
+                                                </div>{% trans %}צור קשר{% endtrans %}
+                                            </a>
+                                        </li>
+                                        <li{% if route == 'faq' %} class="active"{% endif %}>
+                                            <a href="{{ path('faq') }}">
+                                                <div class="black ui circular icon button left"><i
+                                                            class="icon circle outline help big"
+                                                            style="margin: -2px -1px 3px -1px;"></i>
+                                                </div>{% trans %}אלות ותשובות{% endtrans %}
+                                            </a>
+                                        </li>
+                                        {% if ((settings.isCharge or app.user.id == 455) and app.user.gender.id == 1 and not app.user.is2D() and not app.user.isPaying()) or app.user.id == 455 %}
+                                            <li{% if route == 'subscription' or route == 'sign_up_subscription' %} class="active"{% endif %}>
+                                                <a href="{{ path('subscription') }}">
+                                                    <div class="black ui circular icon button left">
+                                                        <i class="md-ribbon icon big" style="margin: 0px -1px;"></i>
+                                                    </div>{% trans %}Subscription{% endtrans %}</a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                    <div class="clr"></div>
+                                </div>
+                            {% elseif route != 'sign_up' %}
+                                <div class="clr" style="height:10px"></div>
+                                <div class="login-form clearfix">
+
+                                    <div>
+                                        {% if error is defined and error %}
+                                            <div class="ui compact message red loginError">
+
+                                                {% if error.messageKey == 'Account is disabled.' %}
+                                                    {% trans %}הכרטיס נחסם על ידי הנהלת האתר{% endtrans %}
+                                                {% else %}
+                                                    {% trans %}שם משתמש או סיסמא שגוי{% endtrans %}
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                        <input type="hidden" name="_target_path" value="{{ path('homepage') }}">
+                                        <div class="login-btn btn-second"><input name="login" id="login" type="submit"
+                                                                                 value="{% trans %}כניסה{% endtrans %}">
+                                        </div>
+                                        <div class="jfree-btn"><input name="jfree" id="jfree" type="button"
+                                                                      onclick="window.location.href = '{{ path('sign_up') }}'"
+                                                                      value="{% trans %}הרשמה חינם{% endtrans %}"></div>
+                                        <div class="clr"></div>
+                                    </div>
+                                    <div class="topbtns">
+                                        <form action="{{ path('login_check') }}" method="post" id="login_form">
+                                            <div class="login-btn btn-first"><input name="login" id="login"
+                                                                                    type="submit"
+                                                                                    value="{% trans %}כניסה{% endtrans %}">
+                                            </div>
+                                            <div class="lfield"><input name="_password" id="password" type="password"
+                                                                       placeholder="{% trans %}סיסמה{% endtrans %}"
+                                                                       required></div>
+                                            <div class="lfield"><input name="_username" id="username" type="text"
+                                                                       placeholder="שם משתמש/אימייל/טלפון"
+                                                                       value="{% if last_username is defined %}{{ last_username }}{% endif %}"
+                                                                       required></div>
+                                            <input type="hidden" name="_target_path" value="{{ path('homepage') }}">
+                                            <div class="clr"></div>
+                                            <p class="fpass"><a
+                                                        href="{{ path('password_recovery') }}">{% trans %}שכחת את הסיסמה?{% endtrans %}</a>
+                                            </p>
+                                            <div class="clr"></div>
+                                        </form>
+                                    </div>
+                                </div>
+                            {% elseif route == 'sign_up' %}
+                                <div class="inner_menu">
+                                    <div class="tglmenu" style="margin-top: -20px;"></div>
+                                    <ul class="cf">
+                                        <li{% if route == 'contact' %} class="active"{% endif %}><a
+                                                    href="{{ path('contact') }}">{% trans %}צור קשר{% endtrans %}</a>
+                                        </li>
+                                        <li{% if route == 'homepage' %} class="active"{% endif %}><a
+                                                    href="{{ path('homepage') }}">{% trans %}כניסה{% endtrans %}</a>
+                                        </li>
+                                    </ul>
+                                    <div class="clr"></div>
+                                    <ul class="mobile cf">
+                                        <li{% if route == 'homepage' %} class="active"{% endif %}>
+                                            <a href="{{ path('homepage') }}">
+                                                <div class="black ui circular icon button left"><i
+                                                            class="icon sign in big"
+                                                            style="margin: -2px -1px 4px 0px;"></i>
+                                                </div>{% trans %}כניסה{% endtrans %}
+                                            </a>
+                                        </li>
+                                        <li{% if route == 'contact' %} class="active"{% endif %}>
+                                            <a href="{{ path('contact') }}">
+                                                <div class="black ui circular icon button left"><i class="icon mail big"
+                                                                                                   style="margin: -2px -1px 4px 0px;"></i>
+                                                </div>{% trans %}צור קשר{% endtrans %}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <div class="clr"></div>
+                                </div>
+                            {% endif %}
+
+                            <div class="clr"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if route == 'homepage' %}
+            <!-- banner text -->
+
+        </div>
+        <!-- slider -->
+        <div class="hslider">
+            {% for slide in slides %}
+            {% if slide.isActive %}
+            <div class="slider-img"
+                 style="background:url({{ slide.getFileWebPath }}) no-repeat center center; background-size:cover;">
+                <div class="wrap">
+                    <div class="banner-txt">
+                        {% if slide.name is empty %}
+                        <{{ slides[0].headerType }}>{{ slides[0].name|raw }}<br>{{ slides[0].content|raw }}
+                    </{{ slides[0].headerType }}>
+                    {% else %}
+                    <{{ slide.headerType }}>{{ slide.name|raw }}<br>{{ slide.content|raw }}</{{ slide.headerType }}>
+                {% endif %}
+                <div class="join-btn"><a href="{{ path('sign_up') }}">{% trans %}הצטרפו עכשיו חינם!{% endtrans %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+    </div>
+    <div class="mobilehslider">
+        <div class="slider-img"
+             style="background:url({{ slides[0].getFileWebPath }}) no-repeat center center; background-size:cover;"></div>
+    </div>
+    {% endif %}
+
+
+    </div>
+
+    {% if route == 'user_homepage' %}
+        <script>
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            }
+
+            function showPosition(position) {
+                $.ajax({
+                    type: "POST",
+                    'url': '/open_api/locations/saves',
+                    dataType: 'json',
+                    data: {
+                        "id": "{{ app.user.id }}",
+                        "latitude": position.coords.latitude,
+                        "longitude": position.coords.longitude
+                    },
+
+                });
+
+            }
+        </script>
+        {#<iframe style="width: 100%;height: 50px;position: fixed;bottom: 0px;" src="https://www.gobaby.co.il/getLocation.php?url=http:/nysd.com"></iframe>#}
+    {% endif %}
+
+    {% block container %}{% endblock %}
+
+    {% set footerBlocks = getFooterBlocks() %}
+    <!-- footer -->
+    <div class="footer">
+        <div class="go-top"></div>
+        <div class="wrap">
+            <div class="footer_right clearfix">
+                {% for block in footerBlocks %}
+                    <div class="fmenu fmenu{{ loop.index }}">
+                        <span>{{ block.name }}</span>
+                        <ul>
+                            {% for page in block.pages %}
+
+                                {% if page.isActive %}
+                                    {% if page.id == 11 %}
+                                        <li><a href="{{ path('contact') }}">{% trans %}צור קשר{% endtrans %}</a></li>
+{#                                    {% elseif page.id == 13 %}#}
+{#                                        <li><a href="{{ path('faq') }}">{% trans %}שאלות ותשובות{% endtrans %}</a></li>#}
+                                    {% else %}
+                                        {% if page.isRegular != true %}
+                                            <li><a href="{{ path('pages_page', {'uri': page.uri}) }}">{{ page.name }}</a>
+                                            </li>
+                                        {% else %}
+                                            <li><a href="{{ page.uri }}">{{ page.name }}</a></li>
+                                        {% endif %}
+                                    {% endif %}
+
+                                {% endif %}
+                            {% endfor %}
+
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="footer_left clearfix">
+
+                <div class="fsocial">
+                    <span>{% trans %}הצטרפו אלינו{% endtrans %}:</span>
+                    <ul class="clearfix">
+                        <li class="contact"><a href="/contact"><img alt="android"
+                                                                    src="/images/cont-us.png"/></a>
+                        </li>
+                        <li><a href="https://www.facebook.com/groups/2010482642575200/" target="_blank"><img
+                                        alt="facebook" src="/images/facebook.png"/></a></li>
+                        <li><a href="https://www.instagram.com/zigzug_official" target="_blank"><img alt="instagram"
+                                                                                                     src="/images/inst.png"/></a>
+                        <li><a href="/android/download.html" target="_blank"><img alt="android"
+                                                                                                        src="/images/android.png"/></a>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="clr"></div>
+            </div>
+            <div class="clr"></div>
+        </div>
+    </div>
+
+    </div>
+
+    <div class="overlay"></div>
+
+    <div class="ui active disabled dimmer" id="global_dimmer">
+        <div class="ui text large loader disabled">{% trans %}Loading{% endtrans %}</div>
+    </div>
+
+
+
+    {% if app.user %}
+
+        <input type="hidden" id="currentUserId" value="{{ app.user.id }}"/>
+        <input type="hidden" id="currentUserImage" value=""/>
+
+        <input type="hidden" value="{{ messenger.config.payment.text }}" id="paymentText">
+        <input type="hidden" value="" id="paymentLink">
+        <input type="hidden" value="{{ messenger.config.payment.linkText }}" id="paymentLinkText">
+        <input type="hidden" value="{{ messenger.config.points.linkText }}" id="pointsLinkText">
+        <input type="hidden" value="{{ app.user.apiKey }}" id="apiKey">
+
+        <div class="chatsArea"></div>
+        <div class="popup pgal0">
+            <div class="popup_div">
+                <div class="popup_top cf">
+                    <div class="close">
+                        <div class="black circular ui icon button right mini">
+                            <i class="remove big icon"></i>
+                        </div>
+                        {#Remove<img alt="close" src="/images/popupclose.png" />#}
+                    </div>
+                </div>
+                <div class="popup_bot">
+                    <ul class="popslider">
+                        <li class="slid">
+                            <div class="img">
+                                <div class="pop_title"><span>Sheron Hirsh,</span> 32, manhattan</div>
+                                <div class="pop_img"
+                                     style="background:url(/images/pimg1.png) no-repeat; background-size:cover;"></div>
+                            </div>
+                        </li>
+                        <li class="slid">
+                            <div class="img">
+                                <div class="pop_title"><span>Sheron Hirsh,</span> 32, manhattan</div>
+                                <div class="pop_img"
+                                     style="background:url(/images/pimg3.png) no-repeat; background-size:cover;"></div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="pop_con">
+                        <a href=""><img alt="redthumb" src="/images/redthumb.png"/></a>
+                        <a href=""><img alt="pmsg" src="/images/pmsg.png"/></a>
+                        <a href=""><img alt="thumbgreen" src="/images/thumbgreen.png"/></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="templates">
+            <input type="hidden" id="dialogLink"
+                   value="{{ path('messenger_dialog_open',{'userId': app.user.id, 'contactId': 'userID'}) }}">
+            <div id="arenaSlideTemplate">
+                <li class="slid" id="[ID]">
+                    <div class="img">
+                        <div class="pop_title">
+                            {# /images/nlogobig.png #}
+                            <a class="logo_pop" href="{{ path('user_homepage') }}"><img alt="sugardaddy"
+                                                                                        src="/images/logo.png"/></a>
+                            <span><a href="{{ path('view_user', {id: 'userID'}) }}" target="_blank"
+                                     style="color: inherit;">[USERNAME]</a>,</span> [AGE], [AREA]
+                        </div>
+                        <div class="pop_img"
+                             style="background:url([IMAGE]) no-repeat center; background-size:contain;"></div>
+                    </div>
+                </li>
+            </div>
+            <div id="chatTemplate">
+                <div class="chatWindow rounded" id="[CONTACT_ID]">
+                    <div class="header rounded"></div>
+                    <div class="contactName"><a onclick="viewUserProfile([CONTACT_ID], $(this).offset().top)">[CONTACT_NAME]</a>
+                    </div>
+                    <div class="close rounded"></div>
+                    <div class="minimize rounded"></div>
+                    <div class="body">
+                        <br>
+                        <div class="scrollbar1">
+                            <div class="scrollbar">
+                                <div class="track">
+                                    <div class="thumb"></div>
+                                </div>
+                            </div>
+                            <div class="viewport">
+                                <div class="overview">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea id="message"></textarea>
+                </div>
+            </div>
+            <div id="splashBingoTemplate">
+                <div [ATTRID]="splashBingo">
+                    <div class="wrap">
+                        <div onclick="closeBingo();" class="cancel"></div>
+                        <img class="bingoImg" src="/images/bingo/bingo.png"/>
+                        <div class="clear"></div>
+                        <div class="rightPhoto">
+                            <div class="imageBingo" style="background-image:url([Photo1]);"></div>
+                        </div>
+                        <div class="leftPhoto">
+                            <div class="imageBingo" style="background-image:url([Photo2]);"></div>
+                        </div>
+                        <div class="plus"></div>
+                        <div class="clear"></div>
+                        <div class="textSplash">גם [USERNAME] בעניין שלכם!</div>
+                        <div class="chat"
+                             onclick="window.location.href='{{ path('messenger_dialog_open', {'userId': app.user.id, 'contactId':'[CONTACTID]'}) }}';">{% trans %}דברו איתם{% endtrans %}</div>
+                        <div class="ignore"
+                             onclick="closeBingo();">{% trans %}המשיכו לדפדף{% endtrans %}</div>
+                    </div>
+                </div>
+            </div>
+            <div id="emoticonsTemplate" class="hidden">
+                <div class="emoticons_wrapper"></div>
+            </div>
+
+            <div id="dialogMessageSectionTemplate">
+                <div class="msg_text cf [DIRECTION] [STATUS] message messageSection"
+                     id="dialogMessageSection_[MESSAGE_SECTION_ID]">
+                    [MESSAGE]
+                    <i class="trash icon trash-icon delete-message-link" onclick="dialog.deleteMessage(this)"
+                       data-id="[MESSAGE_SECTION_ID]"></i>
+                    <span class="mdate">[DATE_TIME]</span>
+                </div>
+                <input type="hidden" class="unreadMessage" value="[MESSAGE_SECTION_ID]">
+                <div class="clr"></div>
+            </div>
+        </div>
+        <div class="ui modal small" id="alert">
+            <i class="close icon"></i>
+            <div class="header">{% trans %}הודעה{% endtrans %}</div>
+            <div class="content"></div>
+            <div class="actions">
+                <div class="ui button ok">{% trans %}OK{% endtrans %}</div>
+            </div>
+        </div>
+    {% endif %}
+    {% if downloadApp %}
+        <div class="banner-app-download {% if app.user %}logged{% endif %}">
+            <div class="close"></div>
+            <a href="{{ downloadApp }}">
+                <img src="/images/banner.jpg">
+            </a>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+
+
+
+
